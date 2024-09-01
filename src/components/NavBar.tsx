@@ -18,19 +18,17 @@ const NavBar: React.FC = () => {
 
     return (
         <nav>
-            {user ? (
-                <button onClick={handleLogout}>
-                    Logout
-                </button>
-            ) : (
-                <NavButton label="Login" path="/login" />
-            )}
             <NavButton label="Welcome" path="/" />
-            {user && (
+            {user ? (
                 <>
                     <NavButton label="Content" path="/content" />
                     <NavButton label="Profile" path="/profile" />
+                    <button onClick={handleLogout}>
+                        Logout {user.email}
+                    </button>
                 </>
+            ) : (
+                <NavButton label="Login" path="/login" />
             )}
         </nav>
     );
