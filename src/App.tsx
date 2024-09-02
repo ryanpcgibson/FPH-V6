@@ -7,6 +7,7 @@ import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import DataPage from './pages/DataPage';
 import NavBar from './components/NavBar';
+import UITestPage from './pages/UITestPage';
 
 function App() {
   return (
@@ -16,10 +17,10 @@ function App() {
         <Routes>
           <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LoginPage />} />
-
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/data" element={<DataPage />} />
+            <Route path="/uitest" element={<UITestPage />} />
           </Route>
         </Routes>
       </AuthProvider>
