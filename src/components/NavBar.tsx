@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -58,19 +57,7 @@ const NavBar: React.FC = () => {
                         <MenuItem component={Link} to="/login" onClick={handleMenuClose}>Login</MenuItem>
                     )}
                 </Menu>
-                {/* <div sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    <Button color="inherit" component={Link} to="/">Welcome</Button>
-                    {user ? (
-                        <>
-                            <Button color="inherit" component={Link} to="/data">Data</Button>
-                            <Button color="inherit" component={Link} to="/uitest">UI Test</Button>
-                            <Button color="inherit" component={Link} to="/profile">Profile</Button>
-                            <Button color="inherit" onClick={handleLogout}>Logout {user.email}</Button>
-                        </>
-                    ) : (
-                        <Button color="inherit" component={Link} to="/login">Login</Button>
-                    )}
-                </div> */}
+
             </Toolbar>
         </AppBar>
     );
