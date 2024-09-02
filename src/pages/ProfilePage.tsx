@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../config/supabaseClient';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface UserProfile {
     id: string;
@@ -17,7 +21,7 @@ const UserProfile: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            const { data: { user } } = await supabaseClient.auth.getUser()
+            const { data: { user } } = await supabaseClient.auth.getUser();
 
             if (user && user.email) {
                 setProfile({
@@ -35,19 +39,33 @@ const UserProfile: React.FC = () => {
         fetchProfile();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+        </Box>
+    );
+    if (error) return (
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <Typography color="error">{error}</Typography>
+        </Box>
+    );
 
     return (
-        <div>
-            <h1>User Profile</h1>
-            {profile && (
-                <div>
-                    <p><strong>Email:</strong> {profile.email}</p>
-                    <p><strong>Full Name:</strong> {profile.display_name}</p>
-                </div>
-            )}
-        </div>
+        <Container>
+            <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    User Profile
+                </Typography>
+                <Box sx={{ marginTop: 2 }}>
+                    <Typography variant="body1">
+                        <strong>Email:</strong> {profile?.email}
+                    </Typography>
+                    <Typography variant="body1">
+                        <strong>Display Name:</strong> {profile?.display_name}
+                    </Typography>
+                </Box>
+            </Box>
+        </Container>
     );
 };
 

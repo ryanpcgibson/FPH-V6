@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseClient } from '../config/supabaseClient';
 import { JsonToTable } from "react-json-to-table";
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface DataTableProps {
     tableName: string;
@@ -34,15 +38,21 @@ const DataTable: React.FC<DataTableProps> = ({ tableName, query }) => {
         fetchData();
     }, [tableName, query]);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><CircularProgress /></Box>;
+    if (error) return <Box display="flex" justifyContent="center" alignItems="center" height="100vh"><Typography color="error">{error}</Typography></Box>;
 
     return (
-        <div>
-            <h1>{tableName}</h1>
-            <h3>Query: {query}</h3>
-            <JsonToTable json={data} />
-        </div>
+        <Paper sx={{ margin: 2, padding: 2 }}>
+            <Typography variant="h6" component="div" gutterBottom>
+                {tableName}
+            </Typography>
+            <Typography variant="subtitle1" component="div" gutterBottom>
+                Query: {query}
+            </Typography>
+            <Box sx={{ overflowX: 'auto' }}>
+                <JsonToTable json={data} />
+            </Box>
+        </Paper>
     );
 };
 

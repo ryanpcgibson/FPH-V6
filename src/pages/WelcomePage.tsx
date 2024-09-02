@@ -1,14 +1,23 @@
 
+import React from 'react';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
 function WelcomePage() {
     return (
-        <div>
-            <div>
-                <h1>Welcome</h1>
-                <div>
-                    <p>This is a welcome panel.</p>
-                </div>
-            </div>
-        </div>
+        <Container>
+            <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+                <Typography variant="h2" component="h1" gutterBottom>
+                    Welcome
+                </Typography>
+                <Box sx={{ marginTop: 2 }}>
+                    <Typography variant="body1">
+                        This is a welcome panel.
+                    </Typography>
+                </Box>
+            </Box>
+        </Container>
     );
 }
 
