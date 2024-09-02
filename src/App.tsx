@@ -5,7 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/Auth';
 import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
-import ContentPage from './pages/ContentPage';
+import DataPage from './pages/DataPage';
 import NavBar from './components/NavBar';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/content" element={<ContentPage />} />
+            <Route path="/data" element={<DataPage />} />
           </Route>
         </Routes>
       </AuthProvider>

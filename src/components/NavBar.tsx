@@ -22,7 +22,7 @@ const NavBar: React.FC = () => {
                 <Button color="inherit" component={Link} to="/">Welcome</Button>
                 {user ? (
                     <>
-                        <Button color="inherit" component={Link} to="/content">Content</Button>
+                        <Button color="inherit" component={Link} to="/data">Data</Button>
                         <Button color="inherit" component={Link} to="/profile">Profile</Button>
                         <Button color="inherit" onClick={handleLogout}>Logout {user.email}</Button>
                     </>
