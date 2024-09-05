@@ -9,9 +9,6 @@ const BottomDrawerContent: React.FC = () => {
             <Typography variant="h6" component="div" gutterBottom>
                 Drawer Content
             </Typography>
-            <Typography variant="body1" gutterBottom>
-                This is the content inside the bottom drawer.
-            </Typography>
             <Box sx={{ display: 'flex', overflowX: 'auto', gap: 2 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <HorizontalBar width={200} backgroundColor="grey.300" />

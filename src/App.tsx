@@ -7,7 +7,6 @@ import { AuthProvider } from './hooks/Auth';
 import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import DataPage from './pages/DataPage';
-import NavBar from './components/NavBar';
 
 // Import UI Test Pages dynamically
 const pages = import.meta.glob('./uitest/*.tsx');
@@ -27,7 +26,6 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <NavBar />
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<WelcomePage />} />

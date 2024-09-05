@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import BottomDrawerContent from './BottomDrawerContent';
+import BottomDrawerContent from './TimelineBars';
 
 const UITestPage: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -40,7 +40,7 @@ const UITestPage: React.FC = () => {
                 </Box>
             </Box>
             <Drawer
-                anchor="right"
+                anchor="bottom"
                 open={drawerOpen}
                 onClose={toggleDrawer(false)}
             >
