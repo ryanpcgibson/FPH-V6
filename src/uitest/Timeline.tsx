@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -10,6 +10,14 @@ import TimelineBars from './TimelineBars';
 import ImageCarousel from './ImageCarousel';
 
 const drawerWidth = 430;
+
+const mockData = [
+    { width: 200, photo: 'https://fastly.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68' },
+    { width: 400, photo: 'https://fastly.picsum.photos/id/19/2500/1667.jpg?hmac=7epGozH4QjToGaBf_xb2HbFTXoV5o8n_cYzB7I4lt6g' },
+    { width: 800, photo: 'https://fastly.picsum.photos/id/24/4855/1803.jpg?hmac=ICVhP1pUXDLXaTkgwDJinSUS59UWalMxf4SOIWb9Ui4' },
+    { width: 1200, photo: 'https://fastly.picsum.photos/id/23/3887/4899.jpg?hmac=2fo1Y0AgEkeL2juaEBqKPbnEKm_5Mp0M2nuaVERE6eE' },
+];
+
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -67,20 +75,30 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
     const toggleDrawer = () => {
         setOpen(!open);
     }
 
+    const closeDrawer = () => {
+        setOpen(false);
+    }
+
+    const handleBarClick = (photo: string) => {
+        setSelectedPhoto(photo);
+        setOpen(true);
+    };
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <Drawer variant="permanent" open={open}>
-                <ImageCarousel />
+                {selectedPhoto && <ImageCarousel photo={selectedPhoto} closeDrawer={closeDrawer} />}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'auto' }}>
                 <TimelineHeader />
-                <TimelineBars />
+                <TimelineBars data={mockData} onBarClick={handleBarClick} />
             </Box>
             <IconButton
                 color="inherit"

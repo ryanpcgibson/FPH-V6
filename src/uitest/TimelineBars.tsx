@@ -1,24 +1,30 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import HorizontalBar from './HorizontalBar';
 
-const BottomDrawerContent: React.FC = () => {
+
+interface TimelineBarsProps {
+    data: { width: number; photo: string }[];
+    onBarClick: (photo: string) => void;
+}
+
+const TimelineBars: React.FC<TimelineBarsProps> = ({ data, onBarClick }) => {
     return (
         <Box sx={{ padding: 2 }}>
-            <Typography variant="h6" component="div" gutterBottom>
-                Drawer Content
-            </Typography>
             <Box sx={{ display: 'flex', overflowX: 'auto', gap: 2 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <HorizontalBar width={200} backgroundColor="grey.300" />
-                    <HorizontalBar width={400} backgroundColor="grey.400" />
-                    <HorizontalBar width={800} backgroundColor="grey.500" />
-                    <HorizontalBar width={1200} backgroundColor="grey.600" />
+                    {data.map((item, index) => (
+                        <HorizontalBar
+                            key={index}
+                            width={item.width}
+                            backgroundColor={`grey.${300 + index * 100}`}
+                            onClick={() => onBarClick(item.photo)}
+                        />
+                    ))}
                 </Box>
             </Box>
         </Box>
     );
 };
 
-export default BottomDrawerContent;
+export default TimelineBars;
