@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import TimelineBars from './TimelineBars';
 import ImageCarousel from './ImageCarousel';
 
-const drawerWidth = 240;
+const drawerWidth = 430;
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -127,7 +127,7 @@ export default function MiniDrawer() {
             <Drawer variant="permanent" open={open}>
                 <ImageCarousel />
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, overflow: 'auto' }}>
                 <TimelineHeader />
                 <TimelineBars />
             </Box>
