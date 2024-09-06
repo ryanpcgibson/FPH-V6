@@ -6,7 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/Auth';
 import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
-import DataPage from './pages/DataPage';
+import FamilyPage from './pages/FamilyPage';
 import TimelinePage from './pages/Timeline';
 
 // Import UI Test Pages dynamically
@@ -33,10 +33,11 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/data" element={<DataPage />} />
               <Route path="/timeline" element={<TimelinePage />} />
+              <Route path="/family/:id?" element={<FamilyPage />} />
 
-              {/* Dynamically generated routes for UI test pages */}
+              {/* Dynamically generated routes for UI test pages 
+                  Special case, just for development */}
               {uiTestRoutes.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />
               ))}
@@ -57,6 +58,7 @@ function App() {
                 }
               />
             </Route>
+
           </Routes>
         </Suspense>
       </AuthProvider>
