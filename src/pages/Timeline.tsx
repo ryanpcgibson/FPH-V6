@@ -6,8 +6,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import TimelineBars from './TimelineBars';
-import ImageCarousel from './ImageCarousel';
+import TimelineBars from '../components/TimelineBars';
+import ImageCarousel from '../components/ImageCarousel';
+import NavMenu from '../components/NavMenu';
 
 const drawerWidth = 430;
 
@@ -72,7 +73,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export default function MiniDrawer() {
+const TimelinePage: React.FC = () => {
+
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
@@ -100,23 +102,8 @@ export default function MiniDrawer() {
                 <TimelineHeader />
                 <TimelineBars data={mockData} onBarClick={handleBarClick} />
             </Box>
-            <IconButton
-                color="inherit"
-                aria-label="toggle drawer"
-                onClick={toggleDrawer}
-                sx={{
-                    position: 'absolute',
-                    bottom: 16,
-                    right: 16,
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    '&:hover': {
-                        backgroundColor: 'primary.dark',
-                    },
-                }}
-            >
-                <MenuIcon />
-            </IconButton>
-        </Box>
+        </Box >
     );
 }
+
+export default TimelinePage;

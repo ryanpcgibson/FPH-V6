@@ -8,8 +8,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import TimelineBars from './TimelineBars';
-import ImageCarousel from './ImageCarousel';
+import TimelineBars from '../components/TimelineBars';
+import ImageCarousel from '../components/ImageCarousel';
 
 const drawerWidth = 430;
 

@@ -7,6 +7,7 @@ import { AuthProvider } from './hooks/Auth';
 import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import DataPage from './pages/DataPage';
+import TimelinePage from './pages/Timeline';
 
 // Import UI Test Pages dynamically
 const pages = import.meta.glob('./uitest/*.tsx');
@@ -33,6 +34,8 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/data" element={<DataPage />} />
+              <Route path="/timeline" element={<TimelinePage />} />
+
               {/* Dynamically generated routes for UI test pages */}
               {uiTestRoutes.map((route) => (
                 <Route key={route.path} path={route.path} element={route.element} />
