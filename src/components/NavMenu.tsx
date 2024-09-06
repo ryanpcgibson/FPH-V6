@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,12 +9,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 export default function NavMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (path: string) => {
+    navigate(path);
+    handleClose();
   };
 
   return (
@@ -40,11 +48,11 @@ export default function NavMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Data</MenuItem>
-        <MenuItem onClick={handleClose}>Timeline</MenuItem>
-        <MenuItem onClick={handleClose}>UI Test</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick('/profile')}>Profile</MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick('/family')}>Family</MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick('/timeline')}>Timeline</MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick('/uitest')}>UI Test</MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick('/logout')}>Logout</MenuItem>
       </Menu>
     </div>
   );
