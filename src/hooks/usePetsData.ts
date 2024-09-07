@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabaseClient } from '../db/supabaseClient';
-import { Pet, PetInsert, PetUpdate } from '../db/db_types_extended';
+import { Pet, PetInsert, PetUpdate } from '../db/db_types';
 
 // Create a new pet
 export const useCreatePet = () => {

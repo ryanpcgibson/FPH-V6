@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useCreatePet, useUpdatePet, useDeletePet } from '../hooks/usePetsData';
-import { Pet, PetsInsert } from '../db/db_types_extended';
+import { Pet, PetInsert } from '../db/db_types';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
 interface PetFormProps {
