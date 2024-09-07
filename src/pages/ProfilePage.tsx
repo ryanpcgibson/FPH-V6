@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabaseClient } from '../config/supabaseClient';
+import { supabaseClient } from '../db/supabaseClient';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';

@@ -1,6 +1,6 @@
 import { Session, User } from '@supabase/supabase-js';
 import { useContext, useState, useEffect, createContext } from 'react';
-import { supabaseClient } from '../config/supabaseClient';
+import { supabaseClient } from '../db/supabaseClient';
 
 // create a context for authentication
 const AuthContext = createContext<{ session: Session | null | undefined, user: User | null | undefined, signOut: () => void }>({ session: null, user: null, signOut: () => { } });

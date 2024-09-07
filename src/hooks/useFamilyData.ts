@@ -1,6 +1,6 @@
 // src/hooks/useFamilyData.ts
 import { useQuery } from '@tanstack/react-query';
-import { supabaseClient } from '../config/supabaseClient';
+import { supabaseClient } from '../db/supabaseClient';
 
 const fetchFamilyData = async (familyId: number) => {
     const { data, error } = await supabaseClient

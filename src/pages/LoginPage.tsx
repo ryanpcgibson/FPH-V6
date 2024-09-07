@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabaseClient } from '../config/supabaseClient';
+import { supabaseClient } from '../db/supabaseClient';
 import { Session } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router-dom';
 

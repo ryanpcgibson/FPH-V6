@@ -8,6 +8,7 @@ import WelcomePage from './pages/WelcomePage';
 import ProfilePage from './pages/ProfilePage';
 import FamilyPage from './pages/FamilyPage';
 import TimelinePage from './pages/Timeline';
+import PetPage from './pages/PetPage';
 
 // Import UI Test Pages dynamically
 const pages = import.meta.glob('./uitest/*.tsx');
@@ -35,6 +36,7 @@ function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/timeline" element={<TimelinePage />} />
               <Route path="/family/:id?" element={<FamilyPage />} />
+              <Route path="/pet" element={<PetPage />} />
 
               {/* Dynamically generated routes for UI test pages 
                   Special case, just for development */}
