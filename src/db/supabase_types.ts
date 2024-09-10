@@ -140,7 +140,7 @@ export type Database = {
           created_at: string
           end_date: string | null
           id: number
-          start_date: string | null
+          start_date: string
           title: string
         }
         Insert: {
@@ -149,7 +149,7 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           id?: number
-          start_date?: string | null
+          start_date: string
           title: string
         }
         Update: {
@@ -158,7 +158,7 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           id?: number
-          start_date?: string | null
+          start_date?: string
           title?: string
         }
         Relationships: [
