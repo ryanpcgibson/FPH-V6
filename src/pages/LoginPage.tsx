@@ -1,15 +1,43 @@
-import { useEffect, useState } from 'react';
-import { supabaseClient } from '../db/supabaseClient';
-import { Session } from '@supabase/supabase-js';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { supabaseClient } from "../db/supabaseClient";
+import { Session } from "@supabase/supabase-js";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
 
 function Login() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [session, setSession] = useState<Session | null>();
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); // State for error message
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   useEffect(() => {
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
@@ -21,55 +49,65 @@ function Login() {
     });
   }, []);
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    setError(null); // Reset error state
+    setError(null);
     try {
       const { error } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
+        email: values.email,
+        password: values.password,
       });
       if (error) throw error;
-      navigate('/');
+      navigate("/");
     } catch (err) {
-      setError('Invalid credentials or user does not exist'); // Set error message
+      setError("Invalid credentials or user does not exist");
     } finally {
-      // setEmail('');
-      setPassword('');
+      form.reset({ email: values.email, password: "" });
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Sign in</h1>
-      <form onSubmit={handleLogin} noValidate>
-        <div>
-          <label htmlFor="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+    <div className="max-w-md mx-auto mt-10">
+      <h1 className="text-2xl font-bold mb-5">Sign in</h1>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
+                <FormControl>
+                  <Input type="email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Sign in'}
-        </button>
-      </form>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "Loading..." : "Sign in"}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

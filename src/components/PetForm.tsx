@@ -1,107 +1,134 @@
-import React from 'react';
-import { Box, Typography, TextField, Button } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useCreatePet } from '../hooks/usePetsData';
-import { Pet } from '../db/db_types';
+"use client";
+
+import React, { useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import DatePicker from "./DatePicker";
+import { Pet } from "../db/db_types";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Pet name must be at least 2 characters.",
+  }),
+  start_date: z.date().nullable(),
+  end_date: z.date().nullable(),
+});
 
 interface PetFormProps {
-    petId?: number;
-    familyId: number;
-    initialData?: Partial<Pet>;
+  petId?: number;
+  familyId: number;
+  initialData?: Partial<Pet>;
 }
 
 const PetForm: React.FC<PetFormProps> = ({ petId, familyId, initialData }) => {
-    const [formData, setFormData] = React.useState(initialData || {});
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: initialData?.name || "",
+      start_date: initialData?.start_date || null,
+      end_date: initialData?.end_date || null,
+    },
+  });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData: Partial<Pet>) => ({ ...prevData, [name]: value }));
-    };
-
-    // Datepicker does not return event handler, like other fields
-    const updateStartDate = (date: Date | null) => {
-        setFormData((prevData: Partial<Pet>) => ({ ...prevData, start_date: date ?? undefined }));
+  useEffect(() => {
+    if (petId === null) {
+      form.setValue("name", "");
+      form.setValue("start_date", null);
+      form.setValue("end_date", null);
+    } else {
+      form.setValue("name", initialData?.name || "");
+      form.setValue("start_date", initialData?.start_date || null);
+      form.setValue("end_date", initialData?.end_date || null);
     }
+  }, [petId, familyId, initialData, form]);
 
-    const updateEndDate = (date: Date | null) => {
-        setFormData((prevData: Partial<Pet>) => ({ ...prevData, end_date: date ?? undefined }));
-    }
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+  };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await createPetMutation.mutateAsync(formData);
-            // Handle success (e.g., show a success message, redirect, etc.)
-        } catch (error) {
-            // Handle error (e.g., show an error message)
-            console.error('Error adding pet:', error);
-        }
-    };
-
-    const handleDelete = () => {
-        // TODO Handle delete
-    }
-
-    React.useEffect(() => {
-        if (petId === null) {
-            setFormData({ family_id: familyId });
-        } else {
-            setFormData(initialData || {});
-        }
-    }, [petId, familyId, initialData]);
-
-
-    // TODO MobileDatePicker
-
-    return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Typography variant="h6">{petId ? 'Update Pet' : 'Create Pet'}</Typography>
-                <TextField
-                    label="Name"
-                    name="name"
-                    value={formData.name || ''}
-                    onChange={handleChange}
-                    required
-                />
-                <TextField
-                    label="Family ID"
-                    name="family_id"
-                    type="number"
-                    value={formData.family_id || ''}
-                    onChange={handleChange}
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                    required
-                />
-                <DatePicker
-                    name="start_date"
-                    label="Start Date"
-                    views={['month', 'year']}
-                    value={formData.start_date}
-                    onChange={updateStartDate}
-                />
-                <DatePicker
-                    name="end_date"
-                    label="End Date"
-                    views={['month', 'year']}
-                    value={formData.end_date}
-                    onChange={updateEndDate}
-                />
-                <Button type="submit" variant="contained" color="primary">
-                    {petId ? 'Update' : 'Create'}
-                </Button>
-                {petId && (
-                    <Button variant="contained" color="secondary" onClick={handleDelete}>
-                        Delete
-                    </Button>
-                )}
-            </Box>
-        </LocalizationProvider>
-    );
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Pet Form</CardTitle>
+            <CardDescription>Fill out the details of your pet</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pet Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Pet Name" {...field} />
+                  </FormControl>
+                  <FormDescription>Enter the name of your pet.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="start_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Start Date</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      date={field.value}
+                      setDate={(date) => field.onChange(date)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="end_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>End Date</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      date={field.value}
+                      setDate={(date) => field.onChange(date)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+          <CardFooter>
+            <Button type="submit">Submit</Button>
+          </CardFooter>
+        </Card>
+      </form>
+    </Form>
+  );
 };
 
 export default PetForm;
