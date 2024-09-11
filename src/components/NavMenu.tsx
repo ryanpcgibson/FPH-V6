@@ -1,59 +1,47 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu } from "lucide-react";
 
 export default function NavMenu() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const navigate = useNavigate();
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
-    handleClose();
   };
 
   return (
-    <div style={{ position: 'fixed', bottom: 16, right: 16 }}>
-      <IconButton
-        color="inherit"
-        aria-label="toggle drawer"
-        onClick={handleClick}
-        edge="start"
-        sx={[
-          {
-            marginRight: 0,
-          },
-        ]}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
-      >
-        <MenuItem onClick={() => handleMenuItemClick('/profile')}>Profile</MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick('/family')}>Family</MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick('/timeline')}>Timeline</MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick('/uitest')}>UI Test</MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick('/logout')}>Logout</MenuItem>
-      </Menu>
+    <div className="fixed bottom-4 right-4">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <Menu className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/profile")}>
+            Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/family")}>
+            Family
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/timeline")}>
+            Timeline
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/uitest")}>
+            UI Test
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/logout")}>
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

@@ -38,9 +38,15 @@ interface PetFormProps {
   petId?: number;
   familyId: number;
   initialData?: Partial<Pet>;
+  onDelete?: () => void; // Add onDelete prop for delete functionality
 }
 
-const PetForm: React.FC<PetFormProps> = ({ petId, familyId, initialData }) => {
+const PetForm: React.FC<PetFormProps> = ({
+  petId,
+  familyId,
+  initialData,
+  onDelete,
+}) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,68 +72,97 @@ const PetForm: React.FC<PetFormProps> = ({ petId, familyId, initialData }) => {
     console.log(values);
   };
 
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
+    }
+  };
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Pet Form</CardTitle>
-            <CardDescription>Fill out the details of your pet</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pet Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Pet Name" {...field} />
-                  </FormControl>
-                  <FormDescription>Enter the name of your pet.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="start_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start Date</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      date={field.value}
-                      setDate={(date) => field.onChange(date)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="end_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>End Date</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      date={field.value}
-                      setDate={(date) => field.onChange(date)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-          <CardFooter>
-            <Button type="submit">Submit</Button>
-          </CardFooter>
-        </Card>
-      </form>
-    </Form>
+    <div className="flex justify-center items-center min-h-screen">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-full max-w-lg"
+        >
+          <Card>
+            {/* <CardHeader>
+              <CardTitle>Pet Form</CardTitle>
+              <CardDescription>
+                Fill out the details of your pet
+              </CardDescription>
+            </CardHeader> */}
+            <CardContent>
+              <div className="flex items-center space-x-2">
+                <FormLabel className="w-1/4">Family ID</FormLabel>
+                <div className="flex-1 w-full text-left">
+                  {familyId.toString()}
+                </div>
+              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">Pet Name</FormLabel>
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Pet Name"
+                        {...field}
+                        className="w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="start_date"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">Start Date</FormLabel>
+                    <FormControl className="flex-1">
+                      <DatePicker
+                        date={field.value}
+                        setDate={(date) => field.onChange(date)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="end_date"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">End Date</FormLabel>
+                    <FormControl className="flex-1">
+                      <DatePicker
+                        date={field.value}
+                        setDate={(date) => field.onChange(date)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex justify-end space-x-2">
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+              <Button type="submit">Update</Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
+    </div>
   );
 };
 

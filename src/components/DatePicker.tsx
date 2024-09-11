@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 
 interface DatePickerProps {
-  date: Date | undefined;
+  date: Date | null;
   setDate: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -48,11 +48,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
+          selected={date || undefined}
           onSelect={(newDate: Date | undefined) => setDate(newDate)}
           initialFocus
-          disabled={(currentDate) => 
-            (minDate ? currentDate < minDate : false) || 
+          disabled={(currentDate) =>
+            (minDate ? currentDate < minDate : false) ||
             (maxDate ? currentDate > maxDate : false)
           }
         />

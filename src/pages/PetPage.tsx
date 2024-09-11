@@ -1,14 +1,13 @@
 // src/pages/PetPage.tsx
 
-import React, { useState, useEffect } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import PetForm from '../components/PetForm';
-import PetDropdown from '../components/PetDropdown';
-import { useFamilyData } from '../hooks/useFamilyData';
-import { Pet } from '../db/db_types';
+import React, { useState, useEffect } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import PetForm from "../components/PetForm";
+import PetDropdown from "../components/PetDropdown";
+import { useFamilyData } from "../hooks/useFamilyData";
+import { Pet } from "../db/db_types";
 
 const PetPage: React.FC = () => {
   const { familyId } = useOutletContext<{ familyId: number | null }>();
@@ -16,7 +15,9 @@ const PetPage: React.FC = () => {
   const petId = petIdParam ? parseInt(petIdParam, 10) : null;
 
   const [selectedPetId, setSelectedPetId] = useState<number | null>(petId);
-  const [initialData, setInitialData] = useState<Partial<Pet> | undefined>(undefined);
+  const [initialData, setInitialData] = useState<Partial<Pet> | undefined>(
+    undefined
+  );
 
   // TODO should this be in a hook somewhere?
   const { data, error, isLoading } = useFamilyData(familyId);
@@ -33,50 +34,46 @@ const PetPage: React.FC = () => {
 
   useEffect(() => {
     handleSelectPet(selectedPetId);
-    console.log('PetPage selectedPetId', selectedPetId);
+    console.log("PetPage selectedPetId", selectedPetId);
   }, [petId, selectedPetId, data]);
-
-  if (!familyId) {
-    return (
-      <Container>
-        <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-          <Typography variant="h6" color="error">
-            Error: No family ID provided in the URL.
-          </Typography>
-        </Box>
-      </Container>
-    );
-  }
 
   if (isLoading) {
     return (
-      <Container>
-        <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-          <Typography variant="h6">Loading...</Typography>
-        </Box>
-      </Container>
+      <div className="flex justify-center items-center min-h-screen">
+        Loading ...
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container>
-        <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-          <Typography variant="h6" color="error">
-            Error: {error.message}
-          </Typography>
-        </Box>
-      </Container>
+      <div className="flex justify-center items-center min-h-screen">
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      </div>
     );
   }
 
   return (
-    <Container>
-      <Box sx={{ textAlign: 'center', marginTop: 4 }}>
-        <PetDropdown familyId={familyId} selectedPetId={selectedPetId} onSelectPet={handleSelectPet} />
-        <PetForm petId={selectedPetId || undefined} familyId={familyId} initialData={data?.pets.find(pet => pet.id === selectedPetId)} />
-      </Box>
-    </Container>
+    <Card>
+      <CardHeader>
+        <CardTitle>Pet Information</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <PetDropdown
+          selectedPetId={selectedPetId}
+          onSelectPet={handleSelectPet}
+          pets={data?.pets || []}
+        />
+        <PetForm
+          familyId={familyId}
+          petId={selectedPetId}
+          initialData={initialData}
+        />
+      </CardContent>
+    </Card>
   );
 };
 

@@ -1,84 +1,57 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import CloseIcon from '@mui/icons-material/Close';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface ImageCarouselProps {
-    photo: string;
-    closeDrawer: () => void;
+  photo: string;
+  closeDrawer: () => void;
 }
 
-const ImageCarousel: React.FC<ImageCarouselProps> = ({ photo, closeDrawer }) => {
-    const handleNext = () => {
-        // Implement the logic to handle the next image
-    };
+const ImageCarousel: React.FC<ImageCarouselProps> = ({
+  photo,
+  closeDrawer,
+}) => {
+  const handleNext = () => {
+    // Implement the logic to handle the next image
+  };
 
-    const handlePrev = () => {
-        // Implement the logic to handle the previous image
-    };
+  const handlePrev = () => {
+    // Implement the logic to handle the previous image
+  };
 
-    return (
-        <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-            <IconButton
-                onClick={handlePrev}
-                sx={{
-                    position: 'absolute',
-                    left: 16,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    zIndex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    color: 'white',
-                    '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    },
-                }}
-            >
-                <ArrowBackIosIcon />
-            </IconButton>
-            <Box
-                component="img"
-                src={photo}
-                alt="Current Image"
-                sx={{ height: '100%', width: '100%', objectFit: 'cover' }}
-            />
-            <IconButton
-                onClick={handleNext}
-                sx={{
-                    position: 'absolute',
-                    right: 16,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    zIndex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    color: 'white',
-                    '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    },
-                }}
-            >
-                <ArrowForwardIosIcon />
-            </IconButton>
-            <IconButton
-                onClick={closeDrawer}
-                sx={{
-                    position: 'absolute',
-                    right: 16,
-                    top: 16,
-                    zIndex: 1,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    color: 'white',
-                    '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    },
-                }}
-            >
-                <CloseIcon />
-            </IconButton>
-        </Box>
-    );
+  return (
+    <div className="relative w-full h-full">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={handlePrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <img
+        src={photo}
+        alt="Current Image"
+        className="h-full w-full object-cover"
+      />
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={handleNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={closeDrawer}
+        className="absolute right-4 top-4 z-10 bg-black/50 hover:bg-black/70 text-white"
+      >
+        <X className="h-4 w-4" />
+      </Button>
+    </div>
+  );
 };
 
 export default ImageCarousel;
