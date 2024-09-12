@@ -50,8 +50,6 @@ export const useFamilyData = (familyId: number | null) => {
                 throw new Error('Family ID is null');
             }
             return fetchFamilyData(familyId);
-            // let data = fetchFamilyData(familyId);
-            // return data;
         }
     });
 };

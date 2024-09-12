@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
-import TimelineBars from "../components/TimelineBars";
-import ImageCarousel from "../components/ImageCarousel";
-import NavMenu from "../components/NavMenu";
+import TimelineBars from "../../components/TimelineBars";
+import ImageCarousel from "../../components/ImageCarousel";
 
 const drawerWidth = 430;
 

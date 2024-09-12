@@ -28,11 +28,13 @@ export default function NavMenu() {
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/profile")}>
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleMenuItemClick("/family")}>
-            Family
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/family/7")}>
+            Family 7
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleMenuItemClick("/timeline")}>
-            Timeline
+          <DropdownMenuItem
+            onSelect={() => handleMenuItemClick("/family/7/pet/3")}
+          >
+            Pet 3
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/uitest")}>
             UI Test

@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import PetForm from "../components/PetForm";
-import PetDropdown from "../components/PetDropdown";
-import { useFamilyData } from "../hooks/useFamilyData";
-import { Pet } from "../db/db_types";
+import PetForm from "../../components/PetForm";
+import PetDropdown from "../../components/PetDropdown";
+import { useFamilyData } from "../../hooks/useFamilyData";
+import { Pet } from "../../db/db_types";
 
 const PetPage: React.FC = () => {
   const { familyId } = useOutletContext<{ familyId: number | null }>();

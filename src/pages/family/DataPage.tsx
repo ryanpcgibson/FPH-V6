@@ -1,20 +1,17 @@
+// pages/DataPage.tsx - debugging page to see raw family data
+
 import React from "react";
-import { useParams } from "react-router-dom";
-import { useFamilyData } from "../hooks/useFamilyData";
+import { useFamilyDataContext } from "../../context/FamilyDataContext";
 import { JsonToTable } from "react-json-to-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FamilyData, PetDB, LocationDB, MomentDB } from "../db/db_types";
+import { FamilyData, Pet, Location, Moment } from "../../db/db_types";
 
 const ContentPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { familyData, isLoading, error } = useFamilyDataContext();
 
-  // TODO - default to first family for user
-  const familyIdNumber = id ? parseInt(id, 10) : 7;
-
-  const { data, error, isLoading } = useFamilyData(familyIdNumber);
-  console.log("data", data);
-  const convertToString = (date: string | undefined): String | undefined => {
+  // JsonToTable can't handle Date objects, so convert them (back) to strings
+  const convertToString = (date: Date | undefined): String | undefined => {
     if (!date) {
       return undefined;
     } else {
@@ -25,8 +22,8 @@ const ContentPage: React.FC = () => {
     }
   };
 
-  const convertFamilyData = (data: any): FamilyData => {
-    if (!data) {
+  const convertFamilyData = (familyData: any): FamilyData => {
+    if (!familyData) {
       return {
         pets: [],
         locations: [],
@@ -35,18 +32,18 @@ const ContentPage: React.FC = () => {
       };
     } else {
       return {
-        pets: data.pets.map((pet: PetDB) => ({
+        pets: familyData.pets.map((pet: Pet) => ({
           ...pet,
           start_date: convertToString(pet.start_date),
           end_date: convertToString(pet.end_date || undefined),
         })),
-        locations: data.locations.map((location: LocationDB) => ({
+        locations: familyData.locations.map((location: Location) => ({
           ...location,
           start_date: convertToString(location.start_date),
           end_date: convertToString(location.end_date || undefined),
         })),
-        users: data.users, // Assuming users don't have date fields
-        moments: data.moments.map((moment: MomentDB) => ({
+        users: familyData.users, // Assuming users don't have date fields
+        moments: familyData.moments.map((moment: Moment) => ({
           ...moment,
           start_date: convertToString(moment.start_date),
           end_date: convertToString(moment.end_date || undefined),
@@ -55,7 +52,7 @@ const ContentPage: React.FC = () => {
     }
   };
 
-  const updatedData = convertFamilyData(data);
+  const updatedData = convertFamilyData(familyData);
 
   if (isLoading) {
     return (

@@ -1,23 +1,25 @@
-import './App.css';
-import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './hooks/Auth';
-import WelcomePage from './pages/WelcomePage';
-import ProfilePage from './pages/ProfilePage';
-import TimelinePage from './pages/Timeline';
-import DataPage from './pages/DataPage';
-import PetPage from './pages/PetPage';
-import FamilyLayout from './pages/FamilyLayout';
+import "./App.css";
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./hooks/Auth";
+import WelcomePage from "./pages/WelcomePage";
+import ProfilePage from "./pages/ProfilePage";
+import TimelinePage from "./pages/family/Timeline";
+import DataPage from "./pages/family/DataPage";
+import PetPage from "./pages/family/PetPage";
+import FamilyLayout from "./pages/family/Layout";
 
 // Import UI Test Pages dynamically
-const pages = import.meta.glob('./uitest/*.tsx');
+const pages = import.meta.glob("./uitest/*.tsx");
 
 // Create routes dynamically for UI test pages
 const uiTestRoutes = Object.keys(pages).map((path) => {
   const name = path.match(/\.\/uitest\/(.*)\.tsx$/)?.[1];
-  const Component = lazy(pages[path] as () => Promise<{ default: React.ComponentType<any> }>);
+  const Component = lazy(
+    pages[path] as () => Promise<{ default: React.ComponentType<any> }>
+  );
 
   return {
     path: `/uitest/${name}`,
@@ -43,7 +45,11 @@ function App() {
               {/* Dynamically generated routes for UI test pages 
                   Special case, just for development */}
               {uiTestRoutes.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={route.element}
+                />
               ))}
               {/* Add a route for listing all UI test pages */}
               <Route
@@ -54,7 +60,9 @@ function App() {
                     <ul>
                       {uiTestRoutes.map((route) => (
                         <li key={route.path}>
-                          <a href={route.path}>{route.path.replace('/uitest/', '')}</a>
+                          <a href={route.path}>
+                            {route.path.replace("/uitest/", "")}
+                          </a>
                         </li>
                       ))}
                     </ul>
@@ -62,7 +70,6 @@ function App() {
                 }
               />
             </Route>
-
           </Routes>
         </Suspense>
       </AuthProvider>
