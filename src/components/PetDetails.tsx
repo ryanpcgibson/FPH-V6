@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pet, FamilyData } from "../db/db_types";
-import { formatDateForDisplay } from "../utils";
+import { formatDateForDisplay } from "../dateUtils";
 
 interface PetDetailsCardProps {
   pet: Pet | undefined;

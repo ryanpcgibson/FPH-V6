@@ -1,55 +1,70 @@
 // src/hooks/useFamilyData.ts
-import { useQuery } from '@tanstack/react-query';
-import { supabaseClient } from '../db/supabaseClient';
-import { FamilyData, PetDB, LocationDB, MomentDB } from '../db/db_types';
+import { useQuery } from "@tanstack/react-query";
+import { supabaseClient } from "../db/supabaseClient";
+import { convertStringToDate } from "../dateUtils";
+import { PetDB, LocationDB, MomentDB, UserDB } from "../db/db_types";
+import { Pet, Location, Moment, User } from "../db/db_types";
 
-
-const convertToDate = (dateString: string | undefined): Date | undefined => {
-    return dateString ? new Date(dateString) : undefined;
+export type FamilyDataDB = {
+  pets: PetDB[];
+  locations: LocationDB[];
+  users: UserDB[];
+  moments: MomentDB[];
 };
 
-const convertFamilyData = (data: any): FamilyData => {
-    return {
-        pets: data.pets.map((pet: PetDB) => ({
-            ...pet,
-            start_date: convertToDate(pet.start_date),
-            end_date: convertToDate(pet.end_date || undefined),
-        })),
-        locations: data.locations.map((location: LocationDB) => ({
-            ...location,
-            start_date: convertToDate(location.start_date),
-            end_date: convertToDate(location.end_date || undefined),
-        })),
-        users: data.users, // Assuming users don't have date fields
-        moments: data.moments.map((moment: MomentDB) => ({
-            ...moment,
-            start_date: convertToDate(moment.start_date),
-            end_date: convertToDate(moment.end_date || undefined),
-        })),
-    };
+export type FamilyData = {
+  pets: Pet[];
+  locations: Location[];
+  users: User[];
+  moments: Moment[];
 };
 
 const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
-    const { data, error } = await supabaseClient
-        .rpc('get_family_records', { param_family_id: familyId });
+  const { data, error } = await supabaseClient.rpc("get_family_records", {
+    param_family_id: familyId,
+  });
 
-    if (error) {
-        throw new Error(error.message);
-    }
+  if (error) {
+    throw new Error(error.message);
+  }
 
-    // Convert date strings to Date objects
-    return convertFamilyData(data);
+  if (!data) {
+    throw new Error("No data returned from the database");
+  }
+
+  return convertFamilyData(data as FamilyDataDB);
+};
+
+const convertFamilyData = (data: FamilyDataDB): FamilyData => {
+  return {
+    pets: data.pets.map((pet: PetDB) => ({
+      ...pet,
+      start_date: convertStringToDate(pet.start_date),
+      end_date: convertStringToDate(pet.end_date || undefined),
+    })),
+    locations: data.locations.map((location: LocationDB) => ({
+      ...location,
+      start_date: convertStringToDate(location.start_date),
+      end_date: convertStringToDate(location.end_date || undefined),
+    })),
+    users: data.users, 
+    moments: data.moments.map((moment: MomentDB) => ({
+      ...moment,
+      start_date: convertStringToDate(moment.start_date),
+      end_date: convertStringToDate(moment.end_date || undefined),
+
+    })),
+  };
 };
 
 export const useFamilyData = (familyId: number | null) => {
-
-    return useQuery({
-        queryKey: ['familyData', familyId],
-        queryFn: () => {
-            if (familyId === null) {
-                throw new Error('Family ID is null');
-            }
-            return fetchFamilyData(familyId);
-        }
-    });
+  return useQuery({
+    queryKey: ["familyData", familyId],
+    queryFn: () => {
+      if (familyId === null) {
+        throw new Error("Family ID is null");
+      }
+      return fetchFamilyData(familyId);
+    },
+  });
 };
