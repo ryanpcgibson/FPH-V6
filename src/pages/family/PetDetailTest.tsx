@@ -57,13 +57,6 @@ const PetPage: React.FC = () => {
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen p-4 gap-4">
-      <div className="w-full sm:w-1/2 max-w-[calc(100vh-2rem)] aspect-square sm:max-h-[600px]">
-        <Card className="w-full h-full overflow-hidden rounded-lg">
-          <CardContent className="h-full p-0">
-            <EmblaCarousel photos={photos} />
-          </CardContent>
-        </Card>
-      </div>
       <div className="w-full sm:w-1/2 max-w-[1000px] flex-grow h-[calc(100vh-2rem)] sm:max-h-[600px]">
         <Card className="h-full overflow-auto rounded-lg">
           <CardHeader>

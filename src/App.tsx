@@ -10,6 +10,7 @@ import TimelinePage from "./pages/family/Timeline";
 import DataPage from "./pages/family/DataPage";
 import PetPage from "./pages/family/PetPage";
 import FamilyLayout from "./pages/family/Layout";
+import PetDetailPage from "./pages/family/PetDetailTest";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
                 <Route index element={<TimelinePage />} />
                 <Route path="data" element={<DataPage />} />
                 <Route path="pet/:petId?" element={<PetPage />} />
+                <Route path="petdetail/:petId?" element={<PetDetailPage />} />
               </Route>
             </Route>
           </Routes>
