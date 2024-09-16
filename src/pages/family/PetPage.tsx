@@ -1,42 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Pet } from "../../db/db_types";
-import ImageCarousel from "../../components/ImageCarousel";
+import { Pet, Photo, FamilyData } from "../../db/db_types";
 import { useFamilyDataContext } from "../../context/FamilyDataContext";
-import { EmblaOptionsType } from "embla-carousel";
 import EmblaCarousel from "../../components/ui/EmblaCarousel";
-
-const OPTIONS: EmblaOptionsType = {};
-const SLIDE_COUNT = 5;
-const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
+import PetDetails from "../../components/PetDetails";
 
 const PetPage: React.FC = () => {
-  const [photo, setPhoto] = useState<string | null>(null);
-
   const { petId: petIdParam } = useParams<{ petId: string }>();
   const petId = petIdParam ? parseInt(petIdParam, 10) : null;
 
-  const [selectedPetId, setSelectedPetId] = useState<number | null>(petId);
-  const [initialData, setInitialData] = useState<Partial<Pet> | undefined>(
-    undefined
-  );
-  const { familyData, isLoading, error } = useFamilyDataContext();
+  const [petData, setPetData] = useState<Pet | undefined>(undefined);
 
-  const handleSelectPet = (petId: number | null) => {
-    setSelectedPetId(petId);
-    if (petId === null) {
-      setInitialData(undefined);
-    } else {
-      const selectedPet = familyData?.pets.find((pet) => pet.id === petId);
-      setInitialData(selectedPet ? { ...selectedPet } : undefined);
-    }
-  };
+  const { familyData, isLoading, error } = useFamilyDataContext();
+  const [moments, setMoments] = useState<FamilyData["moments"]>([]);
+  const [currentMomentIndex, setCurrentMomentIndex] = useState<number>(0);
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
   useEffect(() => {
-    handleSelectPet(selectedPetId);
-  }, [petId, selectedPetId, familyData]);
+    if (familyData && petData) {
+      console.log("Updating photos", moments[currentMomentIndex].title);
+      setPhotos(moments.flatMap((moment) => moment.photos));
+    }
+  }, [petData, familyData, currentMomentIndex]);
+
+  useEffect(() => {
+    if (familyData && petId) {
+      setPetData(familyData.pets.find((pet) => pet.id === petId));
+      const petMoments = familyData.moments.filter((moment) =>
+        moment.pets.some((pet) => pet.id === petId)
+      );
+      setMoments(petMoments);
+      setCurrentMomentIndex(0);
+    }
+  }, [familyData, petId]);
 
   if (isLoading) {
     return (
@@ -58,29 +56,26 @@ const PetPage: React.FC = () => {
   }
 
   return (
-    <div className="chart-wrapper mx-auto flex max-w-6xl flex-col flex-wrap items-start justify-center gap-6 p-6 sm:flex-row sm:p-8">
-      <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
-        <Card className="g:max-w-md">
-          <CardContent className="h-[calc(100%-4rem)]">
-            {/* <ImageCarousel photo="https://fastly.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68" /> */}
-            <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+    <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen p-4 gap-4">
+      <div className="w-full sm:w-1/2 max-w-[calc(100vh-2rem)] aspect-square sm:max-h-[600px]">
+        <Card className="w-full h-full overflow-hidden rounded-lg">
+          <CardContent className="h-full p-0">
+            <EmblaCarousel photos={photos} />
           </CardContent>
         </Card>
-        <Card>
+      </div>
+      <div className="w-full sm:w-1/2 max-w-[1000px] flex-grow h-[calc(100vh-2rem)] sm:max-h-[600px]">
+        <Card className="h-full overflow-auto rounded-lg">
           <CardHeader>
-            <CardTitle>{initialData?.name}</CardTitle>
+            <CardTitle>{petData?.name}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="mt-4">
-              <h2 className="text-xl font-semibold mb-2">Pet Details</h2>
-              <p>Name: </p>
-              <p>Species: {initialData?.species}</p>
-              <p>Breed: {initialData?.breed}</p>
-              {/* Add more pet details here */}
-            </div>
-            <div className="mt-4">
-              <p>Select a pet to view details</p>
-            </div>
+            <PetDetails
+              pet={petData}
+              moments={moments}
+              currentMomentIndex={currentMomentIndex}
+              setCurrentMomentIndex={setCurrentMomentIndex}
+            />
           </CardContent>
         </Card>
       </div>

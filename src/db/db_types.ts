@@ -37,7 +37,10 @@ export interface FamilyData {
     pets: Pet[];
     locations: Location[];
     users: User[];
-    moments: Moment[];
+    moments: (Omit<Moment, 'photos' | 'pets'> & {
+        photos: Photo[];
+        pets: { id: number }[];
+    })[];
 }
 
 
