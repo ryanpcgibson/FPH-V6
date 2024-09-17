@@ -205,6 +205,7 @@ export type Database = {
         Row: {
           added_by: string | null
           created_at: string
+          description: string | null
           end_date: string | null
           family_id: number
           id: number
@@ -214,6 +215,7 @@ export type Database = {
         Insert: {
           added_by?: string | null
           created_at?: string
+          description?: string | null
           end_date?: string | null
           family_id: number
           id?: number
@@ -223,6 +225,7 @@ export type Database = {
         Update: {
           added_by?: string | null
           created_at?: string
+          description?: string | null
           end_date?: string | null
           family_id?: number
           id?: number
