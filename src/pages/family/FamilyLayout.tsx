@@ -6,8 +6,7 @@ import { PetTimelineProvider } from "@/context/PetTimelineContext";
 
 const FamilyLayout: React.FC = () => {
   const { familyId: familyIdParam } = useParams<{ familyId: string }>();
-  // TODO - default to first family for user
-  const familyId = familyIdParam ? parseInt(familyIdParam, 10) : null;
+  const familyId = familyIdParam ? parseInt(familyIdParam, 10) : null;   // TODO - default to first family for user
 
   if (familyId === null) {
     return <div>Error: Family ID is required</div>;

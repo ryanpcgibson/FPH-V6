@@ -53,10 +53,17 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
           totalCount={moments.length}
           onPrevClick={goToPrevMoment}
           onNextClick={goToNextMoment}
-          renderCenter={() =>
-            moments[currentMomentIndex]?.title ||
-            `Moment ${currentMomentIndex + 1} / ${moments.length}`
-          }
+          renderCenter={() => {
+            const moment = moments[currentMomentIndex];
+            const title = moment?.title || `Moment ${currentMomentIndex + 1}`;
+            const start_date = moment?.start_date
+              ? new Date(moment.start_date).toISOString().split("T")[0]
+              : "";
+            const end_date = moment?.end_date
+              ? new Date(moment.end_date).toISOString().split("T")[0]
+              : "";
+            return `${title} - ${start_date} - ${end_date}`;
+          }}
         />
       </div>
       <div className="h-full">

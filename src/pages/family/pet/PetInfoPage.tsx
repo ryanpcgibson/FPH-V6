@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Pet, Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetDataContext } from "@/context/PetDataContext";
+import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
-import PetDetails from "@/components/PetDetails";
+import PetDetails from "@/components/PetDetails2";
+import TimelineBars from "@/components/TimelineBars";
 
 const PetInfoPage: React.FC = () => {
+  const location = useLocation();
+  const momentId = location.state?.momentId;
+
   const {
     familyData,
     isLoading: isFamilyLoading,
@@ -19,9 +25,14 @@ const PetInfoPage: React.FC = () => {
     isLoading: isPetLoading,
     error: petError,
   } = usePetDataContext();
+  const {
+    petTimelines,
+    isLoading: isPetTimelineLoading,
+    error: petTimelineError,
+  } = usePetTimelineContext();
 
-  const isLoading = isFamilyLoading || isPetLoading;
-  const error = familyError || petError;
+  const isLoading = isFamilyLoading || isPetLoading || isPetTimelineLoading;
+  const error = familyError || petError || petTimelineError;
 
   const [moments, setMoments] = useState<FamilyData["moments"]>([]);
   const [currentMomentIndex, setCurrentMomentIndex] = useState<number>(0);
@@ -32,9 +43,15 @@ const PetInfoPage: React.FC = () => {
         moment.pets.some((pet: { id: number }) => pet.id === petId)
       );
       setMoments(petMoments);
-      setCurrentMomentIndex(0);
+
+      if (momentId) {
+        const index = petMoments.findIndex((moment) => moment.id === momentId);
+        setCurrentMomentIndex(index !== -1 ? index : 0);
+      } else {
+        setCurrentMomentIndex(0);
+      }
     }
-  }, [familyData, petId]);
+  }, [familyData, petId, momentId]);
 
   if (isLoading) {
     return (
@@ -71,6 +88,7 @@ const PetInfoPage: React.FC = () => {
         currentMomentIndex={currentMomentIndex}
         setCurrentMomentIndex={setCurrentMomentIndex}
       />
+      <TimelineBars petTimelines={petTimelines} />
     </div>
   );
 };

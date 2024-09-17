@@ -1,53 +1,90 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { Link, useNavigate } from "react-router-dom";
+import { PetTimeline, PetTimelineSegment } from "@/context/PetTimelineContext";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
 interface TimelineBarsProps {
-  data: { width: number; photo: string }[];
-  onBarClick: (photo: string) => void;
+  petTimelines: PetTimeline[];
 }
 
-const HorizontalBar: React.FC<{
-  width: number;
-  backgroundColor: string;
-  onClick: () => void;
-}> = ({ width, backgroundColor, onClick }) => {
-  return (
-    <div
-      className={cn(
-        "h-8 rounded cursor-pointer transition-all hover:opacity-80",
-        backgroundColor
-      )}
-      style={{ width: `${width}px` }}
-      onClick={onClick}
-    />
-  );
-};
+const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines }) => {
+  const { familyId } = useFamilyDataContext();
+  const navigate = useNavigate();
 
-const TimelineBars: React.FC<TimelineBarsProps> = ({ data, onBarClick }) => {
-  const getBackgroundColor = (index: number) => {
-    const colors = [
-      "bg-gray-300",
-      "bg-gray-400",
-      "bg-gray-500",
-      "bg-gray-600",
-      "bg-gray-700",
-    ];
-    return colors[index % colors.length];
+  console.log(petTimelines);
+  const getStatusColor = (status: PetTimelineSegment["status"]) => {
+    switch (status) {
+      case "not-born":
+        return "bg-gray-200";
+      case "alive":
+        return "bg-green-500";
+      case "memory":
+        return "bg-blue-500";
+      case "deceased":
+        return "bg-red-500";
+      default:
+        return "bg-gray-400";
+    }
   };
 
+  const handleSegmentClick = (petId: number, momentId?: number) => {
+    const url = `/family/${familyId}/pet/${petId}`;
+    if (momentId) {
+      navigate(url, { state: { momentId } });
+    } else {
+      navigate(url);
+    }
+  };
+
+  const allYears = petTimelines.flatMap((timeline) =>
+    timeline.segments.map((segment) => segment.year)
+  );
+  const minYear = Math.min(...allYears);
+  const maxYear = Math.max(...allYears);
+  const yearRange = maxYear - minYear + 1;
+
   return (
-    <div className="p-4">
-      <div className="flex overflow-x-auto gap-4">
-        <div className="flex flex-col gap-4">
-          {data.map((item, index) => (
-            <HorizontalBar
-              key={index}
-              width={item.width}
-              backgroundColor={getBackgroundColor(index)}
-              onClick={() => onBarClick(item.photo)}
-            />
-          ))}
-        </div>
+    <div className="w-full sm:w-3/5 p-4">
+      <div
+        className="grid"
+        style={{ gridTemplateColumns: `auto repeat(${yearRange}, 1fr)` }}
+      >
+        <div></div>
+        {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
+          (year) => (
+            <div key={year} className="text-xs text-center">
+              {year}
+            </div>
+          )
+        )}
+        {petTimelines.map((timeline) => (
+          <React.Fragment key={timeline.petId}>
+            <div className="text-sm font-semibold pr-2">
+              <Link to={`/family/${familyId}/pet/${timeline.petId}`} className="hover:underline">
+                {timeline.petName}
+              </Link>
+            </div>
+            {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
+              (year) => {
+                const segment = timeline.segments.find((s) => s.year === year);
+                return (
+                  <div
+                    key={year}
+                    className={`h-6 ${
+                      segment ? getStatusColor(segment.status) : "bg-gray-100"
+                    } border border-white cursor-pointer`}
+                    title={
+                      segment?.moments && segment.moments.length > 0
+                        ? `${year}: ${segment.moments.map(m => m.title).join(", ")}`
+                        : segment ? `${year}: ${segment.status}` : `${year}: No data`
+                    }
+                    onClick={() => handleSegmentClick(timeline.petId, segment?.moments?.[0]?.id)}
+                  />
+                );
+              }
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

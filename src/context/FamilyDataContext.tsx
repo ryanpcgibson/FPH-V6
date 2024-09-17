@@ -3,6 +3,7 @@ import { FamilyData, useFamilyData } from "../hooks/useFamilyData";
 
 interface FamilyDataContextProps {
   familyData: FamilyData | undefined;
+  familyId: number;
   isLoading: boolean;
   error: Error | null;
 }
@@ -23,7 +24,7 @@ export const FamilyDataProvider: React.FC<FamilyDataProviderProps> = ({
   const { data, isLoading, error } = useFamilyData(familyId);
 
   return (
-    <FamilyDataContext.Provider value={{ familyData: data, isLoading, error }}>
+    <FamilyDataContext.Provider value={{ familyData: data, familyId, isLoading, error }}>
       {children}
     </FamilyDataContext.Provider>
   );
