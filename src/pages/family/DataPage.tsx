@@ -10,6 +10,7 @@ import { FamilyData, Pet, Location, Moment } from "../../db/db_types";
 const ContentPage: React.FC = () => {
   const { familyData, isLoading, error } = useFamilyDataContext();
 
+  // TODO: move this to a utils file and rename
   // JsonToTable can't handle Date objects, so convert them (back) to strings
   const convertToString = (date: Date | undefined): String | undefined => {
     if (!date) {

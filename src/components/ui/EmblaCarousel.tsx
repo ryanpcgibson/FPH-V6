@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import "./embla.css";
-import { Photo } from "../../db/db_types";
+import { Photo } from "@/db/db_types";
 
 interface EmblaCarouselProps {
   photos: Photo[];
@@ -24,11 +24,11 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({ photos, options }) => {
         <div className="embla__container h-full w-full">
           {photos.map((photo, index) => (
             <div className="embla__slide h-full w-full" key={photo.id || index}>
-              <div className="embla__slide__inner h-full w-full">
+              <div className="embla__slide__inner h-full w-full flex items-center justify-center">
                 <img
-                  src={photo.path}
+                  src={`/src/assets/${photo.path}`}
                   alt={`Pet photo ${index + 1}`}
-                  className="embla__slide__img"
+                  className="embla__slide__img object-contain max-h-full max-w-full"
                 />
               </div>
             </div>

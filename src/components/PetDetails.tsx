@@ -6,29 +6,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Pet, FamilyData } from "../db/db_types";
-import { formatDateForDisplay } from "../dateUtils";
+import { Pet } from "@/db/db_types";
+import { formatDateForDisplay } from "@/utils/dateUtils";
+import { usePetTimelineContext } from "@/context/PetTimelineContext";
+import { FamilyData } from "@/hooks/useFamilyData";
 
-interface PetDetailsCardProps {
-  pet: Pet | undefined;
+const PetDetails: React.FC<{
+  pet: Pet;
   moments: FamilyData["moments"];
   currentMomentIndex: number;
   setCurrentMomentIndex: (index: number) => void;
-}
+}> = ({ pet, moments, currentMomentIndex, setCurrentMomentIndex }) => {
+  const { petTimelines } = usePetTimelineContext();
 
-const PetDetails: React.FC<PetDetailsCardProps> = ({
-  pet,
-  moments,
-  currentMomentIndex,
-  setCurrentMomentIndex,
-}) => {
   return (
     <>
-      <div className="mt-4">
-        <h2 className="text-xl font-semibold mb-2">Pet Details</h2>
-        <p>Name: {pet?.name}</p>
-        {/* Add more pet details here */}
-      </div>
       <div className="mt-4">
         <Select
           value={currentMomentIndex?.toString() ?? ""}
