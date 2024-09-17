@@ -106,6 +106,39 @@
   ],
   "moments": [
     {
+      "id": 4,
+      "created_at": "2024-09-17T03:51:01.128059+00:00",
+      "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
+      "start_date": "2024-09-18",
+      "end_date": null,
+      "title": "Beach Time",
+      "body": null,
+      "photos": [
+        {
+          "id": 4,
+          "path": "beach1.jpg",
+          "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
+          "moment_id": 4,
+          "created_at": "2024-09-17T03:53:25.855296+00:00"
+        },
+        {
+          "id": 5,
+          "path": "beach2.jpg",
+          "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
+          "moment_id": 4,
+          "created_at": "2024-09-17T03:53:41.426722+00:00"
+        },
+        {
+          "id": 6,
+          "path": "beach4.jpg",
+          "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
+          "moment_id": 4,
+          "created_at": "2024-09-17T03:53:53.945777+00:00"
+        }
+      ],
+      "pets": [{ "id": 5 }]
+    },
+    {
       "id": 1,
       "created_at": "2024-08-29T22:40:29.595922+00:00",
       "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
@@ -116,7 +149,7 @@
       "photos": [
         {
           "id": 2,
-          "path": "https://picsum.photos/id/237/200/300",
+          "path": "camping1.jpg",
           "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
           "moment_id": 1,
           "created_at": "2024-08-31T19:21:11.57805+00:00"
@@ -135,15 +168,15 @@
       "photos": [
         {
           "id": 1,
-          "path": "https://picsum.photos/id/237/200/300",
+          "path": "run1.jpg",
           "added_by": "fc8b1496-46cc-40bf-9bd5-cb294195ab8d",
           "moment_id": 2,
           "created_at": "2024-08-31T19:20:52.382705+00:00"
         },
         {
           "id": 3,
-          "path": "https://fastly.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68",
-          "added_by": null,
+          "path": "run2.jpg",
+          "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
           "moment_id": 2,
           "created_at": "2024-09-11T21:31:37.912354+00:00"
         }
