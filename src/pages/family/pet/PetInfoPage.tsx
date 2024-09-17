@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Pet, Moment } from "@/db/db_types";
-import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { FamilyData } from "@/hooks/useFamilyData";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import { usePetDataContext } from "@/context/PetDataContext";
 import PetCarousel from "@/components/PetCarousel";
 import PetDetails from "@/components/PetDetails";
 
 const PetInfoPage: React.FC = () => {
-  const { petId: petIdParam } = useParams<{ petId: string }>();
-  const petId = petIdParam ? parseInt(petIdParam, 10) : null;
+  const {
+    familyData,
+    isLoading: isFamilyLoading,
+    error: familyError,
+  } = useFamilyDataContext();
+  const {
+    petData,
+    petId,
+    isLoading: isPetLoading,
+    error: petError,
+  } = usePetDataContext();
 
-  const [petData, setPetData] = useState<Pet | undefined>(undefined);
+  const isLoading = isFamilyLoading || isPetLoading;
+  const error = familyError || petError;
+
   const [moments, setMoments] = useState<FamilyData["moments"]>([]);
   const [currentMomentIndex, setCurrentMomentIndex] = useState<number>(0);
 
-  const { familyData, isLoading, error } = useFamilyDataContext();
-
   useEffect(() => {
     if (familyData && petId) {
-      setPetData(familyData.pets.find((pet: Pet) => pet.id === petId));
       const petMoments = familyData.moments.filter((moment: Moment) =>
         moment.pets.some((pet: { id: number }) => pet.id === petId)
       );

@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { useFamilyData } from "../hooks/useFamilyData";
-import { FamilyData } from "../db/db_types";
+import { FamilyData, useFamilyData } from "../hooks/useFamilyData";
 
 interface FamilyDataContextProps {
   familyData: FamilyData | undefined;

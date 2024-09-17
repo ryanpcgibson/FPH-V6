@@ -5,18 +5,18 @@ import { FamilyDataProvider } from "@/context/FamilyDataContext";
 import { PetTimelineProvider } from "@/context/PetTimelineContext";
 
 const FamilyLayout: React.FC = () => {
-  const { familyId } = useParams<{ familyId: string }>();
+  const { familyId: familyIdParam } = useParams<{ familyId: string }>();
   // TODO - default to first family for user
-  const parsedFamilyId = familyId ? parseInt(familyId, 10) : null;
+  const familyId = familyIdParam ? parseInt(familyIdParam, 10) : null;
 
-  if (parsedFamilyId === null) {
+  if (familyId === null) {
     return <div>Error: Family ID is required</div>;
   }
 
   return (
-    <FamilyDataProvider familyId={parsedFamilyId}>
+    <FamilyDataProvider familyId={familyId}>
       <PetTimelineProvider>
-        <Outlet context={{ familyId: parsedFamilyId }} />
+        <Outlet context={{ familyId }} />
       </PetTimelineProvider>
     </FamilyDataProvider>
   );
