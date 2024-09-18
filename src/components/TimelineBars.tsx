@@ -36,8 +36,7 @@ const TimelineCell: React.FC<{
       } border border-white cursor-pointer flex items-center justify-center`}
       title={segment?.status}
       onClick={() => onClick(petId, segment?.moments?.[0]?.id)}
-    >
-    </div>
+    ></div>
   );
 };
 
@@ -46,7 +45,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   const navigate = useNavigate();
   console.log(petTimelines);
   const handleSegmentClick = (petId: number, momentId?: number) => {
-    const url = `/family/${familyId}/pet/${petId}`;
+    const url = `/app/family/${familyId}/pet/${petId}`;
     if (momentId) {
       navigate(url, { state: { momentId } });
     } else {
@@ -72,7 +71,11 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
       <div className="overflow-x-auto">
         <div
           className="inline-grid gap-px"
-          style={{ gridTemplateColumns: `${petId ? '' : 'auto'} repeat(${yearRange}, 100px)` }}
+          style={{
+            gridTemplateColumns: `${
+              petId ? "" : "auto"
+            } repeat(${yearRange}, 100px)`,
+          }}
         >
           {!petId && <div className="w-40"></div>}
           {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
@@ -87,7 +90,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
               {!petId && (
                 <div className="text-sm font-semibold pr-2 whitespace-nowrap w-40 flex items-center">
                   <Link
-                    to={`/family/${familyId}/pet/${timeline.petId}`}
+                    to={`/app/family/${familyId}/pet/${timeline.petId}`}
                     className="hover:underline"
                   >
                     {timeline.petName}

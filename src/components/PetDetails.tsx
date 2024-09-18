@@ -2,7 +2,7 @@ import React from "react";
 import { Pet } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { formatDateForDisplay } from "@/utils/dateUtils";
-import { Link } from "react-router-dom";
+import FamilyLink from "@/components/FamilyLink";
 
 interface PetInfoCardProps {
   petData: Pet | undefined;
@@ -32,12 +32,7 @@ const PetDetails: React.FC<PetInfoCardProps> = ({
       </h2>
       <h2>
         Family:{" "}
-        <Link
-          to={`/family/${familyId}`}
-          className="text-xl font-bold text-blue-600 hover:text-blue-800"
-        >
-          {familyData?.family_name}
-        </Link>
+        <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
       </h2>
       <h2>
         Description:
