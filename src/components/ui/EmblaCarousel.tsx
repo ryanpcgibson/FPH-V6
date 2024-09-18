@@ -47,25 +47,23 @@ const EmblaCarousel: React.FC<EmblaCarouselProps> = ({
   }, [photos, emblaApi, setCurrentIndex]);
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="embla flex-grow">
-        <div className="embla__viewport h-full w-full" ref={emblaRef}>
-          <div className="embla__container h-full w-full">
-            {photos.map((photo, index) => (
-              <div
-                className="embla__slide h-full w-full"
-                key={photo.id || index}
-              >
-                <div className="embla__slide__inner h-full w-full flex items-center justify-center">
-                  <img
-                    src={`/src/assets/${photo.path}`}
-                    alt={`Pet photo ${index + 1}`}
-                    className="embla__slide__img object-contain max-h-full max-w-full"
-                  />
-                </div>
+    <div className="embla h-full">
+      <div className="embla__viewport h-full" ref={emblaRef}>
+        <div className="embla__container h-full">
+          {photos.map((photo, index) => (
+            <div
+              className="embla__slide h-full"
+              key={photo.id || index}
+            >
+              <div className="embla__slide__inner h-full flex items-center justify-center">
+                <img
+                  src={`/src/assets/${photo.path}`}
+                  alt={`Pet photo ${index + 1}`}
+                  className="embla__slide__img object-contain max-h-full max-w-full"
+                />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

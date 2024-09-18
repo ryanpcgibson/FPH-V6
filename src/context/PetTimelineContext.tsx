@@ -27,38 +27,24 @@ const PetTimelineContext = createContext<PetTimelineContextProps | undefined>(
 function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
   const currentYear = new Date().getFullYear();
 
-  // Find the overall min and max years across all pets
-  const allYears = pets.flatMap(pet => [
-    pet.start_date?.getFullYear() ?? currentYear,
-    pet.end_date?.getFullYear() ?? currentYear
-  ]);
-  const minYear = Math.min(...allYears);
-  const maxYear = Math.max(...allYears);
-
   return pets.map((pet) => {
     const petStartYear = pet.start_date?.getFullYear() ?? currentYear;
     const petEndYear = pet.end_date?.getFullYear() ?? currentYear;
 
     const segments: PetTimelineSegment[] = [];
 
-    for (let year = minYear; year <= maxYear; year++) {
-      let status: PetTimelineSegment["status"] = "not-born";
-      let yearMoments: { id: number; title: string }[] = [];
-
-      if (year >= petStartYear && year <= petEndYear) {
-        status = "alive";
-
-        yearMoments = moments.filter(
+    for (let year = petStartYear; year <= petEndYear; year++) {
+      let status: PetTimelineSegment["status"] = "alive";
+      let yearMoments = moments
+        .filter(
           (moment) =>
             moment.pets.some((p) => p.id === pet.id) &&
             moment.start_date?.getFullYear() === year
-        ).map(moment => ({ id: moment.id, title: moment.title }));
+        )
+        .map(moment => ({ id: moment.id, title: moment.title }));
 
-        if (yearMoments.length > 0) {
-          status = "memory";
-        }
-      } else if (year > petEndYear) {
-        status = "deceased";
+      if (yearMoments.length > 0) {
+        status = "memory";
       }
 
       segments.push({ year, status, moments: yearMoments });

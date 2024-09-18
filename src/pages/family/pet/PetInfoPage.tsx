@@ -7,7 +7,7 @@ import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetDataContext } from "@/context/PetDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
-import PetDetails from "@/components/PetDetails2";
+import PetDetails from "@/components/PetDetails";
 import TimelineBars from "@/components/TimelineBars";
 
 const PetInfoPage: React.FC = () => {
@@ -16,6 +16,7 @@ const PetInfoPage: React.FC = () => {
 
   const {
     familyData,
+    familyId,
     isLoading: isFamilyLoading,
     error: familyError,
   } = useFamilyDataContext();
@@ -73,22 +74,25 @@ const PetInfoPage: React.FC = () => {
   }
 
   return (
-    <div
-      className="flex flex-col sm:flex-row gap-4 items-stretch justify-center min-h-screen p-0"
-      id="pet-detail-container"
-    >
-      <PetCarousel
-        moments={moments}
-        currentMomentIndex={currentMomentIndex}
-        setCurrentMomentIndex={setCurrentMomentIndex}
-      />
-      <PetDetails
-        petData={petData}
-        moments={moments}
-        currentMomentIndex={currentMomentIndex}
-        setCurrentMomentIndex={setCurrentMomentIndex}
-      />
-      <TimelineBars petTimelines={petTimelines} />
+    <div className="flex flex-row h-screen" id="page-container">
+      <div className="w-3/5 h-full" id="carousel-container">
+        <PetCarousel
+          moments={moments}
+          currentMomentIndex={currentMomentIndex}
+          setCurrentMomentIndex={setCurrentMomentIndex}
+        />
+      </div>
+      <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
+        <PetDetails
+          petData={petData}
+          familyData={familyData}
+          familyId={familyId}
+          moments={moments}
+          currentMomentIndex={currentMomentIndex}
+          setCurrentMomentIndex={setCurrentMomentIndex}
+        />
+        <TimelineBars petTimelines={petTimelines} petId={petId} />
+      </div>
     </div>
   );
 };

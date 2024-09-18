@@ -1,4 +1,12 @@
 {
+  "families": [
+    {
+      "id": 7,
+      "created_at": "2024-08-29T17:21:16.869698+00:00",
+      "added_by": "7aaecac1-7dfc-433b-9e66-920d3baa7114",
+      "name": "Benson"
+    }
+  ],
   "pets": [
     {
       "id": 3,
@@ -7,7 +15,8 @@
       "name": "Rocky",
       "start_date": "2020-03-15",
       "end_date": null,
-      "family_id": 7
+      "family_id": 7,
+      "description": null
     },
     {
       "id": 4,
@@ -16,7 +25,8 @@
       "name": "Luna",
       "start_date": "2021-11-07",
       "end_date": null,
-      "family_id": 7
+      "family_id": 7,
+      "description": null
     },
     {
       "id": 5,
@@ -25,7 +35,18 @@
       "name": "Goldie",
       "start_date": "2022-01-20",
       "end_date": "2024-02-02",
-      "family_id": 7
+      "family_id": 7,
+      "description": null
+    },
+    {
+      "id": 15,
+      "created_at": "2024-09-17T20:26:57.901435+00:00",
+      "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
+      "name": "Dollar",
+      "start_date": "2017-01-17",
+      "end_date": "2022-03-17",
+      "family_id": 7,
+      "description": null
     }
   ],
   "locations": [
@@ -130,19 +151,19 @@
         },
         {
           "id": 6,
-          "path": "beach4.jpg",
+          "path": "beach3.jpg",
           "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
           "moment_id": 4,
           "created_at": "2024-09-17T03:53:53.945777+00:00"
         }
       ],
-      "pets": [{ "id": 5 }]
+      "pets": [{ "id": 3 }, { "id": 4 }, { "id": 5 }]
     },
     {
       "id": 1,
       "created_at": "2024-08-29T22:40:29.595922+00:00",
       "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
-      "start_date": "2023-07-04",
+      "start_date": "2020-07-04",
       "end_date": null,
       "title": "Camping Trip",
       "body": null,
@@ -155,13 +176,13 @@
           "created_at": "2024-08-31T19:21:11.57805+00:00"
         }
       ],
-      "pets": [{ "id": 3 }]
+      "pets": [{ "id": 15 }]
     },
     {
       "id": 2,
       "created_at": "2024-08-29T22:41:57.805303+00:00",
       "added_by": "fc8b1496-46cc-40bf-9bd5-cb294195ab8d",
-      "start_date": "2024-03-29",
+      "start_date": "2023-03-29",
       "end_date": null,
       "title": "Spring Run",
       "body": null,
@@ -181,7 +202,7 @@
           "created_at": "2024-09-11T21:31:37.912354+00:00"
         }
       ],
-      "pets": [{ "id": 3 }, { "id": 4 }]
+      "pets": [{ "id": 5 }]
     }
   ]
 }

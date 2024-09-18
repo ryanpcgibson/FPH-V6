@@ -3,9 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabaseClient } from "../db/supabaseClient";
 import { convertStringToDate } from "../utils/dateUtils";
 import { PetDB, LocationDB, MomentDB, UserDB } from "../db/db_types";
-import { Pet, Location, Moment, User } from "../db/db_types";
+import { Pet, Location, Moment, User, Family } from "../db/db_types";
 
 export type FamilyDataDB = {
+  families: Family[];
   pets: PetDB[];
   locations: LocationDB[];
   users: UserDB[];
@@ -13,6 +14,7 @@ export type FamilyDataDB = {
 };
 
 export type FamilyData = {
+  family_name: string;
   pets: Pet[];
   locations: Location[];
   users: User[];
@@ -37,6 +39,7 @@ const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
 
 const convertFamilyData = (data: FamilyDataDB): FamilyData => {
   return {
+    family_name: data.families[0].name,
     pets: data.pets.map((pet: PetDB) => ({
       ...pet,
       start_date: convertStringToDate(pet.start_date),
@@ -47,12 +50,11 @@ const convertFamilyData = (data: FamilyDataDB): FamilyData => {
       start_date: convertStringToDate(location.start_date),
       end_date: convertStringToDate(location.end_date || undefined),
     })),
-    users: data.users, 
+    users: data.users,
     moments: data.moments.map((moment: MomentDB) => ({
       ...moment,
       start_date: convertStringToDate(moment.start_date),
       end_date: convertStringToDate(moment.end_date || undefined),
-
     })),
   };
 };

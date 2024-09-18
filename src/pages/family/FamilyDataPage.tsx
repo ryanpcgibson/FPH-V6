@@ -9,7 +9,7 @@ import { Pet, Location, Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { convertDateToISODateString } from "@/utils/dateUtils";
 
-const ContentPage: React.FC = () => {
+const FamilyDataPage: React.FC = () => {
   const { familyData, isLoading, error } = useFamilyDataContext();
 
   const convertFamilyData = (familyData: any): FamilyData => {
@@ -75,4 +75,4 @@ const ContentPage: React.FC = () => {
   );
 };
 
-export default ContentPage;
+export default FamilyDataPage;

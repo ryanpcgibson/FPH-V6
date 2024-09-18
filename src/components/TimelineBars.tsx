@@ -5,13 +5,15 @@ import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
+  petId?: number;
 }
 
-const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines }) => {
-  const { familyId } = useFamilyDataContext();
-  const navigate = useNavigate();
-
-  console.log(petTimelines);
+const TimelineCell: React.FC<{
+  segment: PetTimelineSegment | undefined;
+  year: number;
+  petId: number;
+  onClick: (petId: number, momentId?: number) => void;
+}> = ({ segment, year, petId, onClick }) => {
   const getStatusColor = (status: PetTimelineSegment["status"]) => {
     switch (status) {
       case "not-born":
@@ -27,6 +29,22 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines }) => {
     }
   };
 
+  return (
+    <div
+      className={`h-12 w-24 ${
+        segment ? getStatusColor(segment.status) : "bg-gray-100"
+      } border border-white cursor-pointer flex items-center justify-center`}
+      title={segment?.status}
+      onClick={() => onClick(petId, segment?.moments?.[0]?.id)}
+    >
+    </div>
+  );
+};
+
+const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
+  const { familyId } = useFamilyDataContext();
+  const navigate = useNavigate();
+  console.log(petTimelines);
   const handleSegmentClick = (petId: number, momentId?: number) => {
     const url = `/family/${familyId}/pet/${petId}`;
     if (momentId) {
@@ -36,7 +54,13 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines }) => {
     }
   };
 
-  const allYears = petTimelines.flatMap((timeline) =>
+  const timelinesToRender = petId
+    ? petTimelines.filter((timeline) => timeline.petId === petId)
+    : petTimelines;
+
+  console.log(timelinesToRender);
+
+  const allYears = timelinesToRender.flatMap((timeline) =>
     timeline.segments.map((segment) => segment.year)
   );
   const minYear = Math.min(...allYears);
@@ -44,47 +68,51 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines }) => {
   const yearRange = maxYear - minYear + 1;
 
   return (
-    <div className="w-full sm:w-3/5 p-4">
-      <div
-        className="grid"
-        style={{ gridTemplateColumns: `auto repeat(${yearRange}, 1fr)` }}
-      >
-        <div></div>
-        {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
-          (year) => (
-            <div key={year} className="text-xs text-center">
-              {year}
-            </div>
-          )
-        )}
-        {petTimelines.map((timeline) => (
-          <React.Fragment key={timeline.petId}>
-            <div className="text-sm font-semibold pr-2">
-              <Link to={`/family/${familyId}/pet/${timeline.petId}`} className="hover:underline">
-                {timeline.petName}
-              </Link>
-            </div>
-            {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
-              (year) => {
-                const segment = timeline.segments.find((s) => s.year === year);
-                return (
-                  <div
-                    key={year}
-                    className={`h-6 ${
-                      segment ? getStatusColor(segment.status) : "bg-gray-100"
-                    } border border-white cursor-pointer`}
-                    title={
-                      segment?.moments && segment.moments.length > 0
-                        ? `${year}: ${segment.moments.map(m => m.title).join(", ")}`
-                        : segment ? `${year}: ${segment.status}` : `${year}: No data`
-                    }
-                    onClick={() => handleSegmentClick(timeline.petId, segment?.moments?.[0]?.id)}
-                  />
-                );
-              }
-            )}
-          </React.Fragment>
-        ))}
+    <div>
+      <div className="overflow-x-auto">
+        <div
+          className="inline-grid gap-px"
+          style={{ gridTemplateColumns: `${petId ? '' : 'auto'} repeat(${yearRange}, 100px)` }}
+        >
+          {!petId && <div className="w-40"></div>}
+          {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
+            (year) => (
+              <div key={year} className="text-xs text-center w-24">
+                {year}
+              </div>
+            )
+          )}
+          {timelinesToRender.map((timeline) => (
+            <React.Fragment key={timeline.petId}>
+              {!petId && (
+                <div className="text-sm font-semibold pr-2 whitespace-nowrap w-40 flex items-center">
+                  <Link
+                    to={`/family/${familyId}/pet/${timeline.petId}`}
+                    className="hover:underline"
+                  >
+                    {timeline.petName}
+                  </Link>
+                </div>
+              )}
+              {Array.from({ length: yearRange }, (_, i) => minYear + i).map(
+                (year) => {
+                  const segment = timeline.segments.find(
+                    (s) => s.year === year
+                  );
+                  return (
+                    <TimelineCell
+                      key={year}
+                      segment={segment}
+                      year={year}
+                      petId={timeline.petId}
+                      onClick={handleSegmentClick}
+                    />
+                  );
+                }
+              )}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
     </div>
   );

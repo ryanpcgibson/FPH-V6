@@ -7,10 +7,9 @@ import { AuthProvider } from "./hooks/Auth";
 import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
 import FamilyLayout from "./pages/family/FamilyLayout";
-import DataPage from "./pages/family/DataPage";
-import TimelinePage from "./pages/family/TimelinePage";
+import DataPage from "./pages/family/FamilyDataPage";
+import TimelinePage from "./pages/family/FamilyTimelinePage";
 import PetLayout from "./pages/family/pet/PetLayout";
-import PetTestPage from "./pages/family/pet/PetTestPage";
 import PetInfo from "./pages/family/pet/PetInfoPage";
 
 function App() {
@@ -28,7 +27,6 @@ function App() {
                 <Route path="test" element={<DataPage />} />
                 <Route path="pet/:petId?" element={<PetLayout />}>
                   <Route index element={<PetInfo />} />
-                  <Route path="test" element={<PetTestPage />} />
                 </Route>
               </Route>
             </Route>
