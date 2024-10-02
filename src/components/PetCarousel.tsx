@@ -48,7 +48,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   return (
     // <div className="w-full sm:w-3/5 relative" id="carousel-wrapper">
     <div className="relative h-full flex flex-col">
-      <div className="flex-shrink-0 z-10 p-2 bg-white bg-opacity-50">
+      <div className={`flex-shrink-0 z-10 p-2 bg-white bg-opacity-50`}>
         <CarouselControls
           currentIndex={currentMomentIndex}
           totalCount={moments.length}
@@ -69,21 +69,25 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
       </div>
       <div className="h-full">
         <EmblaCarousel
-          photos={photos}
+          photos={photos || []}
           setEmblaApi={setEmblaApi}
           setCurrentIndex={setCurrentPhotoIndex}
         />
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-10 p-2 bg-white bg-opacity-50">
-        <CarouselControls
-          currentIndex={currentPhotoIndex}
-          totalCount={photos.length}
-          onPrevClick={scrollPrev}
-          onNextClick={scrollNext}
-          renderCenter={() =>
-            `Photo ${currentPhotoIndex + 1} / ${photos.length}`
-          }
-        />
+        {photos ? (
+          <CarouselControls
+            currentIndex={currentPhotoIndex}
+            totalCount={photos.length}
+            onPrevClick={scrollPrev}
+            onNextClick={scrollNext}
+            renderCenter={() =>
+              `Photo ${currentPhotoIndex + 1} / ${photos.length}`
+            }
+          />
+        ) : (
+          <div className="text-center">No Photos</div>
+        )}
       </div>
     </div>
   );
