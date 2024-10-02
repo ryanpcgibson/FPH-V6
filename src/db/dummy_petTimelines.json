@@ -1,0 +1,197 @@
+[
+  {
+    "petId": 3,
+    "petName": "Rocky",
+    "segments": [
+      {
+        "year": 2019,
+        "status": "not-born"
+      },
+      {
+        "year": 2018,
+        "status": "not-born"
+      },
+      {
+        "year": 2017,
+        "status": "not-born"
+      },
+      {
+        "year": 2020,
+        "status": "birth",
+        "moments": []
+      },
+      {
+        "year": 2021,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2022,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2023,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2024,
+        "status": "memory",
+        "moments": [
+          {
+            "id": 4,
+            "title": "Beach Time"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "petId": 4,
+    "petName": "Luna",
+    "segments": [
+      {
+        "year": 2020,
+        "status": "not-born"
+      },
+      {
+        "year": 2019,
+        "status": "not-born"
+      },
+      {
+        "year": 2018,
+        "status": "not-born"
+      },
+      {
+        "year": 2017,
+        "status": "not-born"
+      },
+      {
+        "year": 2021,
+        "status": "birth",
+        "moments": []
+      },
+      {
+        "year": 2022,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2023,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2024,
+        "status": "memory",
+        "moments": [
+          {
+            "id": 4,
+            "title": "Beach Time"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "petId": 5,
+    "petName": "Goldie",
+    "segments": [
+      {
+        "year": 2021,
+        "status": "not-born"
+      },
+      {
+        "year": 2020,
+        "status": "not-born"
+      },
+      {
+        "year": 2019,
+        "status": "not-born"
+      },
+      {
+        "year": 2018,
+        "status": "not-born"
+      },
+      {
+        "year": 2017,
+        "status": "not-born"
+      },
+      {
+        "year": 2022,
+        "status": "birth",
+        "moments": []
+      },
+      {
+        "year": 2023,
+        "status": "memory",
+        "moments": [
+          {
+            "id": 2,
+            "title": "Spring Run"
+          }
+        ]
+      },
+      {
+        "year": 2024,
+        "status": "memory",
+        "moments": [
+          {
+            "id": 4,
+            "title": "Beach Time"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "petId": 15,
+    "petName": "Dollar",
+    "segments": [
+      {
+        "year": 2017,
+        "status": "birth",
+        "moments": []
+      },
+      {
+        "year": 2018,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2019,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2020,
+        "status": "memory",
+        "moments": [
+          {
+            "id": 1,
+            "title": "Camping Trip"
+          }
+        ]
+      },
+      {
+        "year": 2021,
+        "status": "alive",
+        "moments": []
+      },
+      {
+        "year": 2022,
+        "status": "death",
+        "moments": []
+      },
+      {
+        "year": 2023,
+        "status": "deceased"
+      },
+      {
+        "year": 2024,
+        "status": "deceased"
+      }
+    ]
+  }
+]

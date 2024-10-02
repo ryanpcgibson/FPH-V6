@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./pages/app/AppLayout";
 import { AuthProvider } from "./context/AuthContext";
+import TestPage from "./pages/TestPage";
 import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/app/ProfilePage";
 import FamilyLayout from "./pages/app/family/FamilyLayout";
@@ -24,6 +25,7 @@ function App() {
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>
                 <Route path="/" element={<WelcomePage />} />
+                <Route path="/test" element={<TestPage />} />
                 <Route path="/app" element={<ProtectedRoute />}>
                   <Route path="profile" element={<ProfilePage />} />
                   <Route index element={<FamilySelectPage />} />

@@ -14,7 +14,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({ segment, year, petId, onCli
   };
 
   let cellContent;
-  let cellClass = "w-24 h-6 cursor-pointer";
+  let cellClass = "w-24 h-6 cursor-pointer min-w-[6rem]"; // Added min-w-[6rem]
 
   if (segment) {
     switch (segment.status) {

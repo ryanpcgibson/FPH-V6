@@ -12,9 +12,7 @@ interface TimelineBarsProps {
 const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   const { familyId } = useFamilyDataContext();
   const navigate = useNavigate();
-  console.log("Pet Timelines:", petTimelines);
-  console.log("Pet ID:", petId);
-  console.log("Family ID:", familyId);
+  console.log("Pet Timelines JSON:", JSON.stringify(petTimelines, null, 2));
 
   const handleSegmentClick = (petId: number, momentId?: number) => {
     const url = `/app/family/${familyId}/pet/${petId}`;
