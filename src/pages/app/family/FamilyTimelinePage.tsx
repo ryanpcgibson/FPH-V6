@@ -41,7 +41,6 @@ const TimelinePage: React.FC = () => {
 
   return (
     <>
-      <h2>{familyData?.family_name} Family</h2>
       <div
         className="flex flex-col sm:flex-row gap-4 items-stretch justify-center min-h-screen p-0  "
         id="pet-detail-container"
