@@ -2,12 +2,11 @@ import React from "react";
 import DoubleScrollGrid from "../components/DoubleScrollGrid";
 
 const TestPage: React.FC = () => {
-  const rows = 20;
-  const cols = 21;
+  const columnHeaders = [
+    2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018,
+    2019, 2020, 2021, 2022, 2023, 2024,
+  ];
 
-  const getData = (row: number, col: number) => row * cols + col + 1;
-
-  const columnHeaders = Array.from({ length: cols }, (_, i) => 2003 + i);
   const rowHeaders = [
     "Fido",
     "Rex",
@@ -21,10 +20,11 @@ const TestPage: React.FC = () => {
     "Bella",
   ];
 
+  const getData = (row: number, col: number) =>
+    row * columnHeaders.length + col + 1;
+
   return (
     <DoubleScrollGrid
-      rows={rows}
-      cols={cols}
       getData={getData}
       columnHeaders={columnHeaders}
       rowHeaders={rowHeaders}

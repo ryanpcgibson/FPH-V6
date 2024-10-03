@@ -1,8 +1,6 @@
 import React from "react";
 
 interface DoubleScrollGridProps {
-  rows: number;
-  cols: number;
   cellWidth?: number;
   cellHeight?: number;
   getData: (row: number, col: number) => React.ReactNode;
@@ -11,47 +9,73 @@ interface DoubleScrollGridProps {
 }
 
 const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
-  rows,
-  cols,
   cellWidth = 80,
-  cellHeight = 40,
+  cellHeight = 30,
   getData,
   columnHeaders,
   rowHeaders,
 }) => {
-  const minWidth = (cols + 1) * cellWidth;
-  const cellClass = `w-[${cellWidth}px] h-[${cellHeight}px] flex items-center justify-center border border-gray-300`;
+  const cols = columnHeaders.length;
+  const rows = rowHeaders.length;
+  const fullWidth = cols * cellWidth;
+  const cellStyle = {
+    minWidth: `${cellWidth}px`,
+    width: `${cellWidth}px`,
+    minHeight: `${cellHeight}px`,
+    height: `${cellHeight}px`,
+  };
 
   return (
-    <div className="w-full h-screen overflow-auto">
-      <div className="relative" style={{ minWidth: `${minWidth}px` }}>
-        {/* Sticky column headers */}
-        <div className="sticky top-0 z-10 bg-gray-200">
+    <div
+      className="w-full h-screen overflow-auto"
+      data-testid="double-scroll-grid-container"
+    >
+      <div className="relative" data-testid="grid-content">
+        <div
+          className="sticky z-10 top-0 bg-white"
+          style={{ width: `${fullWidth}px` }}
+          data-testid="column-header-container"
+        >
           <div className="flex">
             {columnHeaders.map((header, index) => (
-              <div key={index} className={`${cellClass} font-bold`}>
+              <div
+                key={index}
+                className="flex items-center justify-center border border-white font-bold"
+                style={cellStyle}
+                data-testid={`column-header-${index}`}
+              >
                 {header}
               </div>
             ))}
-            {/* Top-right corner cell */}
             <div
-              className={`sticky right-0 z-30 ${cellClass} font-bold bg-gray-300`}
+              className="sticky z-30 right-0 flex border border-white bg-white"
+              style={cellStyle}
+              data-testid="top-right-corner"
             ></div>
           </div>
         </div>
 
-        {/* Grid body */}
-        <div className="relative">
+        <div className="relative" data-testid="grid-body">
           {Array.from({ length: rows }, (_, rowIndex) => (
-            <div key={rowIndex} className="flex">
+            <div
+              key={rowIndex}
+              className="flex"
+              data-testid={`row-${rowIndex}`}
+            >
               {Array.from({ length: cols }, (_, colIndex) => (
-                <div key={colIndex} className={cellClass}>
+                <div
+                  key={colIndex}
+                  className="flex items-center justify-center border border-white"
+                  style={cellStyle}
+                  data-testid={`cell-${rowIndex}-${colIndex}`}
+                >
                   {getData(rowIndex, colIndex)}
                 </div>
               ))}
-              {/* Sticky row headers */}
               <div
-                className={`sticky right-0 z-20 ${cellClass} font-bold bg-gray-200`}
+                className="sticky z-20 right-0 flex items-center justify-center font-bold border border-white bg-gray-200"
+                style={cellStyle}
+                data-testid={`row-header-${rowIndex}`}
               >
                 {rowHeaders[rowIndex]}
               </div>
@@ -59,8 +83,11 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
           ))}
         </div>
       </div>
-      {/* Spacer to hide scrolling content */}
-      <div className="fixed top-0 right-0 bg-gray-300 z-40 w-[${cellWidth}px] h-[${cellHeight}px]"></div>
+      <div
+        className="fixed  z-40 top-0 right-0 border-white bg-white"
+        style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+        data-testid="scroll-spacer"
+      ></div>
     </div>
   );
 };
