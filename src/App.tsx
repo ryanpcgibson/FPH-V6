@@ -18,32 +18,34 @@ import FamilySelectPage from "./pages/app/FamilySelectPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <UserProvider>
-          <FamiliesProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Routes>
-                <Route path="/" element={<WelcomePage />} />
-                <Route path="/test" element={<TestPage />} />
-                <Route path="/app" element={<ProtectedRoute />}>
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route index element={<FamilySelectPage />} />
-                  <Route path="family/:familyId?" element={<FamilyLayout />}>
-                    <Route index element={<TimelinePage />} />
-                    <Route path="test" element={<DataPage />} />
-                    <Route path="pet/:petId?" element={<PetLayout />}>
-                      <Route index element={<PetInfo />} />
+    <>
+      <BrowserRouter>
+        <AuthProvider>
+          <UserProvider>
+            <FamiliesProvider>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  <Route path="/" element={<WelcomePage />} />
+                  <Route path="/test" element={<TestPage />} />
+                  <Route path="/app" element={<ProtectedRoute />}>
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route index element={<FamilySelectPage />} />
+                    <Route path="family/:familyId?" element={<FamilyLayout />}>
+                      <Route index element={<TimelinePage />} />
+                      <Route path="test" element={<DataPage />} />
+                      <Route path="pet/:petId?" element={<PetLayout />}>
+                        <Route index element={<PetInfo />} />
+                      </Route>
                     </Route>
                   </Route>
-                </Route>
-                <Route path="/logout" element={<LogoutPage />} />
-              </Routes>
-            </Suspense>
-          </FamiliesProvider>
-        </UserProvider>
-      </AuthProvider>
-    </BrowserRouter>
+                  <Route path="/logout" element={<LogoutPage />} />
+                </Routes>
+              </Suspense>
+            </FamiliesProvider>
+          </UserProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -3,7 +3,7 @@ import React from "react";
 interface DoubleScrollGridProps {
   cellWidth?: number;
   cellHeight?: number;
-  getData: (row: number, col: number) => React.ReactNode;
+  getData: (row: number, col: number, pattern: string) => React.ReactNode; // Updated
   columnHeaders: React.ReactNode[];
   rowHeaders: React.ReactNode[];
 }
@@ -25,7 +25,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     height: `${cellHeight}px`,
   };
 
-  console.log(getData);
   return (
     <div
       className="w-full h-screen overflow-auto"
@@ -41,7 +40,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
             {columnHeaders.map((header, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center border border-white font-bold"
+                className="flex items-center justify-center border-t border-b border-white font-bold"
                 style={cellStyle}
                 data-testid={`column-header-${index}`}
               >
@@ -49,7 +48,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
               </div>
             ))}
             <div
-              className="sticky z-30 right-0 flex border border-white bg-white"
+              className="sticky z-30 right-0 flex border-t border-b border-white bg-white"
               style={cellStyle}
               data-testid="top-right-corner"
             ></div>
@@ -66,7 +65,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
               {Array.from({ length: cols }, (_, colIndex) => (
                 <div
                   key={colIndex}
-                  className="flex items-center justify-center border border-white"
+                  className="flex items-center justify-center border-t border-b border-white"
                   style={cellStyle}
                   data-testid={`cell-${rowIndex}-${colIndex}`}
                 >
@@ -74,7 +73,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
                 </div>
               ))}
               <div
-                className="sticky z-20 right-0 flex items-center justify-center font-bold border border-white bg-gray-200"
+                className="sticky z-20 right-0 flex items-center justify-center font-bold border-t border-b border-white bg-gray-200"
                 style={cellStyle}
                 data-testid={`row-header-${rowIndex}`}
               >

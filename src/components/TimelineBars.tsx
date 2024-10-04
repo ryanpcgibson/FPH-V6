@@ -6,6 +6,10 @@ import TimelineBar from "@/components/TimelineBar";
 import TimelineCell from "@/components/TimelineCell";
 import DoubleScrollGrid from "../components/DoubleScrollGrid";
 
+const patternIdList = ["9", "10", "22", "40"];
+const cellWidth = 80;
+const cellHeight = 30;
+
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
   petId?: number;
@@ -53,17 +57,24 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     const segment = pet.segments.find((s) => s.year === year);
     return (
       <TimelineCell
+        cellWidth={cellWidth}
+        cellHeight={cellHeight}
+        row={row}
+        col={col}
         key={year}
         segment={segment}
         year={year}
         petId={pet.petId}
         onClick={handleSegmentClick || (() => {})}
+        patternId={patternIdList[row % patternIdList.length]}
       />
     );
   };
 
   return (
     <DoubleScrollGrid
+      cellWidth={cellWidth}
+      cellHeight={cellHeight}
       getData={getData}
       columnHeaders={columnHeaders}
       rowHeaders={rowHeaders}
