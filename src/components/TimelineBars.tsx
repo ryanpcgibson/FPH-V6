@@ -1,31 +1,65 @@
-import React from "react";
+import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PetTimeline } from "@/context/PetTimelineContext";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import TimelineBar from "@/components/TimelineBar";
-import TimelineCell from "@/components/TimelineCell";
-import DoubleScrollGrid from "../components/DoubleScrollGrid";
+import DoubleScrollGrid from "./DoubleScrollGrid";
+import TimelineCell from "./TimelineCell";
 
 const patternIdList = ["9", "10", "22", "40"];
-const cellWidth = 80;
-const cellHeight = 30;
+const minCellWidth = 80;
+const minCellHeight = 30;
+const maxCellHeight = 180;
+const maxRows = 5;
 
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
   petId?: number;
 }
-
 const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   const { familyId } = useFamilyDataContext();
   const navigate = useNavigate();
-  // console.log("Pet Timelines JSON:", JSON.stringify(petTimelines, null, 2));
+  // const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef(null);
 
-  const cellStyle = {
-    minWidth: `${cellWidth}px`,
-    width: `${cellWidth}px`,
-    minHeight: `${cellHeight}px`,
-    height: `${cellHeight}px`,
-  };
+  const [cellStyle, setCellStyle] = useState({
+    minWidth: `${minCellWidth}px`,
+    width: `${minCellWidth}px`,
+    minHeight: `${minCellHeight}px`,
+    height: `${minCellHeight}px`,
+    maxHeight: `${maxCellHeight}px`,
+  });
+
+  const [fullWidth, setFullWidth] = useState(0);
+  const [columnHeaders, setColumnHeaders] = useState<number[]>([]);
+
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateCellDimensions = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.clientHeight;
+        const cellHeight = Math.floor(containerHeight / (maxRows + 1));
+        const cellWidth = (cellHeight / minCellHeight) * minCellWidth;
+        setCellStyle({
+          ...cellStyle,
+          height: `${cellHeight}px`,
+          width: `${cellWidth}px`,
+        });
+        setFullWidth(cellWidth * columnHeaders.length);
+      }
+    };
+
+    updateCellDimensions(); // Initial calculation
+
+    const resizeObserver = new ResizeObserver(updateCellDimensions);
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
+    };
+  }, []);
 
   const handleSegmentClick = (petId: number, momentId?: number) => {
     const url = `/app/family/${familyId}/pet/${petId}`;
@@ -52,10 +86,14 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
         : max,
     -Infinity
   );
-  const columnHeaders = Array.from(
-    { length: latestYear - earliestYear + 1 },
-    (_, i) => earliestYear + i
-  );
+
+  useEffect(() => {
+    const yearHeaders = Array.from(
+      { length: latestYear - earliestYear + 1 },
+      (_, i) => earliestYear + i
+    );
+    setColumnHeaders(yearHeaders);
+  }, [latestYear, earliestYear]);
 
   const rowHeaders = timelinesToRender.map((pet) => pet.petName);
 
@@ -74,16 +112,16 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     );
   };
 
-  console.log("fullWidth", cellWidth * columnHeaders.length);
-
   return (
-    <DoubleScrollGrid
-      cellStyle={cellStyle}
-      fullWidth={cellWidth * columnHeaders.length}
-      getData={getData}
-      columnHeaders={columnHeaders}
-      rowHeaders={rowHeaders}
-    />
+    <div ref={containerRef} className="w-full h-screen overflow-auto">
+      <DoubleScrollGrid
+        cellStyle={cellStyle}
+        fullWidth={fullWidth}
+        getData={getData}
+        columnHeaders={columnHeaders}
+        rowHeaders={rowHeaders}
+      />
+    </div>
   );
 };
 
