@@ -1,6 +1,7 @@
 import React from "react";
 import { PetTimelineSegment } from "@/context/PetTimelineContext";
 import SvgPattern from "@/components/SvgPattern";
+import StarIcon from "@/components/StarIcon";
 
 interface TimelineCellProps {
   cellWidth: number;
@@ -72,7 +73,14 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
         </div>
       )}
       <div className="relative flex items-center justify-center h-full z-10">
-        {/* {segment?.status} */}
+        {segment?.status === "memory" && (
+          <StarIcon
+            size={24}
+            fillColor="yellow"
+            strokeColor="black"
+            strokeWidth={1}
+          />
+        )}
       </div>
     </div>
   );
