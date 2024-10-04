@@ -25,6 +25,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     height: `${cellHeight}px`,
   };
 
+  console.log(getData);
   return (
     <div
       className="w-full h-screen overflow-auto"

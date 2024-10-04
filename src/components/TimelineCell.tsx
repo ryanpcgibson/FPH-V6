@@ -18,42 +18,35 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
     onClick(petId, segment?.moments?.[0]?.id);
   };
 
-  let cellContent;
-  let cellClass = "w-24 h-6 cursor-pointer min-w-[6rem]";
+  let cellContent = "";
+  let cellClass = "w-full h-full cursor-pointer min-w-[6rem] ";
 
   if (segment) {
     switch (segment.status) {
       case "birth":
-        cellContent = "🐣";
-        cellClass += " bg-green-300";
+        cellClass += "bg-gray-200 rounded-l-lg";
         break;
       case "alive":
-        cellContent = "🐾";
-        cellClass += " bg-green-200";
+        cellClass += "bg-gray-200";
         break;
       case "death":
-        cellContent = "🌈";
-        cellClass += " bg-gray-300";
+        cellClass += "bg-gray-200 rounded-r-lg";
         break;
       case "memory":
-        cellContent = "📸";
-        cellClass += " bg-blue-200";
+        cellContent = "⭐️";
+        cellClass += "bg-gray-200";
         break;
       case "not-born":
-        cellContent = "";
-        cellClass += " bg-gray-100";
+        cellClass += "";
         break;
       case "deceased":
-        cellContent = "";
-        cellClass += " bg-gray-200";
+        cellClass += "bg-white";
         break;
       default:
-        cellContent = "•";
-        cellClass += " bg-yellow-200";
+        cellClass += "bg-white";
     }
   } else {
-    cellContent = "";
-    cellClass += " bg-white";
+    cellClass += "bg-white";
   }
 
   return (
