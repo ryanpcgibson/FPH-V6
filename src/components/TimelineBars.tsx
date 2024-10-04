@@ -20,6 +20,13 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   const navigate = useNavigate();
   // console.log("Pet Timelines JSON:", JSON.stringify(petTimelines, null, 2));
 
+  const cellStyle = {
+    minWidth: `${cellWidth}px`,
+    width: `${cellWidth}px`,
+    minHeight: `${cellHeight}px`,
+    height: `${cellHeight}px`,
+  };
+
   const handleSegmentClick = (petId: number, momentId?: number) => {
     const url = `/app/family/${familyId}/pet/${petId}`;
     if (momentId) {
@@ -49,6 +56,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     { length: latestYear - earliestYear + 1 },
     (_, i) => earliestYear + i
   );
+
   const rowHeaders = timelinesToRender.map((pet) => pet.petName);
 
   const getData = (row: number, col: number) => {
@@ -57,13 +65,8 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     const segment = pet.segments.find((s) => s.year === year);
     return (
       <TimelineCell
-        cellWidth={cellWidth}
-        cellHeight={cellHeight}
-        row={row}
-        col={col}
-        key={year}
+        cellStyle={cellStyle}
         segment={segment}
-        year={year}
         petId={pet.petId}
         onClick={handleSegmentClick || (() => {})}
         patternId={patternIdList[row % patternIdList.length]}
@@ -71,10 +74,12 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     );
   };
 
+  console.log("fullWidth", cellWidth * columnHeaders.length);
+
   return (
     <DoubleScrollGrid
-      cellWidth={cellWidth}
-      cellHeight={cellHeight}
+      cellStyle={cellStyle}
+      fullWidth={cellWidth * columnHeaders.length}
       getData={getData}
       columnHeaders={columnHeaders}
       rowHeaders={rowHeaders}

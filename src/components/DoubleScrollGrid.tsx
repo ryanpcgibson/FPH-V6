@@ -1,29 +1,22 @@
 import React from "react";
 
 interface DoubleScrollGridProps {
-  cellWidth?: number;
-  cellHeight?: number;
+  cellStyle: React.CSSProperties;
+  fullWidth: number;
   getData: (row: number, col: number, pattern: string) => React.ReactNode; // Updated
   columnHeaders: React.ReactNode[];
   rowHeaders: React.ReactNode[];
 }
 
 const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
-  cellWidth = 80,
-  cellHeight = 30,
+  cellStyle,
+  fullWidth,
   getData,
   columnHeaders,
   rowHeaders,
 }) => {
   const cols = columnHeaders.length;
   const rows = rowHeaders.length;
-  const fullWidth = cols * cellWidth;
-  const cellStyle = {
-    minWidth: `${cellWidth}px`,
-    width: `${cellWidth}px`,
-    minHeight: `${cellHeight}px`,
-    height: `${cellHeight}px`,
-  };
 
   return (
     <div
@@ -85,7 +78,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
       </div>
       <div
         className="fixed  z-40 top-0 right-0 border-white bg-white"
-        style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
+        style={{ ...cellStyle }}
         data-testid="scroll-spacer"
       ></div>
     </div>
