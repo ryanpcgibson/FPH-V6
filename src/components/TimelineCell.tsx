@@ -45,19 +45,18 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
 
   return (
     <div className={cellClass} onClick={handleClick}>
-      {segment &&
-        ["birth", "alive", "death", "memory"].includes(segment.status) && (
-          <SvgPattern
-            patternId={patternId}
-            cellStyle={cellStyle}
-          />
-        )}
+      <div className="z-10">
+        {segment &&
+          ["birth", "alive", "death", "memory"].includes(segment.status) && (
+            <SvgPattern patternId={patternId} cellStyle={cellStyle} />
+          )}
+      </div>
       {segment?.status === "deceased" && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-full h-px bg-gray-300"></div>
         </div>
       )}
-      <div className="relative flex items-center justify-center h-full z-10">
+      <div className="relative flex items-center justify-center h-full">
         {segment?.status === "memory" && (
           <StarIcon
             size={24}
