@@ -30,31 +30,27 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
     onClick(petId, segment?.moments?.[0]?.id);
   };
 
-  let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";
+  let cellClass =
+    "w-full h-full cursor-pointer relative overflow-hidden bg-white";
   let patternClass = "absolute inset-0 bg-gray-100";
 
-  if (segment) {
-    switch (segment.status) {
-      case "birth":
-        cellClass += " rounded-l-full";
-        patternClass += " rounded-l-full";
-        break;
-      case "death":
-        cellClass += " rounded-r-full";
-        patternClass += " rounded-r-full";
-        break;
-      case "not-born":
-      case "deceased":
-        cellClass += " bg-white";
-        break;
-    }
-  } else {
-    cellClass += " bg-white";
+  switch (segment?.status) {
+    case "birth":
+    case "alive":
+    case "death":
+    case "memory":
+      cellClass += "  border-black border-t border-b";
+      break;
   }
 
-  // Add background colors
-  // if (segment?.status === "birth") cellClass += " bg-blue-500";
-  // if (segment?.status === "death") cellClass += " bg-red-500";
+  switch (segment?.status) {
+    case "birth":
+      cellClass += " border-l";
+      break;
+    case "death":
+      cellClass += " border-r";
+      break;
+  }
 
   return (
     <div className={cellClass} onClick={handleClick}>
