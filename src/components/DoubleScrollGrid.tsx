@@ -3,7 +3,7 @@ import React from "react";
 interface DoubleScrollGridProps {
   cellStyle: React.CSSProperties;
   fullWidth: number;
-  getData: (row: number, col: number, pattern: string) => React.ReactNode; // Updated
+  getData: (row: number, col: number) => React.ReactNode;
   columnHeaders: React.ReactNode[];
   rowHeaders: React.ReactNode[];
 }
