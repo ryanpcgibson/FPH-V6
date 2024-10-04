@@ -1,9 +1,9 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const minCellWidth = 80;
-const maxCellWidth = 120;
+const maxCellWidth = 320;
 const minCellHeight = 30;
-const maxCellHeight = 180;
+const maxCellHeight = 120;
 const maxRows = 5;
 
 // Sub-components
@@ -13,15 +13,15 @@ const ColumnHeaders: React.FC<{
   fullWidth: number;
 }> = ({ headers, cellStyle, fullWidth }) => (
   <div
-    className="sticky z-20 top-0 bg-yellow-500"
-    style={{ width: `${fullWidth}px` }}
+    className="sticky z-20 top-0 bg-white"
+    // style={{ width: `${fullWidth}px` }}
     data-testid="column-header-container"
   >
     <div className="flex">
       {headers.map((header, index) => (
         <div
           key={index}
-          className="flex items-center justify-center font-bold  border border-red-500"
+          className="flex items-center justify-center font-bold"
           style={cellStyle}
           data-testid={`column-header-${index}`}
         >
@@ -111,16 +111,17 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   const [cellStyle, setCellStyle] = useState({
     minWidth: `${minCellWidth}px`,
     width: `${minCellWidth}px`,
+    maxWidth: `${maxCellWidth}px`,
     minHeight: `${minCellHeight}px`,
     height: `${minCellHeight}px`,
     maxHeight: `${maxCellHeight}px`,
   });
 
-  const [cellWidth, setCellWidth] = useState(minCellWidth);
-
   const cols = columnHeaders.length;
   const rows = rowHeaders.length;
-  const [fullWidth, setFullWidth] = useState(0);
+  const [cellHeight, setCellHeight] = useState(minCellHeight);
+  const [cellWidth, setCellWidth] = useState(minCellWidth);
+  const [fullWidth, setFullWidth] = useState(minCellHeight);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -129,22 +130,30 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
       if (containerRef.current) {
         const containerHeight = containerRef.current.clientHeight;
         const containerWidth = containerRef.current.clientWidth;
-        const cellHeight = Math.floor(containerHeight / (maxRows + 1));
-        // const newCellWidth = (cellHeight / minCellHeight) * minCellWidth;
-        // setCellWidth(
-        //   Math.max(minCellWidth, Math.min(newCellWidth, maxCellWidth))
-        // );
-        console.log(containerWidth, columnHeaders.length);
-        setCellWidth(containerWidth / (columnHeaders.length + 1));
-        setCellStyle({
-          ...cellStyle,
-          height: `${cellHeight}px`,
-          width: `${cellWidth}px`,
-        });
+        console.log(
+          "containerHeight",
+          containerHeight,
+          "containerWidth",
+          containerWidth
+        );
+        const cellHeight = Math.min(
+          Math.max(Math.floor(containerHeight / (maxRows + 1)), minCellHeight),
+          maxCellHeight
+        );
+        // TODO: I'm not ensuring any type of ratio here, which might look better
+        const cellWidth = Math.min(
+          Math.max(
+            Math.floor((cellHeight / minCellHeight) * minCellWidth),
+            minCellWidth
+          ),
+          maxCellWidth
+        );
+        setCellHeight(cellHeight);
+        setCellWidth(cellWidth);
       }
     };
 
-    updateCellDimensions(); // Initial calculation
+    updateCellDimensions();
 
     const resizeObserver = new ResizeObserver(updateCellDimensions);
     resizeObserver.observe(containerRef.current);
@@ -157,16 +166,27 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   }, []);
 
   useEffect(() => {
+    console.log("cellHeight", cellHeight, "cellWidth", cellWidth);
+    setCellStyle({
+      ...cellStyle,
+      height: `${cellHeight}px`,
+      width: `${cellWidth}px`,
+    });
+
     if (columnHeaders.length > 0) {
       setFullWidth(cellWidth * columnHeaders.length);
     }
-  }, [columnHeaders, cellWidth]);
+  }, [columnHeaders, cellWidth, cellHeight]);
 
   useEffect(() => {
     console.log("fullWidth", fullWidth);
   }, [fullWidth]);
   return (
-    <div data-testid="double-scroll-grid-container">
+    <div
+      ref={containerRef}
+      data-testid="double-scroll-grid-container"
+      className="h-screen w-screen"
+    >
       <div className="relative" data-testid="grid-content">
         <ColumnHeaders
           headers={columnHeaders}
