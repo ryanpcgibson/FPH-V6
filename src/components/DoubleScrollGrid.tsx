@@ -66,8 +66,7 @@ const Cell: React.FC<{
   </div>
 );
 
-// TODO move pattern into row, calculate width to avoid pattern break
-const Row: React.FC<{
+interface RowProps {
   rowIndex: number;
   cols: number;
   cellStyle: React.CSSProperties;
@@ -77,20 +76,35 @@ const Row: React.FC<{
     cellStyle: React.CSSProperties
   ) => React.ReactNode;
   rowHeader: React.ReactNode;
-}> = ({ rowIndex, cols, cellStyle, getCellContents, rowHeader }) => (
-  <div className="flex" data-testid={`row-${rowIndex}`}>
-    {Array.from({ length: cols }, (_, colIndex) => (
-      <Cell
-        key={colIndex}
-        content={getCellContents(rowIndex, colIndex, cellStyle)}
-        cellStyle={cellStyle}
-        rowIndex={rowIndex}
-        colIndex={colIndex}
+}
+
+// TODO move pattern into row, calculate width to avoid pattern break
+const Row: React.FC<RowProps> = ({
+  rowIndex,
+  cols,
+  cellStyle,
+  getCellContents,
+  rowHeader,
+}) => {
+  return (
+    <div className="flex mb-1" data-testid={`row-${rowIndex}`}>
+      {Array.from({ length: cols }, (_, colIndex) => (
+        <Cell
+          key={colIndex}
+          content={getCellContents(rowIndex, colIndex, cellStyle)}
+          cellStyle={cellStyle}
+          rowIndex={rowIndex}
+          colIndex={colIndex}
+        />
+      ))}
+      <RowHeader 
+        header={rowHeader} 
+        cellStyle={cellStyle} 
+        rowIndex={rowIndex} 
       />
-    ))}
-    <RowHeader header={rowHeader} cellStyle={cellStyle} rowIndex={rowIndex} />
-  </div>
-);
+    </div>
+  );
+};
 
 interface DoubleScrollGridProps {
   getCellContents: (
@@ -129,18 +143,10 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     const updateCellDimensions = () => {
       if (containerRef.current) {
         const containerHeight = containerRef.current.clientHeight;
-        const containerWidth = containerRef.current.clientWidth;
-        console.log(
-          "containerHeight",
-          containerHeight,
-          "containerWidth",
-          containerWidth
-        );
         const cellHeight = Math.min(
           Math.max(Math.floor(containerHeight / (maxRows + 1)), minCellHeight),
           maxCellHeight
         );
-        // TODO: I'm not ensuring any type of ratio here, which might look better
         const cellWidth = Math.min(
           Math.max(
             Math.floor((cellHeight / minCellHeight) * minCellWidth),
