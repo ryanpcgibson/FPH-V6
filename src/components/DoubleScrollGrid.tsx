@@ -201,20 +201,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     }
   }, [columnHeaders, cellWidth]);
 
-  useEffect(() => {
-    console.log(
-      "rowWidth",
-      rowWidth,
-      " = cellWidth",
-      cellWidth,
-      "* cols",
-      columnHeaders.length,
-      " (cellHeight",
-      cellHeight,
-      ")"
-    );
-  }, [rowWidth, cellWidth, columnHeaders]);
-
   return (
     <div
       ref={containerRef}
@@ -248,7 +234,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
         className="fixed z-40 top-0 right-0 border-white bg-white"
         data-testid="scroll-spacer"
       >
-        {cellWidth}-{rowWidth}
       </div>
     </div>
   );
