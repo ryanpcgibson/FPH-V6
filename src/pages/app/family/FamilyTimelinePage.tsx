@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import TimelineBars from "@/components/TimelineBars";
-
+import Header from "@/components/Header";
 const TimelinePage: React.FC = () => {
   const {
     familyData,
@@ -39,16 +39,7 @@ const TimelinePage: React.FC = () => {
     );
   }
 
-  return (
-    <>
-      <div
-        className="flex flex-col sm:flex-row gap-4 items-stretch justify-center min-h-screen p-0  "
-        id="pet-detail-container"
-      >
-        <TimelineBars petTimelines={petTimelines} />
-      </div>
-    </>
-  );
+  return <TimelineBars petTimelines={petTimelines} />;
 };
 
 export default TimelinePage;

@@ -205,7 +205,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     <div
       ref={containerRef}
       data-testid="double-scroll-grid-container"
-      className="h-screen w-screen overflow-auto"
+      className="h-screen w-full overflow-auto"
     >
       <div className="relative" data-testid="grid-content">
         <ColumnHeaders
@@ -233,8 +233,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
       <div
         className="fixed z-40 top-0 right-0 border-white bg-white"
         data-testid="scroll-spacer"
-      >
-      </div>
+      ></div>
     </div>
   );
 };

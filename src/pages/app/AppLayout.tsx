@@ -36,7 +36,7 @@ const ProtectedRoute = () => {
 
   return (
     <div>
-      <NavMenu />
+      {/* <NavMenu /> */}
       <Outlet context={{ user, families }} />
     </div>
   );

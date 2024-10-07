@@ -7,12 +7,12 @@ interface FamilyLinkProps {
 
 function FamilyLink({ familyId, familyName }: FamilyLinkProps) {
   return (
-    <Link
-      to={`/app/family/${familyId}`}
-      className="text-xl font-bold text-blue-600 hover:text-blue-800"
+    <a
+      href={`/app/family/${familyId}`}
+      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
     >
-      {familyName}
-    </Link>
+      The {familyName} Family{" "}
+    </a>
   );
 }
 

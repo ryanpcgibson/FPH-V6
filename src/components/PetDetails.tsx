@@ -19,7 +19,7 @@ const PetDetails: React.FC<PetInfoCardProps> = ({
   familyId,
 }) => {
   return (
-    <div>
+    <div className="bg-red-500">
       <h2>{petData?.name}</h2>
       <h2>
         Alive:{" "}

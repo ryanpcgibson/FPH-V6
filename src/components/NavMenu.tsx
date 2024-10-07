@@ -17,10 +17,11 @@ export default function NavMenu() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4">
+    // <div className="fixed top-4 right-4 z-50">
+    <div className="">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="">
             <Menu className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -28,16 +29,8 @@ export default function NavMenu() {
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/profile")}>
             Profile
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleMenuItemClick("/family/7")}>
-            Family 7
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onSelect={() => handleMenuItemClick("/family/7/pet/3")}
-          >
-            Pet 3
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleMenuItemClick("/uitest")}>
-            UI Test
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/app")}>
+            Choose Family
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/logout")}>
             Logout
