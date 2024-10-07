@@ -65,10 +65,14 @@
   }
 }
 
-.debug-border1 {
-  @apply border border-red-500;
+@layer components {
+  .header-text {
+    @apply text-black font-bold px-5 py-2.5;
+  }
+  .header-link-box {
+    @apply header-text  hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none;
+  }
+  .header-box {
+    @apply header-text border box-border border-white bg-gray-200;
+  }
 }
-.debug-border2 {
-  @apply border border-blue-500;
-}
-

@@ -7,7 +7,6 @@ import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetDataContext } from "@/context/PetDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
-import PetDetails from "@/components/PetDetails";
 import TimelineBars from "@/components/TimelineBars";
 import Header from "@/components/Header";
 
@@ -85,14 +84,7 @@ const PetInfoPage: React.FC = () => {
       </div>
       <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
         <TimelineBars petTimelines={petTimelines} petId={petId} />
-        {/* <PetDetails
-          petData={petData}
-          familyData={familyData}
-          familyId={familyId}
-          moments={moments}
-          currentMomentIndex={currentMomentIndex}
-          setCurrentMomentIndex={setCurrentMomentIndex}
-        /> */}
+
       </div>
     </div>
   );

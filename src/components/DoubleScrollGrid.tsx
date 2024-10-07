@@ -7,6 +7,8 @@ const minCellHeight = 30;
 const maxCellHeight = 120;
 const maxRows = 5;
 
+const borderClass = "border box-border border-white";
+
 // Sub-components
 const ColumnHeaders: React.FC<{
   headers: React.ReactNode[];
@@ -21,7 +23,7 @@ const ColumnHeaders: React.FC<{
       {headers.map((header, index) => (
         <div
           key={index}
-          className="flex items-center justify-center font-bold"
+          className="flex items-center justify-center header-box "
           style={cellStyle}
           data-testid={`column-header-${index}`}
         >
@@ -29,7 +31,7 @@ const ColumnHeaders: React.FC<{
         </div>
       ))}
       <div
-        className="sticky z-30 right-0 flex border-t border-b border-white bg-white"
+        className="sticky z-30 right-0 flex header-box"
         style={cellStyle}
         data-testid="top-right-corner"
       ></div>
@@ -43,7 +45,7 @@ const RowHeader: React.FC<{
   rowIndex: number;
 }> = ({ header, cellStyle, rowIndex }) => (
   <div
-    className="sticky z-30 right-0 flex items-center justify-center font-bold border-t border-b border-white bg-gray-200"
+    className="sticky z-30 right-0 flex items-center justify-center header-box"
     style={cellStyle}
     data-testid={`row-header-${rowIndex}`}
   >
