@@ -1,59 +1,46 @@
 import React from "react";
 import { PetTimelineSegment } from "@/context/PetTimelineContext";
-import SvgPattern from "@/components/SvgPattern";
 import StarIcon from "@/components/StarIcon";
 
 interface TimelineCellProps {
-  cellStyle: React.CSSProperties;
   segment: PetTimelineSegment | undefined;
   petId: number;
   onClick: (petId: number, momentId?: number) => void;
-  patternId: string;
 }
 
 const TimelineCell: React.FC<TimelineCellProps> = ({
-  cellStyle,
   segment,
   petId,
   onClick,
-  patternId,
 }) => {
   const handleClick = () => {
     onClick(petId, segment?.moments?.[0]?.id);
   };
 
-  let cellClass =
-    "w-full h-full cursor-pointer relative overflow-hidden bg-white";
+  let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";
 
   switch (segment?.status) {
     case "birth":
     case "alive":
     case "death":
     case "memory":
-      cellClass += "  border-black border-t border-b";
+      cellClass += " bg-opacity-0 border-t-2 border-b-2 border-black"; // Make the cell transparent to show the pattern
       break;
+    default:
+      cellClass += " bg-white"; // Cover the pattern with white background
   }
 
-  switch (segment?.status) {
-    case "birth":
-      cellClass += " border-l";
-      break;
-    case "death":
-      cellClass += " border-r";
-      break;
+  if (segment?.status === "birth") {
+    cellClass += " border-l-2 border-black";
+  } else if (segment?.status === "death") {
+    cellClass += " border-r-2 border-black";
   }
 
   return (
     <div className={cellClass} onClick={handleClick}>
-      <div className="z-10">
-        {segment &&
-          ["birth", "alive", "death", "memory"].includes(segment.status) && (
-            <SvgPattern patternId={patternId} cellStyle={cellStyle} />
-          )}
-      </div>
       {segment?.status === "deceased" && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-px bg-gray-300"></div>
+          <div className="w-full h-[2px] bg-gray-300"></div>
         </div>
       )}
       <div className="relative flex items-center justify-center h-full">
@@ -65,6 +52,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
             strokeWidth={1}
           />
         )}
+        {/* <div>{segment?.status}</div> */}
       </div>
     </div>
   );

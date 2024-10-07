@@ -1,11 +1,11 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PetTimeline } from "@/context/PetTimelineContext";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import DoubleScrollGrid from "./DoubleScrollGrid";
 import TimelineCell from "./TimelineCell";
 
-const patternIdList = ["9", "10", "22", "40"];
+const patternIds = ["9", "10", "22", "40"]; // Define pattern IDs to use
 
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
@@ -53,33 +53,26 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
 
   const rowHeaders = timelinesToRender.map((pet) => pet.petName);
 
-  const getCellContents = (
-    row: number,
-    col: number,
-    cellStyle: React.CSSProperties
-  ) => {
+  const getCellContents = (row: number, col: number) => {
     const pet = timelinesToRender[row];
     const year = columnHeaders[col];
     const segment = pet.segments.find((s) => s.year === year);
     return (
       <TimelineCell
-        cellStyle={cellStyle}
         segment={segment}
         petId={pet.petId}
         onClick={handleSegmentClick || (() => {})}
-        patternId={patternIdList[row % patternIdList.length]}
       />
     );
   };
 
   return (
-    <div className="w-full h-screen overflow-auto">
-      <DoubleScrollGrid
-        getCellContents={getCellContents}
-        columnHeaders={columnHeaders}
-        rowHeaders={rowHeaders}
-      />
-    </div>
+    <DoubleScrollGrid
+      getCellContents={getCellContents}
+      columnHeaders={columnHeaders}
+      rowHeaders={rowHeaders}
+      patternIds={patternIds}
+    />
   );
 };
 

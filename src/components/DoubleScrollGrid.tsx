@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import SvgPattern from "@/components/SvgPattern"; // Add this import
 
 const minCellWidth = 80;
 const maxCellWidth = 320;
@@ -14,7 +15,6 @@ const ColumnHeaders: React.FC<{
 }> = ({ headers, cellStyle, fullWidth }) => (
   <div
     className="sticky z-20 top-0 bg-white"
-    // style={{ width: `${fullWidth}px` }}
     data-testid="column-header-container"
   >
     <div className="flex">
@@ -43,7 +43,7 @@ const RowHeader: React.FC<{
   rowIndex: number;
 }> = ({ header, cellStyle, rowIndex }) => (
   <div
-    className="sticky z-20 right-0 flex items-center justify-center font-bold border-t border-b border-white bg-gray-200"
+    className="sticky z-30 right-0 flex items-center justify-center font-bold border-t border-b border-white bg-gray-200"
     style={cellStyle}
     data-testid={`row-header-${rowIndex}`}
   >
@@ -51,6 +51,7 @@ const RowHeader: React.FC<{
   </div>
 );
 
+// TODO this should just be calling TimelineCell
 const Cell: React.FC<{
   content: React.ReactNode;
   cellStyle: React.CSSProperties;
@@ -58,7 +59,7 @@ const Cell: React.FC<{
   colIndex: number;
 }> = ({ content, cellStyle, rowIndex, colIndex }) => (
   <div
-    className="flex items-center justify-center border-t border-b border-white"
+    className="flex items-center justify-center border-t border-b border-white z-30"
     style={cellStyle}
     data-testid={`cell-${rowIndex}-${colIndex}`}
   >
@@ -69,6 +70,8 @@ const Cell: React.FC<{
 interface RowProps {
   rowIndex: number;
   cols: number;
+  rowWidth: number;
+  rowHeight: number;
   cellStyle: React.CSSProperties;
   getCellContents: (
     row: number,
@@ -76,18 +79,32 @@ interface RowProps {
     cellStyle: React.CSSProperties
   ) => React.ReactNode;
   rowHeader: React.ReactNode;
+  patternId: string;
 }
 
 // TODO move pattern into row, calculate width to avoid pattern break
 const Row: React.FC<RowProps> = ({
   rowIndex,
   cols,
+  rowWidth,
+  rowHeight,
   cellStyle,
   getCellContents,
   rowHeader,
+  patternId,
 }) => {
   return (
-    <div className="flex mb-1" data-testid={`row-${rowIndex}`}>
+    <div
+      className={`relative flex mb-1 w-[${rowWidth}px]`}
+      data-testid={`row-${rowIndex}`}
+    >
+      <div className="absolute inset-0 z-20 w-full">
+        <SvgPattern
+          patternId={patternId}
+          rowHeight={rowHeight}
+          rowWidth={rowWidth}
+        />
+      </div>
       {Array.from({ length: cols }, (_, colIndex) => (
         <Cell
           key={colIndex}
@@ -97,11 +114,7 @@ const Row: React.FC<RowProps> = ({
           colIndex={colIndex}
         />
       ))}
-      <RowHeader 
-        header={rowHeader} 
-        cellStyle={cellStyle} 
-        rowIndex={rowIndex} 
-      />
+      <RowHeader header={rowHeader} cellStyle={cellStyle} rowIndex={rowIndex} />
     </div>
   );
 };
@@ -114,11 +127,13 @@ interface DoubleScrollGridProps {
   ) => React.ReactNode;
   columnHeaders: React.ReactNode[];
   rowHeaders: React.ReactNode[];
+  patternIds: string[];
 }
 const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   getCellContents,
   columnHeaders,
   rowHeaders,
+  patternIds,
 }) => {
   const containerRef = useRef(null);
 
@@ -135,7 +150,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   const rows = rowHeaders.length;
   const [cellHeight, setCellHeight] = useState(minCellHeight);
   const [cellWidth, setCellWidth] = useState(minCellWidth);
-  const [fullWidth, setFullWidth] = useState(minCellHeight);
+  const [rowWidth, setRowWidth] = useState(minCellHeight * cols);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -143,6 +158,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     const updateCellDimensions = () => {
       if (containerRef.current) {
         const containerHeight = containerRef.current.clientHeight;
+        const containerWidth = containerRef.current.clientWidth;
         const cellHeight = Math.min(
           Math.max(Math.floor(containerHeight / (maxRows + 1)), minCellHeight),
           maxCellHeight
@@ -172,32 +188,44 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log("cellHeight", cellHeight, "cellWidth", cellWidth);
     setCellStyle({
       ...cellStyle,
       height: `${cellHeight}px`,
       width: `${cellWidth}px`,
     });
-
-    if (columnHeaders.length > 0) {
-      setFullWidth(cellWidth * columnHeaders.length);
-    }
-  }, [columnHeaders, cellWidth, cellHeight]);
+  }, [cellWidth, cellHeight]);
 
   useEffect(() => {
-    console.log("fullWidth", fullWidth);
-  }, [fullWidth]);
+    if (columnHeaders.length > 0) {
+      setRowWidth(cellWidth * (columnHeaders.length + 1));
+    }
+  }, [columnHeaders, cellWidth]);
+
+  useEffect(() => {
+    console.log(
+      "rowWidth",
+      rowWidth,
+      " = cellWidth",
+      cellWidth,
+      "* cols",
+      columnHeaders.length,
+      " (cellHeight",
+      cellHeight,
+      ")"
+    );
+  }, [rowWidth, cellWidth, columnHeaders]);
+
   return (
     <div
       ref={containerRef}
       data-testid="double-scroll-grid-container"
-      className="h-screen w-screen"
+      className="h-screen w-screen overflow-auto"
     >
       <div className="relative" data-testid="grid-content">
         <ColumnHeaders
           headers={columnHeaders}
           cellStyle={cellStyle}
-          fullWidth={fullWidth}
+          fullWidth={rowWidth}
         />
 
         <div className="relative z-10" data-testid="grid-body">
@@ -206,18 +234,22 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
               key={rowIndex}
               rowIndex={rowIndex}
               cols={cols}
+              rowWidth={rowWidth}
+              rowHeight={cellHeight}
               cellStyle={cellStyle}
               getCellContents={getCellContents}
               rowHeader={rowHeaders[rowIndex]}
+              patternId={patternIds[rowIndex % patternIds.length]}
             />
           ))}
         </div>
       </div>
       <div
         className="fixed z-40 top-0 right-0 border-white bg-white"
-        // style={{ ...cellStyle }}
         data-testid="scroll-spacer"
-      ></div>
+      >
+        {cellWidth}-{rowWidth}
+      </div>
     </div>
   );
 };
