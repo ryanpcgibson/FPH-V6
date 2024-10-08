@@ -14,32 +14,28 @@ const ColumnHeaders: React.FC<{
   cellWidth: number;
   cellHeight: number;
   headerWidth: number;
-}> = ({ headers, gridTitle, headerWidth, cellWidth, cellHeight }) => {
+}> = ({ headers, cellWidth, cellHeight, headerWidth }) => {
   return (
-    <div className="relative">
-      <div
-        className="flex"
-        style={{ height: `${cellHeight}px` }}
-        data-testid="column-headers"
-      >
-        {headers.map((header, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-center header-box flex-shrink-0"
-            style={{ width: `${cellWidth}px` }}
-            data-testid={`column-header-${index}`}
-          >
-            {header}
-          </div>
-        ))}
-      </div>
-      <div
-        className="absolute top-0 right-0 z-40 flex items-center justify-center align-middle header-box"
-        style={{ width: `${headerWidth}px`, height: `${cellHeight}px` }}
-        data-testid="top-right-corner"
-      >
-        {gridTitle}
-      </div>
+    <div
+      className="flex"
+      style={{ height: `${cellHeight}px` }}
+      data-testid="column-headers"
+    >
+      {headers.map((header, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-center header-box flex-shrink-0"
+          style={{ width: `${cellWidth}px` }}
+          data-testid={`column-header-${index}`}
+        >
+          {header}
+        </div>
+      ))}
+      {/* <div
+        className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold border border-gray-300 bg-yellow"
+        style={{ width: `${headerWidth}px` }}
+        data-testid="top-left-corner"
+      ></div> */}
     </div>
   );
 };
@@ -47,11 +43,12 @@ const ColumnHeaders: React.FC<{
 const RowHeader: React.FC<{
   header: React.ReactNode;
   cellWidth: number;
+  cellHeight: number;
   rowIndex: number;
-}> = ({ header, cellWidth, rowIndex }) => (
+}> = ({ header, cellWidth, cellHeight, rowIndex }) => (
   <div
-    className="sticky z-30 right-0 flex items-center justify-center header-box border-l-8"
-    style={{ width: `${cellWidth}px` }}
+    className="fixed flex z-40 right-0 items-center justify-center align-middle p-2 header-box bg-yellow-400"
+    style={{ width: `${cellWidth}px`, height: `${cellHeight}px` }}
     data-testid={`row-header-${rowIndex}`}
   >
     {header}
@@ -66,7 +63,7 @@ const Cell: React.FC<{
   colIndex: number;
 }> = ({ content, cellWidth, rowIndex, colIndex }) => (
   <div
-    className="flex items-center justify-center border-t border-b border-white z-30 w-full"
+    className="items-center justify-center border-t border-b border-white z-20"
     style={{ width: `${cellWidth}px` }}
     data-testid={`cell-${rowIndex}-${colIndex}`}
   >
@@ -77,10 +74,9 @@ const Cell: React.FC<{
 interface RowProps {
   rowIndex: number;
   cols: number;
-  rowWidth: number;
   cellWidth: number;
   cellHeight: number;
-  // cellStyle: React.CSSProperties;
+  headerWidth: number;
   getCellContents: (row: number, col: number) => React.ReactNode;
   rowHeader: React.ReactNode;
   patternId: string;
@@ -90,9 +86,9 @@ interface RowProps {
 const Row: React.FC<RowProps> = ({
   rowIndex,
   cols,
-  rowWidth,
   cellHeight,
   cellWidth,
+  headerWidth,
   getCellContents,
   rowHeader,
   patternId,
@@ -103,19 +99,29 @@ const Row: React.FC<RowProps> = ({
       style={{ height: `${cellHeight}px` }}
       data-testid={`row-${rowIndex}`}
     >
-      <div className="absolute inset-0 z-20 w-full">
+      <div
+        className="absolute inset-0 z-0"
+        style={{ width: `${cellWidth * cols}px`, height: `${cellHeight}px` }}
+      >
         <SvgPattern patternId={patternId} />
       </div>
-      {Array.from({ length: cols }, (_, colIndex) => (
-        <Cell
-          key={colIndex}
-          content={getCellContents(rowIndex, colIndex)}
-          cellWidth={cellWidth}
-          rowIndex={rowIndex}
-          colIndex={colIndex}
-        />
-      ))}
-      <RowHeader header={rowHeader} cellWidth={cellWidth} rowIndex={rowIndex} />
+      <div className="relative z-10 flex">
+        {Array.from({ length: cols }, (_, colIndex) => (
+          <Cell
+            key={colIndex}
+            content={getCellContents(rowIndex, colIndex)}
+            cellWidth={cellWidth}
+            rowIndex={rowIndex}
+            colIndex={colIndex}
+          />
+        ))}
+      </div>
+      <RowHeader
+        header={rowHeader}
+        cellWidth={cellWidth}
+        cellHeight={cellHeight}
+        rowIndex={rowIndex}
+      />
     </div>
   );
 };
@@ -141,7 +147,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   const [cellHeight, setCellHeight] = useState(minCellHeight);
   const [cellWidth, setCellWidth] = useState(minCellWidth);
   const [rowWidth, setRowWidth] = useState(minCellHeight * cols);
-  const [headerWidth, setHeaderWidth] = useState(minCellWidth * 2);
+  const [headerWidth, setHeaderWidth] = useState(minCellWidth * 1.5);
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -150,7 +156,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
       if (containerRef.current) {
         const containerHeight = containerRef.current.clientHeight;
         const containerWidth = containerRef.current.clientWidth;
-        console.log("container", containerWidth, "x", containerHeight);
         const newCellHeight = Math.min(
           Math.max(Math.floor(containerHeight / (maxRows + 2)), minCellHeight),
           maxCellHeight
@@ -162,14 +167,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
           ),
           maxCellWidth
         );
-        console.log(
-          `h: ${newCellHeight} = ${containerHeight} / ${
-            maxRows + 2
-          } [${minCellHeight}/${maxCellHeight}]`
-        );
-        console.log(
-          `w: ${newCellWidth} = ${newCellHeight} / ${minCellHeight} * ${minCellWidth} [${minCellWidth}/${maxCellWidth}]`
-        );
 
         if (newCellHeight !== cellHeight) {
           setCellHeight(newCellHeight);
@@ -177,8 +174,6 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
         if (newCellWidth !== cellWidth) {
           setCellWidth(newCellWidth);
         }
-
-        // console.log("Updated dimensions:", { newCellWidth, newCellHeight });
       }
     };
 
@@ -195,8 +190,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
   }, []);
 
   useEffect(() => {
-    setHeaderWidth(cellWidth * 2);
-    console.log("cellWidth", cellWidth, "headerWidth", cellWidth * 2);
+    setHeaderWidth(cellWidth * 1.5);
   }, [cellWidth, cellHeight]);
 
   useEffect(() => {
@@ -209,8 +203,7 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
     <div
       ref={containerRef}
       data-testid="double-scroll-grid-container"
-      className="h-screen overflow-auto"
-      style={{ width: `${rowWidth}px` }}
+      className="w-full h-screen overflow-scroll"
     >
       <div
         className="relative"
@@ -235,14 +228,21 @@ const DoubleScrollGrid: React.FC<DoubleScrollGridProps> = ({
               key={rowIndex}
               rowIndex={rowIndex}
               cols={cols}
-              rowWidth={rowWidth}
               cellWidth={cellWidth}
               cellHeight={cellHeight}
+              headerWidth={headerWidth}
               getCellContents={getCellContents}
               rowHeader={rowHeaders[rowIndex]}
               patternId={patternIds[rowIndex % patternIds.length]}
             />
           ))}
+        </div>
+        <div
+          className="fixed top-0 right-0 z-40 flex items-center justify-center align-middle header-box bg-yellow-400"
+          style={{ width: `${headerWidth}px`, height: `${cellHeight}px` }}
+          data-testid="top-right-corner"
+        >
+          {gridTitle}
         </div>
       </div>
     </div>

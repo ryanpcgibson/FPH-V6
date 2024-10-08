@@ -73,27 +73,21 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   };
 
   const gridTitle: React.ReactNode = (
-    <a
-      href={`/app/family/${familyId}`}
-      className="text-xl"
-    >
-      The {familyData?.family_name} Family
+    <a href={`/app/family/${familyId}`} className="text-xl">
+      <span className="whitespace-nowrap">
+        The {familyData?.family_name} Family
+      </span>
     </a>
   );
 
   return (
-    <div
-      className="flex flex-col gap-4 items-stretch justify-center min-h-screen p-0  "
-      id="timeline-bars-container"
-    >
-      <DoubleScrollGrid
-        getCellContents={getCellContents}
-        columnHeaders={columnHeaders}
-        rowHeaders={rowHeaders}
-        patternIds={patternIds}
-        gridTitle={gridTitle}
-      />
-    </div>
+    <DoubleScrollGrid
+      getCellContents={getCellContents}
+      columnHeaders={columnHeaders}
+      rowHeaders={rowHeaders}
+      patternIds={patternIds}
+      gridTitle={gridTitle}
+    />
   );
 };
 

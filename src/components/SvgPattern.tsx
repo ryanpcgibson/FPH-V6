@@ -28,7 +28,7 @@ const SvgPattern: React.FC<SvgPatternProps> = ({ patternId }) => {
 
   return (
     <div
-      className="absolute inset-0 bg-gray-100 w-full h-full"
+      className="inset-0 bg-gray-100 w-full h-full"
       style={{
         backgroundImage: `url(${patternSrc})`,
         backgroundRepeat: "repeat",
