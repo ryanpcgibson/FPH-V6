@@ -31,7 +31,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
   }
 
   if (segment?.status === "birth") {
-    cellClass += " border-l-2 border-black";
+    cellClass += " border-l-2 border-black ";
   } else if (segment?.status === "death") {
     cellClass += " border-r-2 border-black";
   }

@@ -2,8 +2,6 @@ import React from "react";
 
 interface SvgPatternProps {
   patternId: string;
-  rowWidth: number;
-  rowHeight: number;
 }
 
 // Use import.meta.glob to import all SVG files from the patterns directory
@@ -20,11 +18,7 @@ Object.entries(patternModules).forEach(([path, module]) => {
   }
 });
 
-const SvgPattern: React.FC<SvgPatternProps> = ({
-  patternId,
-  rowWidth,
-  rowHeight,
-}) => {
+const SvgPattern: React.FC<SvgPatternProps> = ({ patternId }) => {
   const patternSrc = patterns[patternId];
 
   if (!patternSrc) {
@@ -34,11 +28,9 @@ const SvgPattern: React.FC<SvgPatternProps> = ({
 
   return (
     <div
-      // className={`absolute inset-0 bg-gray-100 w-[${rowWidth}px] h-[${rowHeight}px]`}
-      className={`absolute inset-0 bg-gray-100 w-full h-full`}
+      className="absolute inset-0 bg-gray-100 w-full h-full"
       style={{
         backgroundImage: `url(${patternSrc})`,
-        // backgroundSize: "8px 8px", // Adjust this value to change the size of each tile
         backgroundRepeat: "repeat",
       }}
     />

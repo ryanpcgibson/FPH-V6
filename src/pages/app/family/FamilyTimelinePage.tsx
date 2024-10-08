@@ -3,11 +3,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import TimelineBars from "@/components/TimelineBars";
-import Header from "@/components/Header";
 const TimelinePage: React.FC = () => {
   const {
-    familyData,
-    familyId,
     isLoading: isFamilyLoading,
     error: familyError,
   } = useFamilyDataContext();

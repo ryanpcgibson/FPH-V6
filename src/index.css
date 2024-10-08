@@ -67,12 +67,12 @@
 
 @layer components {
   .header-text {
-    @apply text-black font-bold px-5 py-2.5;
+    @apply text-black font-bold;
   }
   .header-link-box {
-    @apply header-text  hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none;
+    @apply header-text hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none;
   }
   .header-box {
-    @apply header-text border box-border border-white bg-gray-200;
+    @apply header-text border-2 box-border border-white bg-gray-200;
   }
 }
