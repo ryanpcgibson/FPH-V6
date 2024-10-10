@@ -9,14 +9,14 @@ const patternIds = ["9", "10", "22", "40"]; // Define pattern IDs to use
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
   petId?: number;
+  className?: string;
 }
-const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
-  const {
-    familyData,
-    familyId,
-    isLoading: isFamilyLoading,
-    error: familyError,
-  } = useFamilyDataContext();
+const TimelineBars: React.FC<TimelineBarsProps> = ({
+  petTimelines,
+  petId,
+  className = "",
+}) => {
+  const { familyId } = useFamilyDataContext();
   const navigate = useNavigate();
 
   const [columnHeaders, setColumnHeaders] = useState<number[]>([]);
@@ -70,14 +70,6 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     );
   };
 
-  const gridTitle: React.ReactNode = (
-    <a href={`/app/family/${familyId}`} className="text-xl">
-      <span className="whitespace-nowrap">
-        The {familyData?.family_name} Family
-      </span>
-    </a>
-  );
-
   const rows = 20;
   const cols = 10;
   const data = Array.from({ length: rows }, (_, rowIndex) =>
@@ -92,7 +84,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
 
   return (
     <div
-      className="w-full h-screen overflow-auto" // overflow-scroll?
+      className={`${className} overflow-auto`} // overflow-scroll?
       data-testid="double-scroll-grid-container"
     >
       <div
@@ -102,10 +94,10 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
       >
         {/* Sticky column headers */}
         <div
-          className="sticky top-0 z-10 bg-gray-200"
+          className="sticky top-0 z-50 bg-gray-200"
           data-testid="column-header-container"
         >
-          <div className="flex">
+          <div className="flex" data-testid="column-headers">
             {Array.from({ length: cols }, (_, index) => (
               <div
                 key={index}
@@ -117,7 +109,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
             ))}
             {/* Top-right corner cell */}
             <div
-              className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold border border-gray-300 bg-gray-300"
+              className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold border border-gray-300 bg-gray-200"
               data-testid="top-right-corner"
             ></div>
           </div>
@@ -152,10 +144,10 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
         </div>
       </div>
       {/* Spacer to hide scrolling content */}
-      <div
-        className="fixed top-0 right-0 w-20 h-10 bg-gray-300 z-40"
+      {/* <div
+        className="sticky top-0 right-0 w-20 h-10 bg-gray-300 z-40"
         data-testid="scroll-spacer"
-      ></div>
+      ></div> */}
     </div>
   );
 };
