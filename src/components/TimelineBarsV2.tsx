@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { PetTimeline } from "@/context/PetTimelineContext";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import TimelineCell from "./TimelineCell";
+import SvgPattern from "@/components/SvgPattern"; // Add this import
 
 const patternIds = ["9", "10", "22", "40"]; // Define pattern IDs to use
 
@@ -70,8 +71,9 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
     );
   };
 
-  const rows = 20;
-  const cols = 10;
+  const cols = columnHeaders.length;
+  const rows = rowHeaders.length;
+
   const data = Array.from({ length: rows }, (_, rowIndex) =>
     Array.from(
       { length: cols },
@@ -84,7 +86,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
 
   return (
     <div
-      className={`${className} overflow-auto`} // overflow-scroll?
+      className="w-full flex-grow overflow-auto"
       data-testid="double-scroll-grid-container"
     >
       <div
@@ -94,50 +96,67 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
       >
         {/* Sticky column headers */}
         <div
-          className="sticky top-0 z-50 bg-gray-200"
+          className="sticky top-0 z-50"
           data-testid="column-header-container"
         >
           <div className="flex" data-testid="column-headers">
-            {Array.from({ length: cols }, (_, index) => (
-              <div
-                key={index}
-                className="w-20 h-10 flex items-center justify-center font-bold border border-gray-300"
-                data-testid={`column-header-${index}`}
-              >
-                {String.fromCharCode(65 + index)}
-              </div>
-            ))}
+            <div className="flex" data-testid="column-headers">
+              {columnHeaders.map((header, index) => (
+                <div
+                  key={index}
+                  // className="flex items-center justify-center header-box flex-shrink-0"
+                  className="w-20 h-10 flex items-center justify-center font-bold bg-gray-200 border-white border-2 box-border"
+                  data-testid={`column-header-${index}`}
+                >
+                  {header}
+                </div>
+              ))}
+            </div>
             {/* Top-right corner cell */}
             <div
-              className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold border border-gray-300 bg-gray-200"
+              className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold bg-white"
               data-testid="top-right-corner"
             ></div>
           </div>
         </div>
 
         {/* Table body */}
-        <div className="relative" data-testid="grid-body">
-          {data.map((row, rowIndex) => (
+        <div className="relative space-y-1 pt-1" data-testid="grid-body">
+          {Array.from({ length: rows }, (_, rowIndex) => (
             <div
               key={rowIndex}
-              className="flex"
+              className="relative flex"
               data-testid={`row-${rowIndex}`}
             >
-              {row.map((cell, colIndex) => (
+              <div className="absolute w-full h-full z-0">
+                <SvgPattern
+                  patternId={patternIds[rowIndex % patternIds.length]}
+                />
+              </div>
+
+              {Array.from({ length: cols }, (_, colIndex) => (
                 <div
                   key={colIndex}
-                  className="w-20 h-10 flex items-center justify-center border border-gray-300"
+                  className="w-20 h-10 flex items-center justify-center"
                   data-testid={`cell-${rowIndex}-${colIndex}`}
                 >
-                  {cell}
+                  {getCellContents(rowIndex, colIndex)}
                 </div>
+
+                // <div
+                //   key={colIndex}
+                //   className="w-20 h-10 flex items-center justify-center border border-gray-300"
+                //   data-testid={`cell-${rowIndex}-${colIndex}`}
+                // >
+                //   {cell}
+                // </div>
               ))}
               {/* Sticky row headers */}
               <div
-                className="sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold bg-gray-200 border border-gray-300"
+                className="sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold bg-yellow-400"
                 data-testid={`row-header-${rowIndex}`}
               >
-                {rowIndex + 1}
+                {rowHeaders[rowIndex]}
               </div>
             </div>
           ))}
