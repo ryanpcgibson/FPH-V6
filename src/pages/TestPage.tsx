@@ -1,61 +1,57 @@
 import React from "react";
-import DoubleScrollGrid from "../components/DoubleScrollGrid";
-import petTimelinesData from "@/db/dummy_petTimelines.json";
+
+const rows = 7;
+const cols = 7;
 
 const TestPage: React.FC = () => {
-  const petTimelines = petTimelinesData;
-  const earliestYear = petTimelines.reduce(
-    (min, pet) =>
-      pet.segments.length > 0 ? Math.min(min, pet.segments[0].year) : min,
-    Infinity
-  );
-  const latestYear = petTimelines.reduce(
-    (max, pet) =>
-      pet.segments.length > 0
-        ? Math.max(max, pet.segments[pet.segments.length - 1].year)
-        : max,
-    -Infinity
-  );
-  const columnHeaders = Array.from(
-    { length: latestYear - earliestYear + 1 },
-    (_, i) => earliestYear + i
-  );
-  const rowHeaders = petTimelines.map((pet) => pet.petName);
-
-  const getData = (row: number, col: number) => {
-    const pet = petTimelines[row];
-    const year = columnHeaders[col];
-    const segment = pet.segments.find((s) => s.year === year);
-    return segment ? segment.status : "";
-  };
-
-  // const columnHeaders = [
-  //   2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018,
-  //   2019, 2020, 2021, 2022, 2023, 2024,
-  // ];
-
-  // const rowHeaders = [
-  //   "Fido",
-  //   "Rex",
-  //   "Buddy",
-  //   "Max",
-  //   "Charlie",
-  //   "Rocky",
-  //   "Tiger",
-  //   "Jake",
-  //   "Lucky",
-  //   "Bella",
-  // ];
-
-  // const getData = (row: number, col: number) =>
-  //   row * columnHeaders.length + col + 1;
-
   return (
-    <DoubleScrollGrid
-      getData={getData}
-      columnHeaders={columnHeaders}
-      rowHeaders={rowHeaders}
-    />
+    <div className="h-screen w-screen flex items-center justify-center">
+      <div className="w-[600px] h-[200px] border border-gray-300 flex overflow-hidden">
+        <div className="flex-grow overflow-auto relative">
+          <div className="flex">
+            <div className="flex-grow">
+              <div className="flex sticky top-0 z-10 bg-gray-100">
+                {[...Array(cols)].map((_, i) => (
+                  <div
+                    key={`col-${i}`}
+                    className="w-20 h-[30px] flex items-center justify-center font-bold border border-gray-300"
+                  >
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                ))}
+              </div>
+              {[...Array(rows)].map((_, rowIndex) => (
+                <div key={`row-${rowIndex}`} className="flex">
+                  {[...Array(cols)].map((_, colIndex) => (
+                    <div
+                      key={`cell-${rowIndex}-${colIndex}`}
+                      className="w-20 h-[30px] flex items-center justify-center border border-gray-300 bg-white"
+                    >
+                      {String.fromCharCode(65 + colIndex)}
+                      {rowIndex + 1}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="sticky right-0 z-20 bg-gray-100 flex flex-col">
+              {/* Fixed HC cell */}
+              <div className="sticky top-0 w-20 h-[30px] flex items-center justify-center font-bold border border-gray-300 bg-white z-30">
+                HC
+              </div>
+              {[...Array(rows)].map((_, i) => (
+                <div
+                  key={`header-${i}`}
+                  className="w-20 h-[30px] flex items-center justify-center border border-gray-300 bg-white"
+                >
+                  H{i + 1}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

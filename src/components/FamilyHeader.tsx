@@ -1,6 +1,6 @@
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
-const FamilyHeader: React.FC<{ className?: string }> = ({ className = '' }) => {
+const FamilyHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
   const { familyData, familyId } = useFamilyDataContext();
 
   return (

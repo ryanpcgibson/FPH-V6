@@ -89,7 +89,7 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
     >
       <div
         className="relative"
-        style={{ minWidth: `${minWidth}px` }}
+        style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
         data-testid="grid-content"
       >
         {/* Sticky column headers */}

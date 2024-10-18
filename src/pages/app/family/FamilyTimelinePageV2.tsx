@@ -36,9 +36,16 @@ const TimelinePageV2: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-full h-full min-h-screen">
-      <FamilyHeader className="sticky top-0 right-0 z-50" />
-      <TimelineBarsV2 className="w-full h-screen" petTimelines={petTimelines} />
+    // <div className="flex flex-col w-full h-full">
+    // <FamilyHeader className="sticky top-0 right-0 z-50" />
+    <div className="h-screen w-screen flex justify-center">
+      <div className="w-full max-w-[800px] h-[500px] p-0 md:p-4 lg:p-8 flex flex-col justify-center">
+        <FamilyHeader className="w-full" />
+        <TimelineBarsV2
+          className="w-full flex-grow"
+          petTimelines={petTimelines}
+        />
+      </div>
     </div>
   );
 };
