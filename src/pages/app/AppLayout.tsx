@@ -1,7 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuthData";
 import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
-import NavMenu from "@/components/NavMenu";
 
 const ProtectedRoute = () => {
   const { user, isLoading: isLoadingUser, error: errorUser } = useAuth();
@@ -35,9 +34,13 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div>
-      {/* <NavMenu /> */}
-      <Outlet context={{ user, families }} />
+    <div className="h-screen w-screen flex justify-center">
+      <div
+        className="w-full max-w-[800px] max-h-[500px] h-full p-0 md:p-4 lg:p-8 flex flex-col justify-center overflow-hidden"
+        id="app-layout"
+      >
+        <Outlet context={{ user, families }} />
+      </div>
     </div>
   );
 };

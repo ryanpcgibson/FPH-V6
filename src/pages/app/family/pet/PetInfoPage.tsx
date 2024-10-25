@@ -8,7 +8,6 @@ import { usePetDataContext } from "@/context/PetDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
 import TimelineBars from "@/components/TimelineBars";
-import Header from "@/components/Header";
 
 const PetInfoPage: React.FC = () => {
   const location = useLocation();
@@ -16,12 +15,10 @@ const PetInfoPage: React.FC = () => {
 
   const {
     familyData,
-    familyId,
     isLoading: isFamilyLoading,
     error: familyError,
   } = useFamilyDataContext();
   const {
-    petData,
     petId,
     isLoading: isPetLoading,
     error: petError,
@@ -75,7 +72,7 @@ const PetInfoPage: React.FC = () => {
 
   return (
     <div className="flex flex-row h-screen" id="page-container">
-      <div className="w-3/5 h-full" id="carousel-container">
+      <div className="flex flex-col flex-grow w-3/5" id="carousel-container">
         <PetCarousel
           moments={moments}
           currentMomentIndex={currentMomentIndex}
