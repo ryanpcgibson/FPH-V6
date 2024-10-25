@@ -2,23 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PetTimeline } from "@/context/PetTimelineContext";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import DoubleScrollGrid from "./DoubleScrollGrid";
 import TimelineCell from "./TimelineCell";
-import FamilyLink from "./FamilyLink";
+import SvgPattern from "@/components/SvgPattern";
 
 const patternIds = ["9", "10", "22", "40"]; // Define pattern IDs to use
 
 interface TimelineBarsProps {
   petTimelines: PetTimeline[];
   petId?: number;
+  className?: string;
 }
-const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
-  const {
-    familyData,
-    familyId,
-    isLoading: isFamilyLoading,
-    error: familyError,
-  } = useFamilyDataContext();
+const TimelineBars: React.FC<TimelineBarsProps> = ({
+  petTimelines,
+  petId,
+  className = "",
+}) => {
+  const { familyId } = useFamilyDataContext();
   const navigate = useNavigate();
 
   const [columnHeaders, setColumnHeaders] = useState<number[]>([]);
@@ -72,22 +71,103 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
     );
   };
 
-  const gridTitle: React.ReactNode = (
-    <a href={`/app/family/${familyId}`} className="text-xl">
-      <span className="whitespace-nowrap">
-        The {familyData?.family_name} Family
-      </span>
-    </a>
+  const cols = columnHeaders.length;
+  const rows = rowHeaders.length;
+
+  const data = Array.from({ length: rows }, (_, rowIndex) =>
+    Array.from(
+      { length: cols },
+      (_, colIndex) => rowIndex * cols + colIndex + 1
+    )
   );
 
+  // Calculate the minimum width based on the number of columns
+  const minWidth = (cols + 1) * 80; // 80px per cell (w-20 = 5rem = 80px)
+
   return (
-    <DoubleScrollGrid
-      getCellContents={getCellContents}
-      columnHeaders={columnHeaders}
-      rowHeaders={rowHeaders}
-      patternIds={patternIds}
-      gridTitle={gridTitle}
-    />
+    <div
+      className="w-full flex-grow overflow-auto"
+      data-testid="double-scroll-grid-container"
+    >
+      <div
+        className="relative"
+        style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
+        data-testid="grid-content"
+      >
+        {/* Sticky column headers */}
+        <div
+          className="sticky top-0 z-50"
+          data-testid="column-header-container"
+        >
+          <div className="flex" data-testid="column-headers">
+            <div className="flex" data-testid="column-headers">
+              {columnHeaders.map((header, index) => (
+                <div
+                  key={index}
+                  // className="flex items-center justify-center header-box flex-shrink-0"
+                  className="w-20 h-10 flex items-center justify-center font-bold bg-gray-200 border-white border-2 box-border"
+                  data-testid={`column-header-${index}`}
+                >
+                  {header}
+                </div>
+              ))}
+            </div>
+            {/* Top-right corner cell */}
+            <div
+              className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold bg-white"
+              data-testid="top-right-corner"
+            ></div>
+          </div>
+        </div>
+
+        {/* Table body */}
+        <div className="relative space-y-1 pt-1" data-testid="grid-body">
+          {Array.from({ length: rows }, (_, rowIndex) => (
+            <div
+              key={rowIndex}
+              className="relative flex"
+              data-testid={`row-${rowIndex}`}
+            >
+              <div className="absolute w-full h-full z-0">
+                <SvgPattern
+                  patternId={patternIds[rowIndex % patternIds.length]}
+                />
+              </div>
+
+              {Array.from({ length: cols }, (_, colIndex) => (
+                <div
+                  key={colIndex}
+                  className="w-20 h-10 flex items-center justify-center"
+                  data-testid={`cell-${rowIndex}-${colIndex}`}
+                >
+                  {getCellContents(rowIndex, colIndex)}
+                </div>
+
+                // <div
+                //   key={colIndex}
+                //   className="w-20 h-10 flex items-center justify-center border border-gray-300"
+                //   data-testid={`cell-${rowIndex}-${colIndex}`}
+                // >
+                //   {cell}
+                // </div>
+              ))}
+              {/* Sticky row headers */}
+              <div
+                className="sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold bg-yellow-400"
+                data-testid={`row-header-${rowIndex}`}
+              >
+                {rowHeaders[rowIndex]}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Spacer to hide scrolling content */}
+      {/* <div
+        className="sticky top-0 right-0 w-20 h-10 bg-gray-300 z-40"
+        data-testid="scroll-spacer"
+      ></div> */}
+    </div>
   );
 };
 

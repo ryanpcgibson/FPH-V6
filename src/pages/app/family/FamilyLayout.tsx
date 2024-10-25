@@ -3,6 +3,7 @@ import { Outlet, useParams, Navigate, useLocation } from "react-router-dom";
 import { FamilyDataProvider } from "@/context/FamilyDataContext";
 import { PetTimelineProvider } from "@/context/PetTimelineContext";
 import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
+import FamilyHeader from "@/components/FamilyHeader";
 
 const FamilyLayout: React.FC = () => {
   const { families } = useUserFamiliesContext();
@@ -11,7 +12,10 @@ const FamilyLayout: React.FC = () => {
 
   if (!familyIdParam && families.length > 0) {
     const defaultFamilyId = families[0].id;
-    const newPath = location.pathname.replace("/family", `/family/${defaultFamilyId}`);
+    const newPath = location.pathname.replace(
+      "/family",
+      `/family/${defaultFamilyId}`
+    );
     return <Navigate to={newPath} replace />;
   }
 
@@ -24,6 +28,7 @@ const FamilyLayout: React.FC = () => {
   return (
     <FamilyDataProvider familyId={familyId}>
       <PetTimelineProvider>
+        <FamilyHeader className="w-full" />
         <Outlet context={{ familyId }} />
       </PetTimelineProvider>
     </FamilyDataProvider>

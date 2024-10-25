@@ -2,9 +2,9 @@ import React from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
-import TimelineBarsV2 from "@/components/TimelineBarsV2";
-import FamilyHeader from "@/components/FamilyHeader";
-const TimelinePageV2: React.FC = () => {
+import TimelineBars from "@/components/TimelineBarsV1";
+
+const TimelinePageV1: React.FC = () => {
   const { isLoading: isFamilyLoading, error: familyError } =
     useFamilyDataContext();
   const {
@@ -35,16 +35,7 @@ const TimelinePageV2: React.FC = () => {
     );
   }
 
-  return (
-    // <div className="flex flex-col w-full h-full">
-    // <FamilyHeader className="sticky top-0 right-0 z-50" />
-    <div className="h-screen w-screen flex justify-center">
-      <div className="w-full max-w-[800px] max-h-[500px] h-full p-0 md:p-4 lg:p-8 flex flex-col justify-center overflow-hidden">
-        <FamilyHeader className="w-full" />
-        <TimelineBarsV2 petTimelines={petTimelines} />
-      </div>
-    </div>
-  );
+  return <TimelineBars petTimelines={petTimelines} />;
 };
 
-export default TimelinePageV2;
+export default TimelinePageV1;

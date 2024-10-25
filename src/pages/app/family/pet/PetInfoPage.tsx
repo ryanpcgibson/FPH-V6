@@ -84,7 +84,6 @@ const PetInfoPage: React.FC = () => {
       </div>
       <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
         <TimelineBars petTimelines={petTimelines} petId={petId} />
-
       </div>
     </div>
   );

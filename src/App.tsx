@@ -8,8 +8,8 @@ import ProfilePage from "./pages/app/ProfilePage";
 import FamilyLayout from "./pages/app/family/FamilyLayout";
 import DataPage from "./pages/app/family/FamilyDataPage";
 import TestPage from "./pages/TestPage";
+import TimelinePageV1 from "./pages/app/family/FamilyTimelinePageV1";
 import TimelinePage from "./pages/app/family/FamilyTimelinePage";
-import TimelinePageV2 from "./pages/app/family/FamilyTimelinePageV2";
 import PetLayout from "./pages/app/family/pet/PetLayout";
 import PetInfo from "./pages/app/family/pet/PetInfoPage";
 import { UserProvider } from "./context/UserContext";
@@ -37,7 +37,7 @@ function App() {
                     <Route index element={<FamilySelectPage />} />
                     <Route path="family/:familyId?" element={<FamilyLayout />}>
                       <Route index element={<TimelinePage />} />
-                      <Route path="v2" element={<TimelinePageV2 />} />
+                      <Route path="v1" element={<TimelinePageV1 />} /> // TO DELETE
                       <Route path="test" element={<TestPage />} />
                       <Route path="pet/:petId?" element={<PetLayout />}>
                         <Route index element={<PetInfo />} />
