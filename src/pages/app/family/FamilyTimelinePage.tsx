@@ -35,12 +35,8 @@ const TimelinePage: React.FC = () => {
   }
 
   return (
-    // <div className="flex flex-col w-full h-full">
-    // <div className="h-screen w-screen flex justify-center">
     <div className="flex flex-row h-screen" id="page-container">
-      {/* <div className="w-full max-w-[800px] max-h-[500px] h-full p-0 md:p-4 lg:p-8 flex flex-col justify-center overflow-hidden"> */}
       <TimelineBars petTimelines={petTimelines} />
-      {/* </div> */}
     </div>
   );
 };

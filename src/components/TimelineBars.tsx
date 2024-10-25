@@ -104,7 +104,6 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
               {columnHeaders.map((header, index) => (
                 <div
                   key={index}
-                  // className="flex items-center justify-center header-box flex-shrink-0"
                   className="w-20 h-10 flex items-center justify-center font-bold bg-gray-200 border-white border-2 box-border"
                   data-testid={`column-header-${index}`}
                 >
@@ -143,13 +142,6 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
                   {getCellContents(rowIndex, colIndex)}
                 </div>
 
-                // <div
-                //   key={colIndex}
-                //   className="w-20 h-10 flex items-center justify-center border border-gray-300"
-                //   data-testid={`cell-${rowIndex}-${colIndex}`}
-                // >
-                //   {cell}
-                // </div>
               ))}
               {/* Sticky row headers */}
               <div
@@ -162,11 +154,6 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
           ))}
         </div>
       </div>
-      {/* Spacer to hide scrolling content */}
-      {/* <div
-        className="sticky top-0 right-0 w-20 h-10 bg-gray-300 z-40"
-        data-testid="scroll-spacer"
-      ></div> */}
     </div>
   );
 };
