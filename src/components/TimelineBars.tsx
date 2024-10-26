@@ -23,11 +23,9 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
   const [columnHeaders, setColumnHeaders] = useState<number[]>([]);
 
   const handleSegmentClick = (petId: number, momentId?: number) => {
-    const url = `/app/family/${familyId}/pet/${petId}`;
+    const url = `/app/family/${familyId}/pet/${petId}`; // TODO: generalize urls
     if (momentId) {
       navigate(url, { state: { momentId } });
-    } else {
-      navigate(url);
     }
   };
 
@@ -56,7 +54,10 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
     setColumnHeaders(yearHeaders);
   }, [latestYear, earliestYear]);
 
-  const rowHeaders = timelinesToRender.map((pet) => pet.petName);
+  const rowHeaders = timelinesToRender.map((pet) => ({
+    name: pet.petName,
+    link: `/app/family/${familyId}/pet/${pet.petId}`,
+  }));
 
   const getCellContents = (row: number, col: number) => {
     const pet = timelinesToRender[row];
@@ -141,20 +142,22 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
                 >
                   {getCellContents(rowIndex, colIndex)}
                 </div>
-
               ))}
               {/* Sticky row headers */}
               <div
                 className="sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold bg-yellow-400"
                 data-testid={`row-header-${rowIndex}`}
               >
-                {rowHeaders[rowIndex]}
+                <a
+                  href={rowHeaders[rowIndex].link}
+                  className=" hover:underline"
+                >
+                  {rowHeaders[rowIndex].name}
+                </a>
               </div>
             </div>
           ))}
         </div>
-
-        
       </div>
     </div>
   );
