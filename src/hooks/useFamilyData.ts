@@ -1,9 +1,9 @@
 // src/hooks/useFamilyData.ts
 import { useQuery } from "@tanstack/react-query";
-import { supabaseClient } from "../db/supabaseClient";
-import { convertStringToDate } from "../utils/dateUtils";
-import { PetDB, LocationDB, MomentDB, UserDB } from "../db/db_types";
-import { Pet, Location, Moment, User, Family } from "../db/db_types";
+import { supabaseClient } from "@/db/supabaseClient";
+import { convertStringToDate } from "@/utils/dateUtils";
+import { PetDB, LocationDB, MomentDB, UserDB } from "@/db/db_types";
+import { Pet, Location, Moment, User, Family } from "@/db/db_types";
 
 export type FamilyDataDB = {
   families: Family[];

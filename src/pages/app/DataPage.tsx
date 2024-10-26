@@ -1,25 +1,55 @@
 // pages/DataPage.tsx - debugging page to see raw family data
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { JsonToTable } from "react-json-to-table";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Pet, Location, Moment } from "@/db/db_types";
-import { FamilyData } from "@/hooks/useFamilyData";
+import type { FamilyData } from "@/hooks/useFamilyData";
 import { convertDateToISODateString } from "@/utils/dateUtils";
 import { useUser } from "@/context/UserContext";
 import FamiliesTable from "@/components/FamiliesTable";
+import { ChevronRight, ChevronDown } from "lucide-react";
 
-const FamilyDataPage: React.FC = () => {
+interface CollapsibleSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
+  title,
+  children,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border rounded-md mb-4">
+      <button
+        className="flex items-center justify-between w-full px-4 py-2 text-left"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="flex items-center">
+          {isOpen ? (
+            <ChevronDown className="w-4 h-4 mr-2" />
+          ) : (
+            <ChevronRight className="w-4 h-4 mr-2" />
+          )}
+          {title}
+        </span>
+      </button>
+      {isOpen && <div className="px-4 py-2">{children}</div>}
+    </div>
+  );
+};
+
+const DataPage: React.FC = () => {
   const { familyData, familyId, isLoading, error } = useFamilyDataContext();
   const { user } = useUser();
 
+  console.log("familyId", familyId);
+
   const convertFamilyData = (familyData: any): FamilyData => {
+    console.log("convertFamilyData", familyData);
     if (!familyData) {
       return {
         family_name: "",
@@ -50,7 +80,11 @@ const FamilyDataPage: React.FC = () => {
       };
     }
   };
-  const updatedData = convertFamilyData(familyData);
+
+  const updatedData = useMemo(
+    () => convertFamilyData(familyData),
+    [familyData]
+  );
 
   if (isLoading) {
     return (
@@ -73,29 +107,20 @@ const FamilyDataPage: React.FC = () => {
 
   return (
     <div>
-      <Collapsible>
-        <CollapsibleTrigger>User</CollapsibleTrigger>
-        <CollapsibleContent>
-          <JsonToTable json={user} />
-        </CollapsibleContent>
-      </Collapsible>
-      <Collapsible>
-        <CollapsibleTrigger>Families</CollapsibleTrigger>
-        <CollapsibleContent>
-          <FamiliesTable familyId={familyId} />
-        </CollapsibleContent>
-      </Collapsible>
-      <Collapsible>
-        <CollapsibleTrigger>Family Data</CollapsibleTrigger>
-        <CollapsibleContent>
-          <JsonToTable json={updatedData} />
-          <pre className="text-[10px]">
-            {JSON.stringify(updatedData, null, 2)}
-          </pre>
-        </CollapsibleContent>
-      </Collapsible>
+      <CollapsibleSection title="User">
+        <JsonToTable json={user} />
+      </CollapsibleSection>
+      <CollapsibleSection title="Families">
+        <FamiliesTable familyId={familyId} />
+      </CollapsibleSection>
+      <CollapsibleSection title="Family Data">
+        <JsonToTable json={updatedData} />
+        <pre className="text-[10px]">
+          {JSON.stringify(updatedData, null, 2)}
+        </pre>
+      </CollapsibleSection>
     </div>
   );
 };
 
-export default FamilyDataPage;
+export default DataPage;

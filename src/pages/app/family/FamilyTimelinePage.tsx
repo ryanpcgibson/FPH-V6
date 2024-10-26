@@ -32,6 +32,8 @@ const TimelinePage: React.FC = () => {
     );
   }
 
+  console.log("petTimelines:", petTimelines);
+
   return (
     <div className="flex flex-row h-screen" id="page-container">
       <TimelineBars petTimelines={petTimelines} />

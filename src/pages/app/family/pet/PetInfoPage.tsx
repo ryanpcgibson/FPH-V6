@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Pet, Moment } from "@/db/db_types";
+import type { Pet, Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { usePetDataContext } from "@/context/PetDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
 import TimelineBars from "@/components/TimelineBars";
 
 const PetInfoPage: React.FC = () => {
-  const location = useLocation();
-  const momentId = location.state?.momentId;
+  const momentId = 0;
+  const { petId: petIdParam } = useParams<{ petId: string }>();
+  const petId = petIdParam ? parseInt(petIdParam, 10) : null;
 
   const {
     familyData,
@@ -19,18 +19,13 @@ const PetInfoPage: React.FC = () => {
     error: familyError,
   } = useFamilyDataContext();
   const {
-    petId,
-    isLoading: isPetLoading,
-    error: petError,
-  } = usePetDataContext();
-  const {
     petTimelines,
     isLoading: isPetTimelineLoading,
     error: petTimelineError,
   } = usePetTimelineContext();
 
-  const isLoading = isFamilyLoading || isPetLoading || isPetTimelineLoading;
-  const error = familyError || petError || petTimelineError;
+  const isLoading = isFamilyLoading || isPetTimelineLoading;
+  const error = familyError || petTimelineError;
 
   const [moments, setMoments] = useState<FamilyData["moments"]>([]);
   const [currentMomentIndex, setCurrentMomentIndex] = useState<number>(0);

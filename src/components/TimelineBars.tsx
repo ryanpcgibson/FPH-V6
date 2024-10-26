@@ -153,6 +153,8 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
             </div>
           ))}
         </div>
+
+        
       </div>
     </div>
   );

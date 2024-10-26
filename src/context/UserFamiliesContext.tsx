@@ -1,12 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { supabaseClient } from "../db/supabaseClient";
-// import { useAuth } from "@/hooks/useAuthData";
 import { useUser } from "@/context/UserContext";
 
 interface Family {
   id: number;
   name: string;
-  member_type: string; // Add this line
+  member_type: string;
 }
 
 interface FamiliesContextType {
@@ -28,7 +27,6 @@ export const FamiliesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [families, setFamilies] = useState<Family[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  //   const { user } = useAuth();
   const { user, isLoading: isLoadingUser, error: errorUser } = useUser();
 
   const fetchFamilies = async () => {
@@ -136,3 +134,5 @@ export const useUserFamiliesContext = () => {
   }
   return context;
 };
+
+export default FamiliesProvider;

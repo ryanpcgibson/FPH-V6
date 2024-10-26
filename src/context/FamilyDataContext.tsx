@@ -1,30 +1,48 @@
-import React, { createContext, useContext } from "react";
-import { FamilyData, useFamilyData } from "../hooks/useFamilyData";
+import React, { createContext, useContext, useMemo } from "react";
+import { useParams, Outlet } from "react-router-dom";
+import { FamilyData, useFamilyData } from "@/hooks/useFamilyData";
 
-interface FamilyDataContextProps {
+interface FamilyDataContextType {
   familyData: FamilyData | undefined;
-  familyId: number;
+  familyId: number | null;
   isLoading: boolean;
   error: Error | null;
 }
 
-const FamilyDataContext = createContext<FamilyDataContextProps | undefined>(
+const FamilyDataContext = createContext<FamilyDataContextType | undefined>(
   undefined
 );
 
-interface FamilyDataProviderProps {
-  familyId: number;
-  children: React.ReactNode;
-}
-
-export const FamilyDataProvider: React.FC<FamilyDataProviderProps> = ({
-  familyId,
+export const FamilyDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { data, isLoading, error } = useFamilyData(familyId);
 
+  const params = useParams();
+  console.log("All params:", params);
+
+  const { familyId } = useParams<{ familyId?: string }>();
+  console.log("familyId from params:", familyId);
+
+  const parsedFamilyId = useMemo(
+    () => (familyId ? parseInt(familyId, 10) : null),
+    [familyId]
+  );
+
+  const { data, isLoading, error } = useFamilyData(parsedFamilyId);
+
+  const contextValue = useMemo(
+    () => ({
+      familyData: data,
+      familyId: parsedFamilyId,
+      isLoading,
+      error,
+    }),
+    [data, parsedFamilyId, isLoading, error]
+  );
+
+  console.log("FamilyDataProvider contextValue:", contextValue);
   return (
-    <FamilyDataContext.Provider value={{ familyData: data, familyId, isLoading, error }}>
+    <FamilyDataContext.Provider value={contextValue}>
       {children}
     </FamilyDataContext.Provider>
   );
@@ -39,3 +57,5 @@ export const useFamilyDataContext = () => {
   }
   return context;
 };
+
+export default FamilyDataProvider;

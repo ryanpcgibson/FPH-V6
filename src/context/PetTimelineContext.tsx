@@ -50,7 +50,6 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
     const segments: PetTimelineSegment[] = [];
 
     for (let year = petStartYear; year <= petEndYear; year++) {
-
       let status: PetTimelineSegment["status"] = "alive";
 
       // Set status for birth year
@@ -152,3 +151,5 @@ export const usePetTimelineContext = () => {
   }
   return context;
 };
+
+export default PetTimelineProvider;
