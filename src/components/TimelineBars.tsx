@@ -15,7 +15,6 @@ interface TimelineBarsProps {
 const TimelineBars: React.FC<TimelineBarsProps> = ({
   petTimelines,
   petId,
-  className = "",
 }) => {
   const { familyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -54,6 +53,9 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({
     setColumnHeaders(yearHeaders);
   }, [latestYear, earliestYear]);
 
+  // TODO this doesn't smell right - this page should probably be focused on layout, and not be aware of the data structure of timelinesToRender too much.
+  // Also, TODO is to figure out locations, as well as pets
+  // Maybe 
   const rowHeaders = timelinesToRender.map((pet) => ({
     name: pet.petName,
     link: `/app/family/${familyId}/pet/${pet.petId}`,
