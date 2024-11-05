@@ -3,18 +3,24 @@ import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
 import FamilyLink from "@/components/FamilyLink";
 
 const FamilySelectPage = () => {
-  const { families, isLoading, error } = useUserFamiliesContext();
+  const { families } = useUserFamiliesContext();
 
   return (
-    <div className="w-full h-screen overflow-scroll">
-      <div className="flex flex-col gap-2">
-        {families.map((family) => (
-          <div className="w-full flex items-center justify-between p-2 bg-yellow-400" key={family.id}>
+    <div className="w-full flex-grow overflow-auto flex flex-col space-y-2">
+      {families.map((family) => (
+        <div
+          className="w-full h-8 flex items-center justify-between bg-yellow-400"
+          key={family.id}
+        >
+          <div className="flex-grow" />
+          <div className="text-center text-black font-bold text-xl">
             <FamilyLink familyId={family.id} familyName={family.name} />
-            <span>({family.member_type})</span>
           </div>
-        ))}
-      </div>
+          <div className="flex-grow flex justify-end italic pr-2">
+            <span>{family.member_type}</span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
