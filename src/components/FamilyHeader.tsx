@@ -1,5 +1,6 @@
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import NavMenu from "@/components/NavMenu";
+import FamilyLink from "./FamilyLink";
 
 const FamilyHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
   const { familyData, familyId } = useFamilyDataContext();
@@ -11,11 +12,7 @@ const FamilyHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
     >
       <div className="flex-grow" /> {/* Spacer */}
       <div className="text-center">
-        <a href={`/app/family/${familyId}`} className="text-xl">
-          <span className="whitespace-nowrap">
-            The {familyData?.family_name} Family
-          </span>
-        </a>
+        <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
       </div>
       <div className="flex-grow flex justify-end">
         <NavMenu />

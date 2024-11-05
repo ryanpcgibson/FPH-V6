@@ -40,7 +40,6 @@ export const FamilyDataProvider: React.FC<{ children: React.ReactNode }> = ({
     [data, parsedFamilyId, isLoading, error]
   );
 
-  console.log("FamilyDataProvider contextValue:", contextValue);
   return (
     <FamilyDataContext.Provider value={contextValue}>
       {children}
