@@ -44,36 +44,36 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <FamiliesProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<WelcomePage />} />
-              <Route path="/logout" element={<LogoutPage />} />
-              <Route
-                path="/app"
-                element={
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<WelcomePage />} />
+            <Route path="/logout" element={<LogoutPage />} />
+            <Route
+              path="/app"
+              element={
+                <FamiliesProvider>
                   <FamilyDataProvider>
                     <PetTimelineProvider>
                       <ProtectedRoute />
                     </PetTimelineProvider>
                   </FamilyDataProvider>
-                }
-              >
-                <Route path="data" element={<AppData />} />
-                <Route element={<AppLayout />}>
+                </FamiliesProvider>
+              }
+            >
+              <Route path="data" element={<AppData />} />
+              <Route element={<AppLayout />}>
+                <Route path="data" element={<FamilyData />} />
+                <Route index element={<FamilySelectPage />} />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="family/:familyId">
+                  <Route index element={<TimelinePage />} />
+                  <Route path="pet/:petId?" element={<PetInfo />} />
                   <Route path="data" element={<FamilyData />} />
-                  <Route index element={<FamilySelectPage />} />
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route path="family/:familyId">
-                    <Route index element={<TimelinePage />} />
-                    <Route path="pet/:petId?" element={<PetInfo />} />
-                    <Route path="data" element={<FamilyData />} />
-                  </Route>
                 </Route>
               </Route>
-            </Routes>
-          </Suspense>
-        </FamiliesProvider>
+            </Route>
+          </Routes>
+        </Suspense>
       </AuthProvider>
     </BrowserRouter>
   );
