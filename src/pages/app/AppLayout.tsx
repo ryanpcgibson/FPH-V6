@@ -3,7 +3,7 @@ import AppHeader from "@/components/AppHeader";
 
 const AppLayout = () => {
   let contentClassName =
-    "w-full h-full p-4 flex flex-col gap-2 justify-center overflow-hidden border border-red-500";
+    "w-full h-full p-4 flex flex-col gap-2 justify-center overflow-hidden";
   const location = useLocation();
   if (!location.pathname.endsWith("/data")) {
     contentClassName += " max-w-[800px] max-h-[500px]";
