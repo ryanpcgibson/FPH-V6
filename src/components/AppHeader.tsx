@@ -2,18 +2,22 @@ import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import NavMenu from "@/components/NavMenu";
 import FamilyLink from "./FamilyLink";
 
-const FamilyHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
+const AppHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
   const { familyData, familyId } = useFamilyDataContext();
+  
+  const headerContent = familyId ? (
+    <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
+  ) : (
+    <div>Pet Timeline</div>
+  );
 
   return (
     <div
       className={`flex items-center justify-between header-box bg-yellow-400 ${className}`}
       data-testid="family-header"
     >
-      <div className="flex-grow" /> {/* Spacer */}
-      <div className="text-center">
-        <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
-      </div>
+      <div className="flex-grow" />
+      <div className="text-center">{headerContent}</div>
       <div className="flex-grow flex justify-end">
         <NavMenu />
       </div>
@@ -21,4 +25,4 @@ const FamilyHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
   );
 };
 
-export default FamilyHeader;
+export default AppHeader;

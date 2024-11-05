@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuthData";
+import { useAuth } from "@/context/AuthContext";
 
 const LogoutPage: React.FC = () => {
   const { signOut } = useAuth();

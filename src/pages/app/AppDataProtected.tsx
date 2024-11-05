@@ -1,30 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuthData";
+import { useAuth } from "@/context/AuthContext";
 import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
 
 const ProtectedRoute = () => {
-  const { user, isLoading: isLoadingUser, error: errorUser } = useAuth();
-  const {
-    families,
-    isLoading: isLoadingFamilies,
-    error: errorFamilies,
-  } = useUserFamiliesContext();
+  const { user, error: errorUser } = useAuth();
+  const { families, isLoading: isLoadingFamilies, error: errorFamilies } = useUserFamiliesContext();
 
-  if (isLoadingUser) {
-    return <div>Loading...</div>;
-  }
-
-  if (errorUser) {
-    if (errorUser.message === "User not authenticated") {
-      return <Navigate to="/" />;
-    }
-    return <div>Error: {errorUser.message}</div>;
-  }
-
-  if (!user) {
+  // Handle auth errors or no user
+  if (errorUser || !user) {
     return <Navigate to="/" />;
   }
 
+  // Handle families loading and errors
   if (isLoadingFamilies) {
     return <div>Loading families...</div>;
   }

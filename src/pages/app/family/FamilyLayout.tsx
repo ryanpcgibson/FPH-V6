@@ -1,18 +1,13 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import FamilyHeader from "@/components/FamilyHeader";
+// import { Outlet } from "react-router-dom";
+// import AppHeader from "@/components/AppHeader";
 
-interface FamilyLayoutProps {
-  debugLayout?: boolean;
-}
+// const FamilyLayout = ({ debugLayout = false }) => {
+//   return (
+//     <>
+//       {!debugLayout && <AppHeader className="w-full" />}
+//       <Outlet />
+//     </>
+//   );
+// };
 
-const FamilyLayout: React.FC<FamilyLayoutProps> = ({ debugLayout = false }) => {
-  return (
-    <>
-      {!debugLayout && <FamilyHeader className="w-full" />}
-      <Outlet />
-    </>
-  );
-};
-
-export default FamilyLayout;
+// export default FamilyLayout;

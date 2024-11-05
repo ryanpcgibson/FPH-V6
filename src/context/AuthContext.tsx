@@ -1,5 +1,16 @@
-import React from "react";
-import { AuthContext, useAuthData } from "../hooks/useAuthData";
+import React, { createContext, useContext } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { useAuthData } from "../hooks/useAuthData";
+
+interface AuthContextType {
+  session: Session | null;
+  user: User | null;
+  isLoading: boolean;
+  error: Error | null;
+  signOut: () => Promise<{ error: Error | null }>;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -12,3 +23,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
+
+export default AuthProvider;

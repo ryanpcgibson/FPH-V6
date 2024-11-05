@@ -1,21 +1,16 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { Session, User } from "@supabase/supabase-js";
+import { useState, useEffect } from "react";
 import { supabaseClient } from "../db/supabaseClient";
+import { Session, User } from "@supabase/supabase-js";
 
-interface AuthContextType {
+interface AuthState {
   session: Session | null;
   user: User | null;
   isLoading: boolean;
   error: Error | null;
-  signOut: () => Promise<void>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
-
 export const useAuthData = () => {
-  const [authData, setAuthData] = useState<Omit<AuthContextType, "signOut">>({
+  const [authData, setAuthData] = useState<AuthState>({
     session: null,
     user: null,
     isLoading: true,
@@ -84,24 +79,4 @@ export const useAuthData = () => {
   const signOut = () => supabaseClient.auth.signOut();
 
   return { ...authData, signOut };
-};
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const authData = useAuthData();
-
-  return (
-    <AuthContext.Provider value={authData}>
-      {!authData.isLoading && children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 };

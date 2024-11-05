@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useFamilyDataContext } from "./FamilyDataContext";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import { FamilyData } from "@/hooks/useFamilyData";
 import { Pet, Moment } from "../db/db_types";
 
 // TODO: store these types in the DB
@@ -99,17 +106,25 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
   });
 }
 
-export const PetTimelineProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const {
-    familyData,
-    isLoading: isFamilyLoading,
-    error: familyError,
-  } = useFamilyDataContext();
+export const PetTimelineProvider: React.FC<{
+  children: React.ReactNode;
+  familyId: number | undefined;
+}> = ({ children, familyId }) => {
+  const [familyData, setFamilyData] = useState<FamilyData | undefined>(
+    undefined
+  );
+
   const [petTimelines, setPetTimelines] = useState<PetTimeline[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+
+  const { familyData: contextFamilyData } = useFamilyDataContext();
+
+  useEffect(() => {
+    if (familyId) {
+      setFamilyData(contextFamilyData);
+    }
+  }, [familyId, contextFamilyData]);
 
   useEffect(() => {
     if (familyData) {
@@ -133,8 +148,8 @@ export const PetTimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     <PetTimelineContext.Provider
       value={{
         petTimelines,
-        isLoading: isLoading || isFamilyLoading,
-        error: error || familyError,
+        isLoading: isLoading,
+        error: error,
       }}
     >
       {children}
