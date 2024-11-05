@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabaseClient } from "../db/supabaseClient";
 import { useAuth } from "@/context/AuthContext";
 
@@ -13,6 +13,12 @@ export function useFamilies() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchFamilies();
+    }
+  }, [user]);
 
   const fetchFamilies = async () => {
     setIsLoading(true);

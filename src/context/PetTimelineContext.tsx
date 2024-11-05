@@ -1,12 +1,9 @@
 import React, {
   createContext,
   useContext,
-  useState,
-  useEffect,
   useMemo,
 } from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { FamilyData } from "@/hooks/useFamilyData";
 import { Pet, Moment } from "../db/db_types";
 
 // TODO: store these types in the DB
@@ -109,37 +106,52 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
 export const PetTimelineProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { familyData, familyId } = useFamilyDataContext();
-  const [petTimelines, setPetTimelines] = useState<PetTimeline[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const {
+    familyData,
+    familyId,
+    isLoading: isFamilyLoading,
+  } = useFamilyDataContext();
 
-  useEffect(() => {
-    if (familyData) {
-      try {
-        setIsLoading(true);
-        const timelines = generatePetTimelines(
-          familyData.pets,
-          familyData.moments
-        );
-        setPetTimelines(timelines);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("An error occurred"));
-      } finally {
-        setIsLoading(false);
-      }
+  const contextValue = useMemo(() => {
+    if (!familyId || !familyData) {
+      return {
+        petTimelines: [],
+        isLoading: false,
+        error: null,
+      };
     }
-  }, [familyData]);
+
+    try {
+      const timelines = generatePetTimelines(
+        familyData.pets,
+        familyData.moments
+      );
+      return {
+        petTimelines: timelines,
+        isLoading: isFamilyLoading,
+        error: null,
+      };
+    } catch (err) {
+      return {
+        petTimelines: [],
+        isLoading: false,
+        error: err instanceof Error ? err : new Error("An error occurred"),
+      };
+    }
+  }, [familyData, familyId, isFamilyLoading]);
+
+  if (contextValue.error) {
+    return (
+      <div>Error generating pet timelines: {contextValue.error.message}</div>
+    );
+  }
+
+  if (contextValue.isLoading) {
+    return <div>Loading pet timelines...</div>;
+  }
 
   return (
-    <PetTimelineContext.Provider
-      value={{
-        petTimelines,
-        isLoading: isLoading,
-        error: error,
-      }}
-    >
+    <PetTimelineContext.Provider value={contextValue}>
       {children}
     </PetTimelineContext.Provider>
   );

@@ -1,10 +1,7 @@
 import "./App.css";
-import { Suspense, useState, useEffect } from "react";
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PageLayout from "@/components/layouts/PageLayout";
 
 import { AuthProvider } from "@/context/AuthContext";
 
@@ -32,7 +29,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<PageLayout isLoading>Loading...</PageLayout>}>
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="/logout" element={<LogoutPage />} />
@@ -42,13 +39,12 @@ function App() {
                 <FamiliesProvider>
                   <FamilyDataProvider>
                     <PetTimelineProvider>
-                      <ProtectedRoute />
+                        <ProtectedRoute />
                     </PetTimelineProvider>
                   </FamilyDataProvider>
                 </FamiliesProvider>
               }
             >
-              <Route path="data" element={<AppData />} />
               <Route element={<AppLayout />}>
                 <Route path="data" element={<FamilyData />} />
                 <Route index element={<FamilySelectPage />} />

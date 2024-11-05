@@ -75,12 +75,6 @@ const TimelineBars: React.FC<TimelineBarsProps> = ({ petTimelines, petId }) => {
   const cols = columnHeaders.length;
   const rows = rowHeaders.length;
 
-  const data = Array.from({ length: rows }, (_, rowIndex) =>
-    Array.from(
-      { length: cols },
-      (_, colIndex) => rowIndex * cols + colIndex + 1
-    )
-  );
 
   // Calculate the minimum width based on the number of columns
   const minWidth = (cols + 1) * 80; // 80px per cell (w-20 = 5rem = 80px)

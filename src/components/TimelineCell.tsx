@@ -52,7 +52,6 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
             strokeWidth={1}
           />
         )}
-        {/* <div>{segment?.status}</div> */}
       </div>
     </div>
   );

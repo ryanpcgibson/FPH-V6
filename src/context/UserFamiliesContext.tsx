@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
+import React, { createContext, useContext, useMemo } from "react";
 import { useFamilies, UseFamiliesReturn } from "@/hooks/useFamilies";
 
 const FamiliesContext = createContext<UseFamiliesReturn | undefined>(undefined);
@@ -7,20 +6,27 @@ const FamiliesContext = createContext<UseFamiliesReturn | undefined>(undefined);
 export const FamiliesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { user, isLoading: isLoadingUser, error: errorUser } = useAuth();
-  const familiesData = useFamilies();
+  const { families, isLoading, error } = useFamilies();
 
-  useEffect(() => {
-    if (user) {
-      familiesData.fetchFamilies();
-    } else if (errorUser || !isLoadingUser) {
-      // Reset loading state if there's an error or user loading is complete
-      familiesData.isLoading = false;
-    }
-  }, [user, errorUser, isLoadingUser]);
+  const contextValue = useMemo(
+    () => ({
+      families,
+      isLoading,
+      error,
+    }),
+    [families, isLoading, error]
+  );
+
+  if (error) {
+    return <div>Error fetching families: {error.message}</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading families...</div>;
+  }
 
   return (
-    <FamiliesContext.Provider value={familiesData}>
+    <FamiliesContext.Provider value={contextValue}>
       {children}
     </FamiliesContext.Provider>
   );
