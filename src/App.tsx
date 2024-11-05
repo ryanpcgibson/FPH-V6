@@ -41,38 +41,38 @@ function AppLayoutWrapper() {
 }
 
 function App() {
-  const { familyId } = useParams<{ familyId?: string }>();
-  console.log("familyId", familyId);
-  const currentFamilyId = familyId ? parseInt(familyId, 10) : undefined;
-  console.log("currentFamilyId", currentFamilyId);
-
   return (
     <BrowserRouter>
       <AuthProvider>
         <FamiliesProvider>
-          <FamilyDataProvider familyId={currentFamilyId}>
-            <PetTimelineProvider familyId={currentFamilyId}>
-              <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                  <Route path="/" element={<WelcomePage />} />
-                  <Route path="/logout" element={<LogoutPage />} />
-                  <Route path="/app" element={<ProtectedRoute />}>
-                    <Route path="data" element={<AppData />} />
-                    <Route element={<AppLayout />}>
-                      <Route path="data" element={<FamilyData />} />
-                      <Route index element={<FamilySelectPage />} />
-                      <Route path="profile" element={<ProfilePage />} />
-                      <Route path="family/:familyId">
-                        <Route index element={<TimelinePage />} />
-                        <Route path="pet/:petId?" element={<PetInfo />} />
-                        <Route path="data" element={<FamilyData />} />
-                      </Route>
-                    </Route>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/logout" element={<LogoutPage />} />
+              <Route path="/app" element={<ProtectedRoute />}>
+                <Route path="data" element={<AppData />} />
+                <Route element={<AppLayout />}>
+                  <Route path="data" element={<FamilyData />} />
+                  <Route index element={<FamilySelectPage />} />
+                  <Route path="profile" element={<ProfilePage />} />
+                  <Route
+                    path="family/:familyId"
+                    element={
+                      <FamilyDataProvider>
+                        <PetTimelineProvider>
+                          <Outlet />
+                        </PetTimelineProvider>
+                      </FamilyDataProvider>
+                    }
+                  >
+                    <Route index element={<TimelinePage />} />
+                    <Route path="pet/:petId?" element={<PetInfo />} />
+                    <Route path="data" element={<FamilyData />} />
                   </Route>
-                </Routes>
-              </Suspense>
-            </PetTimelineProvider>
-          </FamilyDataProvider>
+                </Route>
+              </Route>
+            </Routes>
+          </Suspense>
         </FamiliesProvider>
       </AuthProvider>
     </BrowserRouter>

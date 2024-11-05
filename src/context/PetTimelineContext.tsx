@@ -108,23 +108,11 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
 
 export const PetTimelineProvider: React.FC<{
   children: React.ReactNode;
-  familyId: number | undefined;
-}> = ({ children, familyId }) => {
-  const [familyData, setFamilyData] = useState<FamilyData | undefined>(
-    undefined
-  );
-
+}> = ({ children }) => {
+  const { familyData, familyId } = useFamilyDataContext();
   const [petTimelines, setPetTimelines] = useState<PetTimeline[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-
-  const { familyData: contextFamilyData } = useFamilyDataContext();
-
-  useEffect(() => {
-    if (familyId) {
-      setFamilyData(contextFamilyData);
-    }
-  }, [familyId, contextFamilyData]);
 
   useEffect(() => {
     if (familyData) {

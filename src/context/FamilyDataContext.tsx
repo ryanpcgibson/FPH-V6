@@ -15,11 +15,12 @@ const FamilyDataContext = createContext<FamilyDataContextType | undefined>(
 
 export const FamilyDataProvider: React.FC<{
   children: React.ReactNode;
-  familyId: number | undefined;
-}> = ({ children, familyId }) => {
-  const { data, isLoading, error } = useFamilyData(familyId);
+}> = ({ children }) => {
+  const { familyId } = useParams<{ familyId?: string }>();
+  const { data, isLoading, error } = useFamilyData(
+    parseInt(familyId || "", 10)
+  );
   console.log("data", data);
-  console.log("familyId", familyId);
   const contextValue = useMemo(
     () => ({
       familyData: data,

@@ -3,13 +3,20 @@ import NavMenu from "@/components/NavMenu";
 import FamilyLink from "./FamilyLink";
 
 const AppHeader: React.FC<{ className?: string }> = ({ className = "" }) => {
-  const { familyData, familyId } = useFamilyDataContext();
-  
+  let familyId = undefined;
+  let familyData = undefined;
+  try {
+    // if outside of FamilyDataProvider could throw error
+    ({ familyData, familyId } = useFamilyDataContext());
+  } catch {}
+
   const headerContent = familyId ? (
     <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
   ) : (
     <div>Pet Timeline</div>
   );
+
+  console.log("familyData", familyData);
 
   return (
     <div
