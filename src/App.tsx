@@ -49,22 +49,22 @@ function App() {
             <Routes>
               <Route path="/" element={<WelcomePage />} />
               <Route path="/logout" element={<LogoutPage />} />
-              <Route path="/app" element={<ProtectedRoute />}>
+              <Route
+                path="/app"
+                element={
+                  <FamilyDataProvider>
+                    <PetTimelineProvider>
+                      <ProtectedRoute />
+                    </PetTimelineProvider>
+                  </FamilyDataProvider>
+                }
+              >
                 <Route path="data" element={<AppData />} />
                 <Route element={<AppLayout />}>
                   <Route path="data" element={<FamilyData />} />
                   <Route index element={<FamilySelectPage />} />
                   <Route path="profile" element={<ProfilePage />} />
-                  <Route
-                    path="family/:familyId"
-                    element={
-                      <FamilyDataProvider>
-                        <PetTimelineProvider>
-                          <Outlet />
-                        </PetTimelineProvider>
-                      </FamilyDataProvider>
-                    }
-                  >
+                  <Route path="family/:familyId">
                     <Route index element={<TimelinePage />} />
                     <Route path="pet/:petId?" element={<PetInfo />} />
                     <Route path="data" element={<FamilyData />} />
