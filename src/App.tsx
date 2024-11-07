@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import FamiliesProvider from "@/context/UserFamiliesContext";
 import FamilyDataProvider from "@/context/FamilyDataContext";
 import PetTimelineProvider from "@/context/PetTimelineContext";
+import LocationTimelineProvider from "@/context/LocationTimelineContext";
 
 import WelcomePage from "@/pages/WelcomePage";
 import ProtectedRoute from "@/pages/app/AppDataProtected";
@@ -39,7 +40,9 @@ function App() {
                 <FamiliesProvider>
                   <FamilyDataProvider>
                     <PetTimelineProvider>
+                      <LocationTimelineProvider>
                         <ProtectedRoute />
+                      </LocationTimelineProvider>
                     </PetTimelineProvider>
                   </FamilyDataProvider>
                 </FamiliesProvider>
