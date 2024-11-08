@@ -15,7 +15,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
 }) => {
   const hasStatus = (statuses: string | string[]): boolean => {
     if (!segment?.status) return false;
-    return Array.isArray(statuses) 
+    return Array.isArray(statuses)
       ? statuses.includes(segment.status)
       : segment.status === statuses;
   };
@@ -26,17 +26,29 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
 
   let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";
 
-  if (hasStatus(["birth", "alive", "death", "memory", "move-in", "residing", "move-out"])) {
+  if (
+    hasStatus([
+      "birth",
+      "birth-and-death",
+      "alive",
+      "death",
+      "memory",
+      "move-in",
+      "move-in-and-out",
+      "residing",
+      "move-out",
+    ])
+  ) {
     cellClass += " bg-opacity-0 border-t-2 border-b-2 border-black";
   } else {
     cellClass += " bg-white";
   }
 
-  if (hasStatus(["birth", "move-in"])) {
+  if (hasStatus(["birth", "birth-and-death", "move-in", "move-in-and-out"])) {
     cellClass += " border-l-2";
   }
 
-  if (hasStatus(["death", "move-out"])) {
+  if (hasStatus(["death", "birth-and-death", "move-out", "move-in-and-out"])) {
     cellClass += " border-r-2";
   }
 

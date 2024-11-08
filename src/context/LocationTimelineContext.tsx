@@ -36,7 +36,6 @@ function generateLocationTimelines(
 
       const segments: LocationTimelineSegment[] = [];
 
-
       for (let year = locationStartYear; year <= locationEndYear; year++) {
         let status: LocationTimelineSegment["status"] = "residing";
 
@@ -46,6 +45,14 @@ function generateLocationTimelines(
 
         if (location.end_date && year === locationEndYear) {
           status = "move-out";
+        }
+
+        if (
+          location.end_date &&
+          year === locationEndYear &&
+          year === locationStartYear
+        ) {
+          status = "move-in-and-out";
         }
 
         let yearMoments = moments
@@ -121,7 +128,7 @@ export const LocationTimelineProvider: React.FC<{
         getFilteredLocationTimelines: (petId?: number) => {
           return generateLocationTimelines(
             familyData.locations,
-            familyData.moments,
+            familyData.moments
           );
         },
       };

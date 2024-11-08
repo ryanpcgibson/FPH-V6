@@ -12,6 +12,7 @@ export interface LocationTimelineSegment {
     | "move-in"
     | "residing"
     | "move-out"
+    | "move-in-and-out"
     | "memory"
     | "not-moved-in"
     | "former";
@@ -31,6 +32,7 @@ export interface PetTimelineSegment {
   status:
     | "not-born"
     | "birth"
+    | "birth-and-death"
     | "alive"
     | "death"
     | "memory"

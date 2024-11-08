@@ -41,6 +41,11 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
         status = "death";
       }
 
+      // Set status for death year
+      if (pet.end_date && year === petEndYear && year === petStartYear) {
+        status = "birth-and-death";
+      }
+
       let yearMoments = moments
         .filter(
           (moment) =>
@@ -136,7 +141,9 @@ export const PetTimelineProvider: React.FC<{
     ...contextValue,
     getFilteredPetTimelines: (petId?: number) => {
       return petId
-        ? contextValue.petTimelines.filter((timeline) => timeline.petId === petId)
+        ? contextValue.petTimelines.filter(
+            (timeline) => timeline.petId === petId
+          )
         : contextValue.petTimelines;
     },
   };
