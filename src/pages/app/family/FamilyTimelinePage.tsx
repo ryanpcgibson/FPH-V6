@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import TimelineGrid from "@/components/timeline/TimelineGrid";
 
 const FamilyTimelinePage: React.FC = () => {

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import type { Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import PetCarousel from "@/components/PetCarousel";
 import TimelineGrid from "@/components/timeline/TimelineGrid";
 
@@ -13,7 +12,6 @@ const PetInfoPage: React.FC = () => {
   const petId = petIdParam ? parseInt(petIdParam, 10) : null;
 
   const { familyData } = useFamilyDataContext();
-  const { petTimelines } = usePetTimelineContext();
 
   const [moments, setMoments] = useState<FamilyData["moments"]>([]);
   const [currentMomentIndex, setCurrentMomentIndex] = useState<number>(0);
