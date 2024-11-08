@@ -19,9 +19,13 @@ export type Location = WithDateFields<LocationDB>;
 export type LocationInsert = WithDateFields<TablesInsert<"locations">>;
 export type LocationUpdate = WithDateFields<TablesUpdate<"locations">>;
 
-export type MomentDB = Omit<Tables<"moments">, "photos" | "pets"> & {
+export type MomentDB = Omit<
+  Tables<"moments">,
+  "photos" | "pets" | "locations"
+> & {
   photos: Photo[];
-  pets: { id: number }[];
+  pets: Pet[];
+  locations: Location[];
 };
 
 export type Moment = WithDateFields<MomentDB>;

@@ -2,7 +2,8 @@ import React from "react";
 import Link from "@/components/Link";
 import SvgPattern from "@/components/SvgPattern";
 import TimelineCell from "@/components/TimelineCell";
-import type { TimelineItem, TimelineSegment } from "@/types/timeline";
+import type { TimelineItem } from "@/types/timeline";
+
 
 interface TimelineRowProps {
   item: TimelineItem;

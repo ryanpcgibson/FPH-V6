@@ -1,45 +1,35 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import TimelineGrid from "./timeline/TimelineGrid";
-import { useTimelineSections } from "@/hooks/useTimelineSections";
+// import React from "react";
+// import { useNavigate } from "react-router-dom";
+// import { usePetTimelineContext } from "@/context/PetTimelineContext";
+// import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
+// import TimelineGrid from "./timeline/TimelineGrid";
+// import { useTimelineSections } from "@/hooks/useTimelineSections";
 
-interface TimelineBarsProps {
-  petTimelines: PetTimeline[];
-  locationTimelines?: LocationTimeline[];
-  petId?: number;
-  className?: string;
-}
+// interface TimelineBarsProps {
+//   petId?: number;
+//   className?: string;
+// }
 
-const TimelineBars: React.FC<TimelineBarsProps> = ({
-  petTimelines,
-  locationTimelines = [],
-  petId,
-}) => {
-  const { familyId } = useFamilyDataContext();
-  const navigate = useNavigate();
-  const baseURL = `/app/family/${familyId}`;
+// const TimelineBars: React.FC<TimelineBarsProps> = ({ petId }) => {
+//   const { petTimelines } = usePetTimelineContext();
+//   const { locationTimelines } = useLocationTimelineContext();
+//   const navigate = useNavigate();
 
-  const sections = useTimelineSections({
-    petTimelines,
-    locationTimelines,
-    petId,
-  });
+//   const sections = useTimelineSections({
+//     petTimelines,
+//     locationTimelines,
+//     petId,
+//   });
 
-  const handleSegmentClick = (itemId: number, momentId?: number) => {
-    const url = `${baseURL}/pet/${itemId}`;
-    if (momentId) {
-      navigate(url, { state: { momentId } });
-    }
-  };
+//   const handleSegmentClick = (itemId: number, momentId?: number) => {
+//     if (momentId) {
+//       navigate(`/pet/${itemId}`, { state: { momentId } });
+//     }
+//   };
 
-  return (
-    <TimelineGrid
-      sections={sections}
-      baseURL={baseURL}
-      onSegmentClick={handleSegmentClick}
-    />
-  );
-};
+//   return (
+//     <TimelineGrid sections={sections} onSegmentClick={handleSegmentClick} />
+//   );
+// };
 
-export default TimelineBars;
+// export default TimelineBars;

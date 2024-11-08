@@ -1,25 +1,31 @@
 import React from "react";
 import TimelineHeader from "@/components/timeline/TimelineHeader";
 import TimelineSection from "@/components/timeline/TimelineSection";
-import { useTimelineCalculations } from "@/hooks/useTimelineCalculations";
-import type { TimelineSection as TimelineSectionType } from "@/types/timeline";
+import { useTimelineSections } from "@/hooks/useTimelineSections";
+import { usePetTimelineContext } from "@/context/PetTimelineContext";
+import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import { useNavigate } from "react-router-dom";
 
-interface TimelineGridProps {
-  sections: TimelineSectionType[];
-  baseURL: string;
-  onSegmentClick?: (itemId: number, momentId?: number) => void;
-}
+const TimelineGrid: React.FC = () => {
+  const { petTimelines } = usePetTimelineContext();
+  const { locationTimelines } = useLocationTimelineContext();
+  const navigate = useNavigate();
 
-const TimelineGrid: React.FC<TimelineGridProps> = ({
-  sections,
-  baseURL,
-  onSegmentClick,
-}) => {
-  const { columnHeaders, minWidth } = useTimelineCalculations(sections);
+  const handleSegmentClick = (itemId: number, momentId?: number) => {
+    if (momentId) {
+      navigate(`/pet/${itemId}`, { state: { momentId } });
+    }
+  };
+  const { sections, columnHeaders, minWidth } = useTimelineSections();
+  const { familyId } = useFamilyDataContext();
+  const baseURL = `/app/family/${familyId}`;
 
-  sections.forEach((section) => {
-    console.log(`section: ${section.id} (${section.items.length})`);
-  });
+  console.log(`petTimelines: (${petTimelines.length})`, petTimelines);
+  console.log(
+    `locationTimelines: (${locationTimelines.length})`,
+    locationTimelines
+  );
 
   return (
     <div
@@ -39,7 +45,7 @@ const TimelineGrid: React.FC<TimelineGridProps> = ({
             section={section}
             columnHeaders={columnHeaders}
             baseURL={baseURL}
-            onSegmentClick={onSegmentClick}
+            onSegmentClick={section.onSegmentClick}
           />
         ))}
       </div>

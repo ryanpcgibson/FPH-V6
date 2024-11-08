@@ -1,38 +1,13 @@
-import React, {
-  createContext,
-  useContext,
-  useMemo,
-} from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { Pet, Moment } from "../db/db_types";
-
-// TODO: store these types in the DB
-// TODO: deeper analysis of pet statuses
-export interface PetTimelineSegment {
-  year: number;
-  status:
-    | "not-born"
-    | "birth"
-    | "alive"
-    | "death"
-    | "memory"
-    | "deceased"
-    | "transferred"
-    | "adopted"
-    | "lost";
-  moments?: { id: number; title: string }[];
-}
-
-export interface PetTimeline {
-  petId: number;
-  petName: string;
-  segments: PetTimelineSegment[];
-}
+import { Pet, Moment } from "@/db/db_types";
+import type { PetTimeline, PetTimelineSegment } from "@/types/timeline";
 
 interface PetTimelineContextProps {
   petTimelines: PetTimeline[];
   isLoading: boolean;
   error: Error | null;
+  getFilteredPetTimelines: (petId?: number) => PetTimeline[];
 }
 
 const PetTimelineContext = createContext<PetTimelineContextProps | undefined>(
@@ -118,6 +93,7 @@ export const PetTimelineProvider: React.FC<{
         petTimelines: [],
         isLoading: false,
         error: null,
+        getFilteredPetTimelines: () => [],
       };
     }
 
@@ -130,12 +106,18 @@ export const PetTimelineProvider: React.FC<{
         petTimelines: timelines,
         isLoading: isFamilyLoading,
         error: null,
+        getFilteredPetTimelines: (petId?: number) => {
+          return petId
+            ? timelines.filter((timeline) => timeline.petId === petId)
+            : timelines;
+        },
       };
     } catch (err) {
       return {
         petTimelines: [],
         isLoading: false,
         error: err instanceof Error ? err : new Error("An error occurred"),
+        getFilteredPetTimelines: () => [],
       };
     }
   }, [familyData, familyId, isFamilyLoading]);
@@ -150,8 +132,17 @@ export const PetTimelineProvider: React.FC<{
     return <div>Loading pet timelines...</div>;
   }
 
+  const enhancedValue = {
+    ...contextValue,
+    getFilteredPetTimelines: (petId?: number) => {
+      return petId
+        ? contextValue.petTimelines.filter((timeline) => timeline.petId === petId)
+        : contextValue.petTimelines;
+    },
+  };
+
   return (
-    <PetTimelineContext.Provider value={contextValue}>
+    <PetTimelineContext.Provider value={enhancedValue}>
       {children}
     </PetTimelineContext.Provider>
   );

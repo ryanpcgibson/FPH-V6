@@ -1,15 +1,12 @@
 import React from "react";
-import { usePetTimelineContext } from "@/context/PetTimelineContext";
-import TimelineBars from "@/components/TimelineBars";
+import TimelineGrid from "@/components/timeline/TimelineGrid";
 
-const TimelinePage: React.FC = () => {
-  const { petTimelines } = usePetTimelineContext();
-
+const FamilyTimelinePage: React.FC = () => {
   return (
     <div className="flex flex-row h-screen" id="page-container">
-      <TimelineBars petTimelines={petTimelines} />
+      <TimelineGrid />
     </div>
   );
 };
 
-export default TimelinePage;
+export default FamilyTimelinePage;

@@ -13,7 +13,6 @@ import LocationTimelineProvider from "@/context/LocationTimelineContext";
 import WelcomePage from "@/pages/WelcomePage";
 import ProtectedRoute from "@/pages/app/AppDataProtected";
 import FamilyData from "@/pages/app/family/FamilyDataPage";
-import AppData from "@/pages/app/AppDataPage";
 import AppLayout from "@/pages/app/AppLayout";
 
 import ProfilePage from "./pages/app/ProfilePage";

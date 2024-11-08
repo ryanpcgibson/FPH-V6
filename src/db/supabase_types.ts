@@ -28,15 +28,7 @@ export type Database = {
           id?: number
           name?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "families_added_by_fkey"
-            columns: ["added_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       family_users: {
         Row: {
@@ -63,13 +55,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "family_users_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "family_users_user_id_fkey1"
             columns: ["user_id"]
             isOneToOne: false
@@ -81,6 +66,36 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users_ext"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      location_moments: {
+        Row: {
+          location_id: number
+          moment_id: number
+        }
+        Insert: {
+          location_id: number
+          moment_id: number
+        }
+        Update: {
+          location_id?: number
+          moment_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_moments_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "location_moments_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "moments"
             referencedColumns: ["id"]
           },
         ]
@@ -118,13 +133,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "locations_added_by_fkey"
-            columns: ["added_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "locations_family_id_fkey"
             columns: ["family_id"]
             isOneToOne: false
@@ -161,15 +169,7 @@ export type Database = {
           start_date?: string
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "moments_added_by_fkey"
-            columns: ["added_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       pet_moments: {
         Row: {
@@ -234,13 +234,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pets_added_by_fkey"
-            columns: ["added_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "pets_family_id_fkey"
             columns: ["family_id"]
             isOneToOne: false
@@ -273,13 +266,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "photos_added_by_fkey"
-            columns: ["added_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "photos_moment_id_fkey"
             columns: ["moment_id"]
             isOneToOne: false
@@ -307,15 +293,7 @@ export type Database = {
           email?: string | null
           id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
@@ -333,13 +311,6 @@ export type Database = {
             columns: ["family_id"]
             isOneToOne: false
             referencedRelation: "families"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -474,4 +445,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

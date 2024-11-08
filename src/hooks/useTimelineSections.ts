@@ -1,57 +1,77 @@
 import { useMemo } from "react";
 import type { TimelineSection } from "@/types/timeline";
-import type { PetTimeline } from "@/context/PetTimelineContext";
-import type { LocationTimeline } from "@/context/LocationTimelineContext";
+import { usePetTimelineContext } from "@/context/PetTimelineContext";
+import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
+import { useNavigate } from "react-router-dom";
 
-interface UseTimelineSectionsProps {
-  petTimelines: PetTimeline[];
-  locationTimelines: LocationTimeline[];
-  petId?: number;
-}
+export const useTimelineSections = (petId?: number) => {
+  const { petTimelines, getFilteredPetTimelines } = usePetTimelineContext();
+  const { locationTimelines } = useLocationTimelineContext();
+  const navigate = useNavigate();
 
-export const useTimelineSections = ({
-  petTimelines,
-  locationTimelines,
-  petId,
-}: UseTimelineSectionsProps) => {
   return useMemo(() => {
     const sections: TimelineSection[] = [];
+    const filteredPetTimelines = getFilteredPetTimelines(petId);
 
-    // Filter pet timelines if petId is provided
-    const filteredPetTimelines = petId
-      ? petTimelines.filter((timeline) => timeline.petId === petId)
-      : petTimelines;
-
-    // Add pets section
     if (filteredPetTimelines.length > 0) {
       sections.push({
-        id: 'pets',
-        type: 'pets',
-        items: filteredPetTimelines.map(pet => ({
+        id: "pets",
+        items: filteredPetTimelines.map((pet) => ({
           id: pet.petId,
           name: pet.petName,
-          segments: pet.segments
+          segments: pet.segments,
         })),
-        patternIds: ['9', '10', '22', '40'],
-        headerStyle: 'bg-yellow-400'
+        patternIds: ["9", "10", "22", "40"],
+        headerStyle: "bg-yellow-400",
+        onSegmentClick: (itemId, momentId) => {
+          navigate(`/pet/${itemId}`, { state: { momentId } });
+        },
       });
     }
 
-    // Add locations section if no specific pet is selected
     if (!petId && locationTimelines.length > 0) {
       sections.push({
-        id: 'locations',
-        type: 'locations',
-        items: locationTimelines.map(location => ({
+        id: "locations",
+        items: locationTimelines.map((location) => ({
           id: location.locationId,
           name: location.locationName,
-          segments: location.segments
+          segments: location.segments,
         })),
-        patternIds: ['50', '51', '52', '53'],
-        headerStyle: 'bg-blue-400'
+        patternIds: ["9", "10", "22", "40"],
+        headerStyle: "bg-blue-400",
+        onSegmentClick: (itemId, momentId) => {
+          navigate(`/location/${itemId}`, { state: { momentId } });
+        },
       });
     }
 
-    return sections;
-  }, [petTimelines, locationTimelines, petId]);
-}; 
+    const allItems = sections.flatMap((section) => section.items);
+
+    const earliestYear = allItems.reduce(
+      (min, item) =>
+        item.segments.length > 0 ? Math.min(min, item.segments[0].year) : min,
+      Infinity
+    );
+
+    const latestYear = allItems.reduce(
+      (max, item) =>
+        item.segments.length > 0
+          ? Math.max(max, item.segments[item.segments.length - 1].year)
+          : max,
+      -Infinity
+    );
+
+    const columnHeaders = Array.from(
+      { length: latestYear - earliestYear + 1 },
+      (_, i) => earliestYear + i
+    );
+
+    const minWidth = (columnHeaders.length + 1) * 80;
+
+    return {
+      sections,
+      columnHeaders,
+      minWidth,
+    };
+  }, [petTimelines, locationTimelines, petId, getFilteredPetTimelines]);
+};
