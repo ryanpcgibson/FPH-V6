@@ -33,7 +33,6 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
     );
   };
 
-  console.log(`item: ${item.id} (${item.segments.length}) `, item);
   return (
     <div className="relative flex" data-testid={`row-${item.id}`}>
       {/* Background Pattern */}

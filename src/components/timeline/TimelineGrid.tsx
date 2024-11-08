@@ -14,8 +14,6 @@ export interface TimelineGridHandle {
 
 const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   const gridContainerRef = useRef<HTMLDivElement>(null);
-  const { petTimelines } = usePetTimelineContext();
-  const { locationTimelines } = useLocationTimelineContext();
   const navigate = useNavigate();
 
   const handleSegmentClick = (itemId: number, momentId?: number) => {
@@ -27,11 +25,6 @@ const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   const { familyId } = useFamilyDataContext();
   const baseURL = `/app/family/${familyId}`;
 
-  console.log(`petTimelines: (${petTimelines.length})`, petTimelines);
-  console.log(
-    `locationTimelines: (${locationTimelines.length})`,
-    locationTimelines
-  );
 
   const scrollToYear = (year: number) => {
     if (gridContainerRef.current) {

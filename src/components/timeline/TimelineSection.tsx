@@ -15,7 +15,6 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
   baseURL,
   onSegmentClick,
 }) => {
-  console.log(`section: ${section.id} (${section.items.length})`);
 
   return (
     <div className="relative space-y-1 pt-1" data-testid="grid-body">
