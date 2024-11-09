@@ -34,7 +34,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   };
 
   return (
-    <div className="relative flex" data-testid={`row-${item.id}`}>
+    <div className="relative flex" id={`row-${item.id}`}>
       {/* Background Pattern */}
       <div className="absolute w-full h-full z-0">
         <SvgPattern patternId={patternId} />

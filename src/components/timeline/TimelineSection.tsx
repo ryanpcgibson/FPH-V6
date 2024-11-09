@@ -17,7 +17,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
 }) => {
 
   return (
-    <div className="relative space-y-1 pt-1" data-testid="grid-body">
+    <div className="relative space-y-1 pt-1" id="grid-body">
       {section.items.map((item, index) => (
         <TimelineRow
           key={item.id}

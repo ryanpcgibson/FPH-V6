@@ -45,7 +45,7 @@ const TimelineBar: React.FC<TimelineBarProps> = ({
       {!petId && (
         <div
           className={`text-sm font-semibold pr-2 whitespace-nowrap w-40 flex items-center ${DEBUG_BORDER1}`}
-          data-testid="pet-name-cell"
+          id="pet-name-cell"
         >
           <Link
             to={`/app/family/${familyId}/pet/${timeline.petId}`}

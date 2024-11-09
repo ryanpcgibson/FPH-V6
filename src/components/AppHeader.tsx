@@ -20,7 +20,7 @@ const AppHeader: React.FC = () => {
   return (
     <div
       className={`w-full h-8 flex items-center justify-between bg-yellow-400 `}
-      data-testid="family-header"
+      id="family-header"
     >
       <div className="flex-grow" />
       <div className="text-center text-black font-bold text-xl">
