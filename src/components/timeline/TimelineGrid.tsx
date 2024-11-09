@@ -19,17 +19,18 @@ const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
       navigate(`/pet/${itemId}`, { state: { momentId } });
     }
   };
-  const { sections, columnHeaders, minWidth } = useTimelineSections();
+  const { sections, yearsArray } = useTimelineSections();
+  const minWidth = (yearsArray.length + 1) * 80;
+
   const { familyId } = useFamilyDataContext();
   const baseURL = `/app/family/${familyId}`;
 
-
   const scrollToYear = (year: number) => {
     if (gridContainerRef.current) {
-      const scrollPosition = calculateYearScrollPosition(year, columnHeaders);
+      const scrollPosition = calculateYearScrollPosition(year, yearsArray);
       gridContainerRef.current.scrollTo({
         left: scrollPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -38,30 +39,30 @@ const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   useEffect(() => {
     const currentYear = new Date().getFullYear();
     scrollToYear(currentYear);
-  }, [columnHeaders]);
+  }, [yearsArray]);
 
   useImperativeHandle(ref, () => ({
-    scrollToYear
+    scrollToYear,
   }));
 
   return (
     <div
       ref={gridContainerRef}
       className="w-full flex-grow overflow-auto"
-      id="double-scroll-grid-container"
+      id="timeline-grid"
     >
       <div
         className="relative"
         style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
         id="grid-content"
       >
-        <TimelineHeader columnHeaders={columnHeaders} />
+        <TimelineHeader columnHeaders={yearsArray} />
 
         {sections.map((section, index) => (
           <TimelineSection
             key={section.id}
             section={section}
-            columnHeaders={columnHeaders}
+            columnHeaders={yearsArray}
             baseURL={baseURL}
             onSegmentClick={section.onSegmentClick}
           />

@@ -12,6 +12,7 @@ export const useTimelineSections = (petId?: number) => {
   return useMemo(() => {
     const sections: TimelineSection[] = [];
     const filteredPetTimelines = getFilteredPetTimelines(petId);
+    // TODO: filter locations for pet
 
     if (filteredPetTimelines.length > 0) {
       sections.push({
@@ -61,17 +62,14 @@ export const useTimelineSections = (petId?: number) => {
       -Infinity
     );
 
-    const columnHeaders = Array.from(
+    const yearsArray = Array.from(
       { length: latestYear - earliestYear + 1 },
       (_, i) => earliestYear + i
     );
 
-    const minWidth = (columnHeaders.length + 1) * 80;
-
     return {
       sections,
-      columnHeaders,
-      minWidth,
+      yearsArray,
     };
   }, [petTimelines, locationTimelines, petId, getFilteredPetTimelines]);
 };
