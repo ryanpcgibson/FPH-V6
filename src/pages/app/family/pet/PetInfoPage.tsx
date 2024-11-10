@@ -4,7 +4,7 @@ import type { Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import PetCarousel from "@/components/PetCarousel";
-import TimelineGrid from "@/components/timeline/TimelineGrid";
+import PetInfoGrid from "@/components/petinfo/PetInfoGrid";
 
 const PetInfoPage: React.FC = () => {
   const momentId = 0;
@@ -42,8 +42,7 @@ const PetInfoPage: React.FC = () => {
         />
       </div>
       <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
-        {/* TODO fix this call, just use context inside timelinebars */}
-        <TimelineGrid />
+        <PetInfoGrid />
       </div>
     </div>
   );
