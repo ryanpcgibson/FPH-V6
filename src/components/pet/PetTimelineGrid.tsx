@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useImperativeHandle } from "react";
 import PetTimelineSection from "@/components/pet/PetTimelineSection";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
 import PetTimelineHeader from "@/components/pet/PetTimelineHeader";
 export interface TimelineGridHandle {
@@ -18,8 +18,10 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
       navigate(`/pet/${itemId}`, { state: { momentId } });
     }
   };
-  const { sections, yearsArray } = useTimelineSections();
-  const minWidth = (yearsArray.length + 1) * 80;
+  const { petId } = useParams<{ petId?: string }>();
+  const petIdNumber = petId ? parseInt(petId, 10) : undefined;
+  const { sections, yearsArray } = useTimelineSections(petIdNumber);
+  const minHeight = (yearsArray.length + 1) * 30;
 
   const { familyId } = useFamilyDataContext();
   const baseURL = `/app/family/${familyId}`;
@@ -47,15 +49,14 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   return (
     <div
       ref={gridContainerRef}
-      className="w-full flex-grow overflow-auto border-red-500 border-2"
+      className="h-full flex-grow overflow-auto"
       id="pet-detail-timeline-grid"
     >
       <div
         className="relative"
-        style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
+        style={{ minHeight: `${minHeight}px`, height: `${minHeight}px` }}
         id="grid-content"
       >
-        <PetTimelineHeader rowHeaders={yearsArray} />
         {sections.map((section, index) => (
           <PetTimelineSection
             key={section.id}
@@ -65,6 +66,7 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
             onSegmentClick={section.onSegmentClick}
           />
         ))}
+        <PetTimelineHeader rowHeaders={yearsArray} />
       </div>
     </div>
   );

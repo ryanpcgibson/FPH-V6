@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import type { Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import Carousel from "@/components/PetCarousel";
+import Carousel from "@/components/pet/PetCarousel";
 import TimelineGrid from "@/components/pet/PetTimelineGrid";
 
 const PetDetailPage: React.FC = () => {

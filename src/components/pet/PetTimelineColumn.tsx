@@ -4,7 +4,6 @@ import SvgPattern from "@/components/SvgPattern";
 import TimelineCell from "@/components/TimelineCell";
 import type { TimelineItem } from "@/types/timeline";
 
-
 interface PetTimelineColumnProps {
   item: TimelineItem;
   rowHeaders: number[];
@@ -34,7 +33,7 @@ const PetTimelineColumn: React.FC<PetTimelineColumnProps> = ({
   };
 
   return (
-    <div className="relative flex" id={`col-${item.id}`}>
+    <div className="relative flex flex-col" id={`col-${item.id}`}>
       {/* Background Pattern */}
       <div className="absolute w-full h-full z-0">
         <SvgPattern patternId={patternId} />

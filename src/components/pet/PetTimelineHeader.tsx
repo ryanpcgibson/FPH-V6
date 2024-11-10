@@ -2,7 +2,6 @@ import React from "react";
 
 interface PetTimelineHeaderProps {
   rowHeaders: number[];
-  headerStyle: string;
 }
 
 const PetTimelineHeader: React.FC<PetTimelineHeaderProps> = ({

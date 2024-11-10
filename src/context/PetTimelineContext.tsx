@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo } from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { Pet, Moment } from "@/db/db_types";
 import type { PetTimeline, PetTimelineSegment } from "@/types/timeline";
+import { useParams } from "react-router-dom";
 
 interface PetTimelineContextProps {
   petTimelines: PetTimeline[];
@@ -86,6 +87,9 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
 export const PetTimelineProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const { petId: petIdParam } = useParams<{ petId?: string }>();
+  const petId = petIdParam ? parseInt(petIdParam, 10) : null;
+
   const {
     familyData,
     familyId,

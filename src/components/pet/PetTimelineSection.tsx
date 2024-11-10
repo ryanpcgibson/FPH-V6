@@ -15,7 +15,10 @@ const PetTimelineSection: React.FC<PetTimelineSectionProps> = ({
   onSegmentClick,
 }) => {
   return (
-    <div className="relative space-y-1 pt-1" id="grid-body">
+    <div
+      className="relative space-y-1 pt-1 border-b border-blue-500 flex flex-row"
+      id="grid-body"
+    >
       {section.items.map((item, index) => (
         <PetTimelineColumn
           key={item.id}
