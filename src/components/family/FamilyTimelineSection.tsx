@@ -1,5 +1,5 @@
 import React from "react";
-import TimelineRow from "./TimelineRow";
+import TimelineRow from "./FamilyTimelineRow";
 import type { TimelineSection as TimelineSectionType } from "@/types/timeline";
 
 interface TimelineSectionProps {

@@ -19,7 +19,7 @@ import ProfilePage from "./pages/app/ProfilePage";
 
 import TimelinePage from "./pages/app/family/FamilyTimelinePage";
 
-import PetInfo from "./pages/app/family/pet/PetInfoPage";
+import PetInfo from "./pages/app/family/pet/PetDetailPage";
 
 import LogoutPage from "./pages/LogoutPage";
 import FamilySelectPage from "./pages/app/FamilySelectPage";

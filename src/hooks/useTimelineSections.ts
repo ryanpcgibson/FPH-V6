@@ -1,3 +1,6 @@
+/**
+ * Manages and organizes timeline data for pets and locations into sections for display in a timeline visualization component. It processes raw timeline data and returns a structured format that can be easily rendered.
+ */
 import { useMemo } from "react";
 import type { TimelineSection } from "@/types/timeline";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";

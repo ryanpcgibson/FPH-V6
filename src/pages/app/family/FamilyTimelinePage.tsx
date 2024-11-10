@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
-import TimelineGrid from "@/components/timeline/TimelineGrid";
+import React from "react";
+import FamilyTimelineGrid from "@/components/family/FamilyTimelineGrid";
 
 const FamilyTimelinePage: React.FC = () => {
   return (
     <div className="flex flex-row h-screen" id="page-container">
-      <TimelineGrid />
+      <FamilyTimelineGrid />
     </div>
   );
 };

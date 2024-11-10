@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import type { Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import PetCarousel from "@/components/PetCarousel";
-import PetInfoGrid from "@/components/petinfo/PetInfoGrid";
+import Carousel from "@/components/PetCarousel";
+import TimelineGrid from "@/components/pet/PetTimelineGrid";
 
-const PetInfoPage: React.FC = () => {
+const PetDetailPage: React.FC = () => {
   const momentId = 0;
   const { petId: petIdParam } = useParams<{ petId: string }>();
   const petId = petIdParam ? parseInt(petIdParam, 10) : null;
@@ -35,17 +35,17 @@ const PetInfoPage: React.FC = () => {
   return (
     <div className="flex flex-row h-screen" id="page-container">
       <div className="flex flex-col flex-grow w-3/5" id="carousel-container">
-        <PetCarousel
+        <Carousel
           moments={moments}
           currentMomentIndex={currentMomentIndex}
           setCurrentMomentIndex={setCurrentMomentIndex}
         />
       </div>
       <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
-        <PetInfoGrid />
+        <TimelineGrid />
       </div>
     </div>
   );
 };
 
-export default PetInfoPage;
+export default PetDetailPage;

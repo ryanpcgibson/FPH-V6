@@ -5,18 +5,18 @@ import TimelineCell from "@/components/TimelineCell";
 import type { TimelineItem } from "@/types/timeline";
 
 
-interface TimelineRowProps {
+interface PetTimelineColumnProps {
   item: TimelineItem;
-  columnHeaders: number[];
+  rowHeaders: number[];
   baseURL: string;
   patternId: string;
   onSegmentClick?: (itemId: number, momentId?: number) => void;
   headerStyle: string;
 }
 
-const TimelineRow: React.FC<TimelineRowProps> = ({
+const PetTimelineColumn: React.FC<PetTimelineColumnProps> = ({
   item,
-  columnHeaders,
+  rowHeaders,
   baseURL,
   patternId,
   onSegmentClick,
@@ -34,14 +34,14 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   };
 
   return (
-    <div className="relative flex" id={`row-${item.id}`}>
+    <div className="relative flex" id={`col-${item.id}`}>
       {/* Background Pattern */}
       <div className="absolute w-full h-full z-0">
         <SvgPattern patternId={patternId} />
       </div>
 
       {/* Cells */}
-      {columnHeaders.map((year) => (
+      {rowHeaders.map((year) => (
         <div key={year} className="w-20 h-10">
           {getCellContent(year)}
         </div>
@@ -57,4 +57,4 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   );
 };
 
-export default TimelineRow;
+export default PetTimelineColumn;

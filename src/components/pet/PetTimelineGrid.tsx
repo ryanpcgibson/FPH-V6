@@ -1,16 +1,15 @@
 import React, { useRef, useEffect, useImperativeHandle } from "react";
-import TimelineHeader from "@/components/timeline/TimelineHeader";
-import TimelineSection from "@/components/timeline/TimelineSection";
+import PetTimelineSection from "@/components/pet/PetTimelineSection";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
-
+import PetTimelineHeader from "@/components/pet/PetTimelineHeader";
 export interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
 }
 
-const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
+const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   const gridContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -48,21 +47,20 @@ const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   return (
     <div
       ref={gridContainerRef}
-      className="w-full flex-grow overflow-auto"
-      id="timeline-grid"
+      className="w-full flex-grow overflow-auto border-red-500 border-2"
+      id="pet-detail-timeline-grid"
     >
       <div
         className="relative"
         style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
         id="grid-content"
       >
-        <TimelineHeader columnHeaders={yearsArray} />
-
+        <PetTimelineHeader rowHeaders={yearsArray} />
         {sections.map((section, index) => (
-          <TimelineSection
+          <PetTimelineSection
             key={section.id}
             section={section}
-            columnHeaders={yearsArray}
+            rowHeaders={yearsArray}
             baseURL={baseURL}
             onSegmentClick={section.onSegmentClick}
           />
@@ -72,4 +70,4 @@ const TimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   );
 });
 
-export default TimelineGrid;
+export default PetTimelineGrid;
