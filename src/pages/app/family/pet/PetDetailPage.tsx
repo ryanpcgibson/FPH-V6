@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import type { Moment } from "@/db/db_types";
 import { FamilyData } from "@/hooks/useFamilyData";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import Carousel from "@/components/pet/PetCarousel";
-import TimelineGrid from "@/components/pet/PetTimelineGrid";
+import PetCarousel from "@/components/pet/PetCarousel";
+import PetTimelineGrid from "@/components/pet/PetTimelineGrid";
 
 const PetDetailPage: React.FC = () => {
   const momentId = 0;
@@ -35,14 +35,14 @@ const PetDetailPage: React.FC = () => {
   return (
     <div className="flex flex-row h-screen" id="page-container">
       <div className="flex flex-col flex-grow w-3/5" id="carousel-container">
-        <Carousel
+        <PetCarousel
           moments={moments}
           currentMomentIndex={currentMomentIndex}
           setCurrentMomentIndex={setCurrentMomentIndex}
         />
       </div>
-      <div className="flex flex-col flex-grow w-2/5" id="pet-detail-container">
-        <TimelineGrid />
+      <div className="flex flex-row flex-grow w-2/5" id="pet-detail-container">
+        <PetTimelineGrid />
       </div>
     </div>
   );

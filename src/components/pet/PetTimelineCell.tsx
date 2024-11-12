@@ -24,7 +24,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
     onClick(petId, segment?.moments?.[0]?.id);
   };
 
-  let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";
+  let cellClass = "w-full h-10 relative overflow-hidden";
 
   if (
     hasStatus([
@@ -39,24 +39,24 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
       "move-out",
     ])
   ) {
-    cellClass += " bg-opacity-0 border-t-2 border-b-2 border-black";
+    cellClass += " bg-opacity-0 border-r-2 border-l-2 border-black";
   } else {
     cellClass += " bg-white";
   }
 
   if (hasStatus(["birth", "birth-and-death", "move-in", "move-in-and-out"])) {
-    cellClass += " border-l-2";
+    cellClass += " border-b-2";
   }
 
   if (hasStatus(["death", "birth-and-death", "move-out", "move-in-and-out"])) {
-    cellClass += " border-r-2";
+    cellClass += " border-t-2";
   }
 
   return (
     <div className={cellClass} onClick={handleClick}>
       {hasStatus(["deceased", "former"]) && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full h-[2px] bg-gray-300"></div>
+        <div className="absolute inset-0 flex flex-row items-center justify-center">
+          <div className="w-[2px] h-full bg-gray-300"></div>
         </div>
       )}
       <div className="relative flex items-center justify-center h-full">

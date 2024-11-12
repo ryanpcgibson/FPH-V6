@@ -4,6 +4,7 @@ import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
+import FamilyTimelineHeader from "@/components/family/FamilyTimelineHeader";
 import PetTimelineHeader from "@/components/pet/PetTimelineHeader";
 export interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
@@ -18,38 +19,34 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
       navigate(`/pet/${itemId}`, { state: { momentId } });
     }
   };
+
   const { petId } = useParams<{ petId?: string }>();
   const petIdNumber = petId ? parseInt(petId, 10) : undefined;
-  const { sections, yearsArray } = useTimelineSections(petIdNumber);
-  const minHeight = (yearsArray.length + 1) * 30;
+  const {
+    sections: originalSections,
+    yearsArray,
+    petNames,
+    locationNames,
+  } = useTimelineSections(petIdNumber);
 
+  // Reverse the sections array and reverse items within each section
+  const reversedSections = [...originalSections].reverse().map((section) => ({
+    ...section,
+    items: [...section.items].reverse(),
+  }));
+
+  const columnHeaders = [...petNames, ...locationNames].reverse();
+  const minHeight = yearsArray.length * 40;
+  const minWidth = (columnHeaders.length + 1) * 80;
+  console.log("minHeight", minHeight);
   const { familyId } = useFamilyDataContext();
   const baseURL = `/app/family/${familyId}`;
-
-  const scrollToYear = (year: number) => {
-    if (gridContainerRef.current) {
-      const scrollPosition = calculateYearScrollPosition(year, yearsArray);
-      gridContainerRef.current.scrollTo({
-        left: scrollPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  // Scroll to current year on mount
-  useEffect(() => {
-    const currentYear = new Date().getFullYear();
-    scrollToYear(currentYear);
-  }, [yearsArray]);
-
-  useImperativeHandle(ref, () => ({
-    scrollToYear,
-  }));
 
   return (
     <div
       ref={gridContainerRef}
-      className="h-full flex-grow overflow-auto"
+      className="w-full flex-grow overflow-auto"
+      style={{ minWidth: `${minWidth}px` }}
       id="pet-detail-timeline-grid"
     >
       <div
@@ -57,16 +54,22 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
         style={{ minHeight: `${minHeight}px`, height: `${minHeight}px` }}
         id="grid-content"
       >
-        {sections.map((section, index) => (
-          <PetTimelineSection
-            key={section.id}
-            section={section}
-            rowHeaders={yearsArray}
-            baseURL={baseURL}
-            onSegmentClick={section.onSegmentClick}
-          />
-        ))}
-        <PetTimelineHeader rowHeaders={yearsArray} />
+        <FamilyTimelineHeader columnHeaders={columnHeaders} />
+        <div
+          className="flex flex-row flex-grow gap-1"
+          style={{ minHeight: `${minHeight}px`, height: `${minHeight}px` }}
+        >
+          {reversedSections.map((section, index) => (
+            <PetTimelineSection
+              key={section.id}
+              section={section}
+              rowHeaders={yearsArray}
+              baseURL={baseURL}
+              onSegmentClick={section.onSegmentClick}
+            />
+          ))}
+          <PetTimelineHeader rowHeaders={yearsArray} />
+        </div>
       </div>
     </div>
   );

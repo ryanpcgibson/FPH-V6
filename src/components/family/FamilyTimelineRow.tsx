@@ -1,9 +1,8 @@
 import React from "react";
 import Link from "@/components/Link";
 import SvgPattern from "@/components/SvgPattern";
-import TimelineCell from "@/components/TimelineCell";
+import FamilyTimelineCell from "@/components/family/FamilyTimelineCell";
 import type { TimelineItem } from "@/types/timeline";
-
 
 interface TimelineRowProps {
   item: TimelineItem;
@@ -25,7 +24,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   const getCellContent = (year: number) => {
     const segment = item.segments.find((s) => s.year === year);
     return (
-      <TimelineCell
+      <FamilyTimelineCell
         segment={segment}
         itemId={item.id}
         onClick={onSegmentClick}

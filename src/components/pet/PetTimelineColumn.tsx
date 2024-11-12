@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "@/components/Link";
 import SvgPattern from "@/components/SvgPattern";
-import TimelineCell from "@/components/TimelineCell";
+import TimelineCell from "@/components/pet/PetTimelineCell";
 import type { TimelineItem } from "@/types/timeline";
 
 interface PetTimelineColumnProps {
@@ -33,25 +33,21 @@ const PetTimelineColumn: React.FC<PetTimelineColumnProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col" id={`col-${item.id}`}>
+    <div
+      className="relative flex flex-col items-center w-[80px] min-w-[80px]"
+      id={`col-${item.id}`}
+    >
       {/* Background Pattern */}
-      <div className="absolute w-full h-full z-0">
+      <div className="absolute w-10 h-full z-0">
         <SvgPattern patternId={patternId} />
       </div>
 
       {/* Cells */}
-      {rowHeaders.map((year) => (
-        <div key={year} className="w-20 h-10">
+      {[...rowHeaders].reverse().map((year) => (
+        <div key={year} className="w-10 h-10">
           {getCellContent(year)}
         </div>
       ))}
-
-      {/* Row Header - now sticky right */}
-      <div
-        className={`sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold ${headerStyle}`}
-      >
-        <Link href={`${baseURL}/pet/${item.id}`}>{item.name}</Link>
-      </div>
     </div>
   );
 };

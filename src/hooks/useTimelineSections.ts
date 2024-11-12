@@ -15,6 +15,10 @@ export const useTimelineSections = (petId?: number) => {
   return useMemo(() => {
     const sections: TimelineSection[] = [];
     const filteredPetTimelines = getFilteredPetTimelines(petId);
+    const petNames = filteredPetTimelines.map((pet) => pet.petName);
+    const locationNames = locationTimelines.map(
+      (location) => location.locationName
+    );
     // TODO: filter locations for pet
 
     if (filteredPetTimelines.length > 0) {
@@ -33,7 +37,7 @@ export const useTimelineSections = (petId?: number) => {
       });
     }
 
-    if (!petId && locationTimelines.length > 0) {
+    if (locationTimelines.length > 0) {
       sections.push({
         id: "locations",
         items: locationTimelines.map((location) => ({
@@ -73,6 +77,8 @@ export const useTimelineSections = (petId?: number) => {
     return {
       sections,
       yearsArray,
+      petNames,
+      locationNames,
     };
   }, [petTimelines, locationTimelines, petId, getFilteredPetTimelines]);
 };

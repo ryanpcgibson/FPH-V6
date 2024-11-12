@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useImperativeHandle } from "react";
-import TimelineHeader from "@/components/family/FamilyTimelineHeader";
-import TimelineSection from "@/components/family/FamilyTimelineSection";
+import FamilyTimelineHeader from "@/components/family/FamilyTimelineHeader";
+import FamilyTimelineSection from "@/components/family/FamilyTimelineSection";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
@@ -57,10 +57,10 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
           id="grid-content"
         >
-          <TimelineHeader columnHeaders={yearsArray} />
+          <FamilyTimelineHeader columnHeaders={yearsArray.map(String)} />
 
           {sections.map((section, index) => (
-            <TimelineSection
+            <FamilyTimelineSection
               key={section.id}
               section={section}
               columnHeaders={yearsArray}
