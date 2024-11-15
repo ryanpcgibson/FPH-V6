@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useImperativeHandle } from "react";
-import FamilyTimelineHeader from "@/components/family/FamilyTimelineHeader";
+import TimelineHeader from "@/components/TimelineHeader";
 import FamilyTimelineSection from "@/components/family/FamilyTimelineSection";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
@@ -43,6 +43,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     }, [yearsArray]);
 
     useImperativeHandle(ref, () => ({
+      // TODO understand this
       scrollToYear,
     }));
 
@@ -57,9 +58,9 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
           id="grid-content"
         >
-          <FamilyTimelineHeader columnHeaders={yearsArray.map(String)} />
+          <TimelineHeader headerTexts={yearsArray.map(String)} />
 
-          {sections.map((section, index) => (
+          {Object.values(sections).map((section) => (
             <FamilyTimelineSection
               key={section.id}
               section={section}

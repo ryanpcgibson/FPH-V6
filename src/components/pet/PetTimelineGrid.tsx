@@ -4,7 +4,7 @@ import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
-import FamilyTimelineHeader from "@/components/family/FamilyTimelineHeader";
+import TimelineHeader from "@/components/TimelineHeader";
 import PetTimelineHeader from "@/components/pet/PetTimelineHeader";
 export interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
@@ -22,20 +22,24 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
 
   const { petId } = useParams<{ petId?: string }>();
   const petIdNumber = petId ? parseInt(petId, 10) : undefined;
-  const {
-    sections: originalSections,
-    yearsArray,
-    petNames,
-    locationNames,
-  } = useTimelineSections(petIdNumber);
+  const { sections, yearsArray } = useTimelineSections(petIdNumber);
 
-  // Reverse the sections array and reverse items within each section
-  const reversedSections = [...originalSections].reverse().map((section) => ({
-    ...section,
-    items: [...section.items].reverse(),
-  }));
+  const columnHeaders: string[] = [];
+  const headerStyles: string[] = [];
 
-  const columnHeaders = [...petNames, ...locationNames].reverse();
+  if (sections.locations) {
+    columnHeaders.push(...sections.locations.items.map((item) => item.name));
+    headerStyles.push(
+      ...sections.locations.items.map(() => sections.locations.headerStyle)
+    );
+  }
+  if (sections.pets) {
+    columnHeaders.push(...sections.pets.items.map((item) => item.name));
+    headerStyles.push(
+      ...sections.pets.items.map(() => sections.pets.headerStyle)
+    );
+  }
+
   const minHeight = yearsArray.length * 40;
   const minWidth = (columnHeaders.length + 1) * 80;
   console.log("minHeight", minHeight);
@@ -54,12 +58,15 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
         style={{ minHeight: `${minHeight}px`, height: `${minHeight}px` }}
         id="grid-content"
       >
-        <FamilyTimelineHeader columnHeaders={columnHeaders} />
+        <TimelineHeader
+          headerTexts={columnHeaders}
+          headerStyles={headerStyles}
+        />
         <div
           className="flex flex-row flex-grow gap-1"
           style={{ minHeight: `${minHeight}px`, height: `${minHeight}px` }}
         >
-          {reversedSections.map((section, index) => (
+          {Object.values(sections).map((section) => (
             <PetTimelineSection
               key={section.id}
               section={section}

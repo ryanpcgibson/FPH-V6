@@ -1,17 +1,23 @@
 import React from "react";
 
 interface TimelineHeaderProps {
-  columnHeaders: string[];
+  headerTexts: string[];
+  headerStyles?: string[];
 }
 
-const TimelineHeader: React.FC<TimelineHeaderProps> = ({ columnHeaders }) => {
+const TimelineHeader: React.FC<TimelineHeaderProps> = ({
+  headerTexts,
+  headerStyles,
+}) => {
   return (
     <div className="sticky top-0 z-50 bg-white" id="column-header-container">
       <div className="flex gap-1" id="column-headers">
-        {columnHeaders.map((header, index) => (
+        {headerTexts.map((header, index) => (
           <div
             key={index}
-            className="w-[80px] h-10 flex items-center justify-center font-bold bg-gray-200"
+            className={`w-[80px] h-10 flex items-center justify-center font-bold ${
+              headerStyles?.[index] ?? "bg-gray-200"
+            }`}
             id={`column-header-${index}`}
           >
             {header}

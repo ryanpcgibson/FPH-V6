@@ -13,7 +13,7 @@ export const useTimelineSections = (petId?: number) => {
   const navigate = useNavigate();
 
   return useMemo(() => {
-    const sections: TimelineSection[] = [];
+    const sections: Record<string, TimelineSection> = {};
     const filteredPetTimelines = getFilteredPetTimelines(petId);
     const petNames = filteredPetTimelines.map((pet) => pet.petName);
     const locationNames = locationTimelines.map(
@@ -22,7 +22,7 @@ export const useTimelineSections = (petId?: number) => {
     // TODO: filter locations for pet
 
     if (filteredPetTimelines.length > 0) {
-      sections.push({
+      sections.pets = {
         id: "pets",
         items: filteredPetTimelines.map((pet) => ({
           id: pet.petId,
@@ -34,11 +34,11 @@ export const useTimelineSections = (petId?: number) => {
         onSegmentClick: (itemId, momentId) => {
           navigate(`/pet/${itemId}`, { state: { momentId } });
         },
-      });
+      };
     }
 
     if (locationTimelines.length > 0) {
-      sections.push({
+      sections.locations = {
         id: "locations",
         items: locationTimelines.map((location) => ({
           id: location.locationId,
@@ -50,10 +50,10 @@ export const useTimelineSections = (petId?: number) => {
         onSegmentClick: (itemId, momentId) => {
           navigate(`/location/${itemId}`, { state: { momentId } });
         },
-      });
+      };
     }
 
-    const allItems = sections.flatMap((section) => section.items);
+    const allItems = Object.values(sections).flatMap((section) => section.items);
 
     const earliestYear = allItems.reduce(
       (min, item) =>

@@ -16,7 +16,8 @@ const PetTimelineHeader: React.FC<PetTimelineHeaderProps> = ({
       {[...rowHeaders].reverse().map((year) => (
         <div
           key={year}
-          className={`w-20 h-10 flex items-center justify-center font-bold`}
+          className={`w-20 h-10 flex items-center justify-center font-bold bg-gray-200 border-y-2
+             border-white`}
         >
           {year}
         </div>

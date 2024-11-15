@@ -14,7 +14,6 @@ const PetTimelineSection: React.FC<PetTimelineSectionProps> = ({
   baseURL,
   onSegmentClick,
 }) => {
-  console.log("section", section);
   return (
     <div
       className="relative flex flex-row pt-1 gap-1"
