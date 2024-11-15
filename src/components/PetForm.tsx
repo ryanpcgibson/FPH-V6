@@ -32,6 +32,7 @@ const formSchema = z.object({
   }),
   start_date: z.date().nullable(),
   end_date: z.date().nullable(),
+  description: z.string().optional(),
 });
 
 interface PetFormProps {
@@ -142,6 +143,24 @@ const PetForm: React.FC<PetFormProps> = ({
                       <DatePicker
                         date={field.value}
                         setDate={(date) => field.onChange(date)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">Description</FormLabel>
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Pet description (optional)"
+                        {...field}
+                        className="w-full"
+                        value={field.value || ''}
                       />
                     </FormControl>
                     <FormMessage />

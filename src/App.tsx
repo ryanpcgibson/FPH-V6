@@ -12,18 +12,17 @@ import LocationTimelineProvider from "@/context/LocationTimelineContext";
 
 import WelcomePage from "@/pages/WelcomePage";
 import ProtectedRoute from "@/pages/app/AppDataProtected";
-import FamilyData from "@/pages/app/family/FamilyDataPage";
 import AppLayout from "@/pages/app/AppLayout";
+import LogoutPage from "@/pages/LogoutPage";
+import ProfilePage from "@/pages/app/ProfilePage";
 
-import ProfilePage from "./pages/app/ProfilePage";
+import TimelinePage from "@/pages/app/family/FamilyTimelinePage";
+import FamilySelectPage from "@/pages/app/FamilySelectPage";
+import FamilyData from "@/pages/app/family/FamilyDataPage";
+import FamilyFormPage from "@/pages/app/family/FamilyFormPage";
 
-import TimelinePage from "./pages/app/family/FamilyTimelinePage";
-
-import PetInfo from "./pages/app/family/pet/PetDetailPage";
-
-import LogoutPage from "./pages/LogoutPage";
-import FamilySelectPage from "./pages/app/FamilySelectPage";
-
+import PetInfo from "@/pages/app/family/pet/PetDetailPage";
+import PetFormPage from "@/pages/app/family/pet/PetFormPage";
 
 function App() {
   return (
@@ -54,7 +53,9 @@ function App() {
                 <Route path="family/:familyId">
                   <Route index element={<TimelinePage />} />
                   <Route path="pet/:petId?" element={<PetInfo />} />
+                  <Route path="pet/:petId/edit" element={<PetFormPage />} />
                   <Route path="data" element={<FamilyData />} />
+                  <Route path="edit" element={<FamilyFormPage />} />
                 </Route>
               </Route>
             </Route>
