@@ -3,7 +3,7 @@ import FamilyTimelineGrid from "@/components/family/FamilyTimelineGrid";
 
 const FamilyTimelinePage: React.FC = () => {
   return (
-    <div className="flex flex-row h-screen" id="page-container">
+    <div className="flex flex-row" id="page-container">
       <FamilyTimelineGrid />
     </div>
   );

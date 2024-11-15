@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
 import TimelineHeader from "@/components/TimelineHeader";
 import PetTimelineHeader from "@/components/pet/PetTimelineHeader";
+
 export interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
 }
@@ -45,6 +46,28 @@ const PetTimelineGrid = React.forwardRef<TimelineGridHandle>((props, ref) => {
   console.log("minHeight", minHeight);
   const { familyId } = useFamilyDataContext();
   const baseURL = `/app/family/${familyId}`;
+
+  // TODO extend to scroll vertically to year also. This is working, but actually scrolling to "last" pet so at a minimum is mis-named.
+  const scrollToYear = (year: number) => {
+    if (gridContainerRef.current) {
+      const scrollPosition = calculateYearScrollPosition(year, yearsArray);
+      gridContainerRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Scroll to current year on mount
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    scrollToYear(currentYear);
+  }, [yearsArray]);
+
+  useImperativeHandle(ref, () => ({
+    // TODO understand this
+    scrollToYear,
+  }));
 
   return (
     <div

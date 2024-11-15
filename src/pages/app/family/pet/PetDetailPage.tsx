@@ -33,7 +33,7 @@ const PetDetailPage: React.FC = () => {
   }, [familyData, petId, momentId]);
 
   return (
-    <div className="flex flex-row h-screen" id="page-container">
+    <div className="flex flex-row" id="page-container">
       <div className="flex flex-col flex-grow w-3/5" id="carousel-container">
         <PetCarousel
           moments={moments}
