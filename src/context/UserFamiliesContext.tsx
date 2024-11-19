@@ -1,29 +1,40 @@
 import React, { createContext, useContext, useMemo } from "react";
-import { useFamilies, UseFamiliesReturn } from "@/hooks/useFamilies";
+import { useQuery } from "@tanstack/react-query";
+import { supabaseClient } from "@/db/supabaseClient";
+import { Families } from "@/db/db_types";
 
-const FamiliesContext = createContext<UseFamiliesReturn | undefined>(undefined);
+const FamiliesContext = createContext<
+  | {
+      families: Families | undefined;
+      isLoading: boolean;
+      isError: boolean;
+      error: Error | null;
+    }
+  | undefined
+>(undefined);
 
 export const FamiliesProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { families, isLoading, error } = useFamilies();
+  const familiesQuery = useQuery({
+    queryKey: ["families"],
+    queryFn: async () => {
+      const { data, error } = await supabaseClient.rpc("get_families");
+      if (error) throw new Error(error.message);
+      if (!data) throw new Error("No data returned from the database");
+      return data as Families;
+    },
+  });
 
   const contextValue = useMemo(
     () => ({
-      families,
-      isLoading,
-      error,
+      families: familiesQuery.data,
+      isLoading: familiesQuery.isLoading,
+      isError: familiesQuery.isError,
+      error: familiesQuery.error,
     }),
-    [families, isLoading, error]
+    [familiesQuery]
   );
-
-  if (error) {
-    return <div>Error fetching families: {error.message}</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading families...</div>;
-  }
 
   return (
     <FamiliesContext.Provider value={contextValue}>
@@ -32,7 +43,12 @@ export const FamiliesProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useUserFamiliesContext = (): UseFamiliesReturn => {
+export const useUserFamiliesContext = (): {
+  families: Families | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: Error | null;
+} => {
   const context = useContext(FamiliesContext);
   if (context === undefined) {
     throw new Error("useFamilies must be used within a FamiliesProvider");

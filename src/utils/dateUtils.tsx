@@ -34,3 +34,10 @@ export const convertDateToISODateString = (
     return `${year}-${month}-${day}`;
   }
 };
+
+export const prepareDateForDB = (date: Date | undefined): string | null => {
+  if (!date) {
+    return null;
+  }
+  return convertDateToISODateString(date) as string;
+};

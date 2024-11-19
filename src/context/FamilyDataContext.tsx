@@ -21,12 +21,12 @@ export const FamilyDataProvider: React.FC<{
 
   if (!familyId) {
     return (
-      <FamilyDataContext.Provider 
+      <FamilyDataContext.Provider
         value={{
           familyData: undefined,
           familyId: null,
           isLoading: false,
-          error: null
+          error: null,
         }}
       >
         {children}
@@ -34,25 +34,17 @@ export const FamilyDataProvider: React.FC<{
     );
   }
 
-  const { data, isLoading, error } = useFamilyData(familyId);
+  const { familyData, isLoading, error } = useFamilyData(familyId);
 
   const contextValue = useMemo(
     () => ({
-      familyData: data,
+      familyData,
       familyId,
       isLoading,
       error,
     }),
-    [data, familyId, isLoading, error]
+    [familyData, familyId, isLoading, error]
   );
-
-  if (error) {
-    return <div>Error fetching family data: {error.message}</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading family data...</div>;
-  }
 
   return (
     <FamilyDataContext.Provider value={contextValue}>

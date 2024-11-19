@@ -11,7 +11,6 @@ const DataPage: React.FC = () => {
   const { familyData, familyId, isLoading, error } = useFamilyDataContext();
 
   const convertFamilyData = (familyData: any): FamilyData => {
-    console.log("convertFamilyData", familyData);
     if (!familyData) {
       return {
         family_name: "",

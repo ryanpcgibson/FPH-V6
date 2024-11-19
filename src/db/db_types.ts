@@ -8,9 +8,15 @@ type WithDateFields<T> = Omit<T, DateFields> &
   Record<DateFields, Date | undefined>;
 
 export type Family = Tables<"families">;
+export type Families = Array<{
+  id: Family["id"];
+  name: Family["name"];
+  member_type: FamilyUsers["member_type"];
+}>;
 export type FamilyInsert = TablesInsert<"families">;
 export type FamilyUpdate = TablesUpdate<"families">;
 
+export type FamilyUsers = Tables<"family_users">;
 export type FamilyUsersInsert = TablesInsert<"family_users">;
 export type FamilyUsersUpdate = TablesUpdate<"family_users">;
 

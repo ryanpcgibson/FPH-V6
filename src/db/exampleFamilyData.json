@@ -1,19 +1,11 @@
 {
-  "families": [
-    {
-      "id": 6,
-      "created_at": "2024-08-29T17:19:51.519423+00:00",
-      "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
-      "name": "Adamson"
-    }
-  ],
   "pets": [
     {
       "id": 1,
       "created_at": "2024-08-29T17:29:44.285064+00:00",
       "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
       "name": "Bella",
-      "start_date": "2018-05-10",
+      "start_date": "2024-11-07",
       "end_date": null,
       "family_id": 6,
       "description": null
@@ -24,7 +16,7 @@
       "added_by": null,
       "name": "Bonzo",
       "start_date": "2019-03-11",
-      "end_date": null,
+      "end_date": "2020-01-01",
       "family_id": 6,
       "description": null
     },
@@ -34,7 +26,7 @@
       "added_by": "b59b64ea-995f-46e9-996c-2e6ebd3a4ab7",
       "name": "Bonzo2",
       "start_date": "2019-03-11",
-      "end_date": null,
+      "end_date": "2023-01-01",
       "family_id": 6,
       "description": null
     },
@@ -75,7 +67,7 @@
       "created_at": "2024-08-30T15:55:46.210953+00:00",
       "added_by": "278c9a90-ac33-4bde-b238-779558ddf4f3",
       "map_reference": "Elm St, Brookfield, VT",
-      "start_date": "2000-07-14",
+      "start_date": "2017-07-14",
       "end_date": "2022-07-14",
       "name": "Elm St",
       "family_id": 6
@@ -171,7 +163,7 @@
           "end_date": null,
           "family_id": 6,
           "created_at": "2024-08-29T17:29:44.285064+00:00",
-          "start_date": "2018-05-10",
+          "start_date": "2024-11-07",
           "description": null
         }
       ]

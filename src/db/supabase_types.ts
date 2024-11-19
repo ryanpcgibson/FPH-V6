@@ -332,12 +332,12 @@ export type Database = {
           family_id: number
         }[]
       }
-      get_family_ids_for_user: {
-        Args: {
-          p_user_id: string
-        }
+      get_families: {
+        Args: Record<PropertyKey, never>
         Returns: {
-          family_id: number
+          id: number
+          name: string
+          member_type: Database["public"]["Enums"]["member_types"]
         }[]
       }
       get_family_records: {
@@ -345,6 +345,22 @@ export type Database = {
           param_family_id: number
         }
         Returns: Json
+      }
+      get_user_family_ids: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          family_id: number
+        }[]
+      }
+      OLD_get_family_ids_for_user: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          family_id: number
+        }[]
       }
     }
     Enums: {

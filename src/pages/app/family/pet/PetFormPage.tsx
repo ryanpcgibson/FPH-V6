@@ -1,19 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import PetForm from "@/components/PetForm";
-import { supabaseClient } from "@/db/supabaseClient";
+import { usePets } from "@/hooks/usePets";
+import PetForm from "@/components/pet/PetForm";
 
 const PetFormPage = () => {
+  const navigate = useNavigate();
   const { petId: petIdParam, familyId: familyIdParam } = useParams<{
     petId?: string;
     familyId?: string;
   }>();
-  const navigate = useNavigate();
+  
+  const [currentFamilyId, setCurrentFamilyId] = useState(
+    familyIdParam ? parseInt(familyIdParam, 10) : 0
+  );
   const petId = petIdParam ? parseInt(petIdParam, 10) : undefined;
-  const familyId = familyIdParam ? parseInt(familyIdParam, 10) : 0;
-
   const { familyData, isLoading, error } = useFamilyDataContext();
+  const { createPet, updatePet, deletePet } = usePets();
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading family data: {error.message}</div>;
@@ -22,20 +25,18 @@ const PetFormPage = () => {
     ? familyData?.pets.find((p) => p.id === petId)
     : undefined;
 
+  const handleFamilyChange = (newFamilyId: number) => {
+    setCurrentFamilyId(newFamilyId);
+  };
+
   const handleDelete = async () => {
     if (!petId) return;
-
-    const { error } = await supabaseClient
-      .from("pets")
-      .delete()
-      .eq("id", petId);
-
-    if (error) {
+    try {
+      await deletePet(petId, currentFamilyId);
+      navigate(`/app/family/${currentFamilyId}`);
+    } catch (error) {
       console.error("Error deleting pet:", error);
-      return;
     }
-
-    navigate(`/app/family/${familyId}`);
   };
 
   const handleSubmit = async (values: {
@@ -45,39 +46,28 @@ const PetFormPage = () => {
   }) => {
     const petData = {
       name: values.name,
-      start_date: values.start_date?.toISOString().split("T")[0],
-      end_date: values.end_date?.toISOString().split("T")[0],
-      family_id: familyId,
+      start_date: values.start_date?.toISOString().split("T")[0] || null,
+      end_date: values.end_date?.toISOString().split("T")[0] || null,
+      family_id: currentFamilyId,
     };
 
-    if (petId) {
-      // Update existing pet
-      const { error } = await supabaseClient
-        .from("pets")
-        .update(petData)
-        .eq("id", petId);
-
-      if (error) {
-        console.error("Error updating pet:", error);
-        return;
+    try {
+      if (petId) {
+        await updatePet(petId, petData);
+      } else {
+        await createPet(petData);
       }
-    } else {
-      // Create new pet
-      const { error } = await supabaseClient.from("pets").insert([petData]);
-
-      if (error) {
-        console.error("Error creating pet:", error);
-        return;
-      }
+      navigate(`/app/family/${currentFamilyId}`);
+    } catch (error) {
+      console.error("Error saving pet:", error);
     }
-
-    navigate(`/app/family/${familyId}`);
   };
 
   return (
     <PetForm
       petId={petId}
-      familyId={familyId}
+      familyId={currentFamilyId}
+      onFamilyChange={handleFamilyChange}
       initialData={pet}
       onDelete={handleDelete}
       onSubmit={handleSubmit}

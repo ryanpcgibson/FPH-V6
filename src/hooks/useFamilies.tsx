@@ -1,138 +1,66 @@
-import { useState, useEffect } from "react";
-import { supabaseClient } from "../db/supabaseClient";
-import { useAuth } from "@/context/AuthContext";
-
-interface Family {
-  id: number;
-  name: string;
-  member_type: string;
-}
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabaseClient } from "@/db/supabaseClient";
+import { FamilyInsert, FamilyUpdate } from "@/db/db_types";
+import { prepareEntityForDB } from "@/utils/dbUtils";
 
 export function useFamilies() {
-  const [families, setFamilies] = useState<Family[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (user) {
-      fetchFamilies();
-    }
-  }, [user]);
-
-  const fetchFamilies = async () => {
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabaseClient
-        .from("families")
-        .select("id, name, family_users!inner(member_type)")
-        .eq("family_users.user_id", user?.id || "");
-
-      if (error) throw error;
-      setFamilies(
-        data.map(({ id, name, family_users }) => ({
-          id,
-          name,
-          member_type: family_users[0].member_type,
-        }))
-      );
-    } catch (err) {
-      setError("Failed to fetch families");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const createFamily = async (name: string) => {
-    try {
-      const { data, error: insertError } = await supabaseClient
-        .from("families")
-        .insert({ name })
-        .select()
-        .single();
-
-      if (insertError) throw insertError;
-
-      const { error: relationError } = await supabaseClient
-        .from("family_users")
-        .insert({
-          family_id: data.id,
-          user_id: user?.id,
-          member_type: "owner",
-        });
-
-      if (relationError) throw relationError;
-      await fetchFamilies();
-    } catch (err) {
-      setError("Failed to create family");
-      console.error(err);
-    }
-  };
-
-  const updateFamily = async (id: number, name: string) => {
-    try {
-      const { data: familyUser, error: checkError } = await supabaseClient
-        .from("family_users")
-        .select("member_type")
-        .eq("family_id", id)
-        .eq("user_id", user?.id)
-        .single();
-
-      if (checkError) throw checkError;
-      if (!["owner", "admin"].includes(familyUser.member_type)) {
-        throw new Error("Insufficient permissions");
-      }
-
+  const createFamilyMutation = useMutation({
+    mutationFn: async (familyData: FamilyInsert) => {
+      const preparedData = prepareEntityForDB(familyData);
       const { error } = await supabaseClient
         .from("families")
-        .update({ name })
-        .eq("id", id);
+        .insert([preparedData]);
 
       if (error) throw error;
-      setFamilies(families.map((f) => (f.id === id ? { ...f, name } : f)));
-    } catch (err) {
-      setError("Failed to update family");
-      console.error(err);
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["families"] });
+    },
+  });
 
-  const deleteFamily = async (id: number) => {
-    try {
-      const { data: familyUser, error: checkError } = await supabaseClient
-        .from("family_users")
-        .select("member_type")
-        .eq("family_id", id)
-        .eq("user_id", user?.id)
-        .single();
+  const updateFamilyMutation = useMutation({
+    mutationFn: async (familyData: FamilyUpdate) => {
+      if (!familyData.id) throw new Error("Family ID is required");
+      const preparedData = prepareEntityForDB(familyData);
+      const { error } = await supabaseClient
+        .from("families")
+        .update(preparedData)
+        .eq("id", familyData.id);
 
-      if (checkError) throw checkError;
-      if (familyUser.member_type !== "owner") {
-        throw new Error("Only owners can delete families");
-      }
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["families"] });
+    },
+  });
 
+  const deleteFamilyMutation = useMutation({
+    mutationFn: async (familyId: number) => {
       const { error } = await supabaseClient
         .from("families")
         .delete()
-        .eq("id", id);
+        .eq("id", familyId);
 
       if (error) throw error;
-      setFamilies(families.filter((f) => f.id !== id));
-    } catch (err) {
-      setError("Failed to delete family");
-      console.error(err);
-    }
-  };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["families"] });
+    },
+  });
 
   return {
-    families,
-    isLoading,
-    error,
-    fetchFamilies,
-    createFamily,
-    updateFamily,
-    deleteFamily,
+    createFamily: createFamilyMutation.mutate,
+    updateFamily: updateFamilyMutation.mutate,
+    deleteFamily: deleteFamilyMutation.mutate,
+    isLoading:
+      createFamilyMutation.isPending ||
+      updateFamilyMutation.isPending ||
+      deleteFamilyMutation.isPending,
+    error:
+      createFamilyMutation.error ||
+      updateFamilyMutation.error ||
+      deleteFamilyMutation.error,
   };
 }
-
-export type UseFamiliesReturn = ReturnType<typeof useFamilies>;
