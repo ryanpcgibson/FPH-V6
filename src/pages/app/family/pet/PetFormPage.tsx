@@ -32,7 +32,7 @@ const PetFormPage = () => {
   const handleDelete = async () => {
     if (!petId) return;
     try {
-      await deletePet(petId, currentFamilyId);
+      await deletePet(petId);
       navigate(`/app/family/${currentFamilyId}`);
     } catch (error) {
       console.error("Error deleting pet:", error);
@@ -46,14 +46,14 @@ const PetFormPage = () => {
   }) => {
     const petData = {
       name: values.name,
-      start_date: values.start_date?.toISOString().split("T")[0] || null,
-      end_date: values.end_date?.toISOString().split("T")[0] || null,
+      start_date: values.start_date || undefined,
+      end_date: values.end_date || undefined,
       family_id: currentFamilyId,
     };
 
     try {
       if (petId) {
-        await updatePet(petId, petData);
+        await updatePet({ ...petData, id: petId });
       } else {
         await createPet(petData);
       }

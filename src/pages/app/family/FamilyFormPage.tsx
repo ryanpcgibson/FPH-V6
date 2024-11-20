@@ -8,7 +8,8 @@ const FamilyFormPage = () => {
   const { familyId: familyIdParam } = useParams<{ familyId?: string }>();
   const familyId = familyIdParam ? parseInt(familyIdParam, 10) : undefined;
   const navigate = useNavigate();
-  const { familyData } = useFamilyDataContext();
+  const { families = [], familyData } = useFamilyDataContext();
+  const family = familyId ? families.find((f) => f.id === familyId) : undefined;
   const { deleteFamily, updateFamily, createFamily } = useFamilies();
 
   const handleDelete = async () => {
@@ -24,7 +25,7 @@ const FamilyFormPage = () => {
   const handleSubmit = async (values: { name: string }) => {
     try {
       if (familyId) {
-        await updateFamily(familyId, values);
+        await updateFamily(values);
       } else {
         await createFamily(values);
       }
@@ -37,7 +38,9 @@ const FamilyFormPage = () => {
   return (
     <FamilyForm
       familyId={familyId}
-      initialData={familyData ? { name: familyData.family_name } : undefined}
+      initialData={
+        familyData && family?.name ? { name: family.name } : undefined
+      }
       onDelete={handleDelete}
       onSubmit={handleSubmit}
     />

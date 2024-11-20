@@ -5,7 +5,6 @@ import PageLayout from "@/components/layouts/PageLayout";
 
 import { AuthProvider } from "@/context/AuthContext";
 
-import FamiliesProvider from "@/context/UserFamiliesContext";
 import FamilyDataProvider from "@/context/FamilyDataContext";
 import PetTimelineProvider from "@/context/PetTimelineContext";
 import LocationTimelineProvider from "@/context/LocationTimelineContext";
@@ -35,15 +34,13 @@ function App() {
             <Route
               path="/app"
               element={
-                <FamiliesProvider>
-                  <FamilyDataProvider>
-                    <PetTimelineProvider>
-                      <LocationTimelineProvider>
-                        <ProtectedRoute />
-                      </LocationTimelineProvider>
-                    </PetTimelineProvider>
-                  </FamilyDataProvider>
-                </FamiliesProvider>
+                <FamilyDataProvider>
+                  <PetTimelineProvider>
+                    <LocationTimelineProvider>
+                      <ProtectedRoute />
+                    </LocationTimelineProvider>
+                  </PetTimelineProvider>
+                </FamilyDataProvider>
               }
             >
               <Route element={<AppLayout />}>

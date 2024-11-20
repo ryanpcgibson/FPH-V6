@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { FamilyData, useFamilyData } from "@/hooks/useFamilyData";
+import { Families, FamilyData } from "@/db/db_types";
+import { useFamilyData } from "@/hooks/useFamilyData";
 
 interface FamilyDataContextType {
+  families: Families | undefined;
   familyData: FamilyData | undefined;
   familyId: number | null;
+  familyName: string | undefined;
   isLoading: boolean;
   error: Error | null;
 }
@@ -23,8 +26,10 @@ export const FamilyDataProvider: React.FC<{
     return (
       <FamilyDataContext.Provider
         value={{
+          families: undefined,
           familyData: undefined,
           familyId: null,
+          familyName: undefined,
           isLoading: false,
           error: null,
         }}
@@ -34,12 +39,14 @@ export const FamilyDataProvider: React.FC<{
     );
   }
 
-  const { familyData, isLoading, error } = useFamilyData(familyId);
+  const { families, familyData, isLoading, error } = useFamilyData(familyId);
 
   const contextValue = useMemo(
     () => ({
+      families,
       familyData,
       familyId,
+      familyName: families?.find((family) => family.id === familyId)?.name,
       isLoading,
       error,
     }),

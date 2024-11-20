@@ -1,13 +1,13 @@
 // This might end up a component, or menu item
-import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
+import { useFamilyData } from "@/hooks/useFamilyData";
 import FamilyLink from "@/components/FamilyLink";
 
 const FamilySelectPage = () => {
-  const { families } = useUserFamiliesContext();
+  const { families } = useFamilyData();
 
   return (
     <div className="w-full flex-grow overflow-auto flex flex-col space-y-2">
-      {families.map((family) => (
+      {families?.map((family) => (
         <div
           className="w-full h-8 flex items-center justify-between bg-yellow-400"
           key={family.id}

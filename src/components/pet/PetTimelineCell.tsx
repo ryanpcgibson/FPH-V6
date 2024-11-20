@@ -3,14 +3,14 @@ import type { TimelineSegment } from "@/types/timeline";
 import StarIcon from "@/components/StarIcon";
 
 interface TimelineCellProps {
-  segment: TimelineSegment | undefined;
-  petId: number;
-  onClick: (petId: number, momentId?: number) => void;
+  segment?: TimelineSegment;
+  itemId: number;
+  onClick?: (itemId: number, momentId?: number) => void;
 }
 
 const TimelineCell: React.FC<TimelineCellProps> = ({
   segment,
-  petId,
+  itemId,
   onClick,
 }) => {
   const hasStatus = (statuses: string | string[]): boolean => {
@@ -21,7 +21,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
   };
 
   const handleClick = () => {
-    onClick(petId, segment?.moments?.[0]?.id);
+    onClick?.(itemId, segment?.moments?.[0]?.id);
   };
 
   let cellClass = "w-full h-10 relative overflow-hidden";

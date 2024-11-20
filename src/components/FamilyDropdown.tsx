@@ -1,5 +1,5 @@
 import React from "react";
-import { useUserFamiliesContext } from "@/context/UserFamiliesContext";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import {
   Select,
   SelectContent,
@@ -18,7 +18,7 @@ const FamilyDropdown: React.FC<FamilyDropdownProps> = ({
   selectedFamilyId,
   onSelectFamily,
 }) => {
-  const { families } = useUserFamiliesContext();
+  const { families } = useFamilyDataContext();
 
   return (
     <div className="w-full">
@@ -30,15 +30,15 @@ const FamilyDropdown: React.FC<FamilyDropdownProps> = ({
           <SelectValue placeholder="Select a family" />
         </SelectTrigger>
         <SelectContent>
-          {families.map((family) => (
+          {families?.map((family) => (
             <SelectItem
               key={family.id}
               value={family.id.toString()}
-              disabled={family.member_type === 'readonly'}
-              className={family.member_type === 'readonly' ? 'opacity-50' : ''}
+              disabled={family.member_type === "viewer"}
+              className={family.member_type === "viewer" ? "opacity-50" : ""}
             >
               The {family.name} Family
-              {family.member_type === 'readonly' && " (Read Only)"}
+              {family.member_type === "viewer" && " (Read Only)"}
             </SelectItem>
           ))}
         </SelectContent>
@@ -47,4 +47,4 @@ const FamilyDropdown: React.FC<FamilyDropdownProps> = ({
   );
 };
 
-export default FamilyDropdown; 
+export default FamilyDropdown;

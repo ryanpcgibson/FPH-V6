@@ -30,8 +30,8 @@ export type MomentDB = Omit<
   "photos" | "pets" | "locations"
 > & {
   photos: Photo[];
-  pets: Pet[];
-  locations: Location[];
+  pets: PetDB[];
+  locations: LocationDB[];
 };
 
 export type Moment = WithDateFields<MomentDB>;
@@ -51,3 +51,19 @@ export type UserDB = Tables<"users">;
 export type User = UserDB;
 export type UserInsert = TablesInsert<"users">;
 export type UserUpdate = TablesUpdate<"users">;
+
+export type FamilyDataDB = {
+  pets: PetDB[];
+  locations: LocationDB[];
+  users: UserDB[];
+  moments: MomentDB[];
+};
+
+export type FamilyData = {
+  pets: Pet[];
+  locations: Location[];
+  users: User[];
+  moments: Moment[];
+};
+
+

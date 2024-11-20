@@ -4,14 +4,13 @@ import FamilyLink from "./FamilyLink";
 
 const AppHeader: React.FC = () => {
   let familyId = undefined;
-  let familyData = undefined;
+  let familyName = undefined;
   try {
-    // if outside of FamilyDataProvider could throw error
-    ({ familyData, familyId } = useFamilyDataContext());
+    ({ familyId, familyName } = useFamilyDataContext());
   } catch {}
 
   const headerContent = familyId ? (
-    <FamilyLink familyId={familyId} familyName={familyData?.family_name} />
+    <FamilyLink familyId={familyId} familyName={familyName} />
   ) : (
     // TODO: this seems janky, since technically any page could have this "title" so refactor TBD where app header title is set by route
     <div>Choose a Family</div>

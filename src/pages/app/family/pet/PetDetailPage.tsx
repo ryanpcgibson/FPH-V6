@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import type { Moment } from "@/db/db_types";
-import { FamilyData } from "@/hooks/useFamilyData";
+import type { FamilyData, Moment } from "@/db/db_types";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import PetCarousel from "@/components/pet/PetCarousel";
 import PetTimelineGrid from "@/components/pet/PetTimelineGrid";

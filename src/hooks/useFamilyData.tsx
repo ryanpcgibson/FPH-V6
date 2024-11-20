@@ -1,23 +1,17 @@
 // src/hooks/useFamilyData.ts
 import { useQuery } from "@tanstack/react-query";
 import { supabaseClient } from "@/db/supabaseClient";
-import { convertStringToDate } from "@/utils/dateUtils";
-import { PetDB, LocationDB, MomentDB, UserDB, Families } from "@/db/db_types";
-import { Pet, Location, Moment, User, Family } from "@/db/db_types";
+// import { convertStringToDate } from "@/utils/dateUtils";
+import { convertEntityFromDB } from "@/utils/dbUtils";
 
-export type FamilyDataDB = {
-  pets: PetDB[];
-  locations: LocationDB[];
-  users: UserDB[];
-  moments: MomentDB[];
-};
-
-export type FamilyData = {
-  pets: Pet[];
-  locations: Location[];
-  users: User[];
-  moments: Moment[];
-};
+import {
+  Pet,
+  Location,
+  Moment,
+  Families,
+  FamilyDataDB,
+  FamilyData,
+} from "@/db/db_types";
 
 const fetchFamilies = async (): Promise<Families> => {
   const { data, error } = await supabaseClient.rpc("get_families");
@@ -32,9 +26,9 @@ const fetchFamilies = async (): Promise<Families> => {
 };
 
 const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
-  const { data, error } = await supabaseClient.rpc("get_family_records", {
+  const { data, error } = (await supabaseClient.rpc("get_family_records", {
     param_family_id: familyId,
-  });
+  })) as { data: FamilyDataDB | null; error: any };
 
   if (error) {
     throw new Error(error.message);
@@ -43,31 +37,21 @@ const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
     throw new Error("No data returned from the database");
   }
 
-  return convertFamilyData(data as FamilyDataDB);
-};
-
-const convertFamilyData = (data: FamilyDataDB): FamilyData => {
-  return {
-    pets: data.pets.map((pet: PetDB) => ({
-      ...pet,
-      start_date: convertStringToDate(pet.start_date),
-      end_date: convertStringToDate(pet.end_date || undefined),
-    })),
-    locations: data.locations.map((location: LocationDB) => ({
-      ...location,
-      start_date: convertStringToDate(location.start_date),
-      end_date: convertStringToDate(location.end_date || undefined),
-    })),
+  const convertedData: FamilyData = {
+    pets: data.pets.map((pet) => convertEntityFromDB(pet) as Pet),
+    locations: data.locations.map(
+      (location) => convertEntityFromDB(location) as Location
+    ),
     users: data.users,
-    moments: data.moments.map((moment: MomentDB) => ({
-      ...moment,
-      start_date: convertStringToDate(moment.start_date),
-      end_date: convertStringToDate(moment.end_date || undefined),
-    })),
+    moments: data.moments.map(
+      (moment) => convertEntityFromDB(moment) as Moment
+    ),
   };
+
+  return convertedData;
 };
 
-export const useFamilyData = (familyId: number | null) => {
+export const useFamilyData = (familyId?: number) => {
   const familiesQuery = useQuery({
     queryKey: ["families"],
     queryFn: fetchFamilies,
@@ -76,18 +60,21 @@ export const useFamilyData = (familyId: number | null) => {
   const familyDataQuery = useQuery({
     queryKey: ["familyData", familyId],
     queryFn: () => {
-      if (familyId === null) {
-        throw new Error("Family ID is null");
+      if (familyId) {
+        return fetchFamilyData(familyId);
+      } else {
+        return undefined;
       }
-      return fetchFamilyData(familyId);
     },
-    enabled: familyId !== null, // Only run this query when familyId is available
+    enabled: familyId !== undefined, // Only run this query when familyId is available
   });
 
   return {
     families: familiesQuery.data,
     familyData: familyDataQuery.data,
-    isLoading: familiesQuery.isLoading || (familyId !== null && familyDataQuery.isLoading),
+    isLoading:
+      familiesQuery.isLoading ||
+      (familyId !== null && familyDataQuery.isLoading),
     isError: familiesQuery.isError || familyDataQuery.isError,
     error: familiesQuery.error || familyDataQuery.error,
   };
