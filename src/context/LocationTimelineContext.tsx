@@ -21,6 +21,7 @@ function generateLocationTimelines(
   locations: Location[],
   moments: Moment[]
 ): LocationTimeline[] {
+  console.log("locations", locations);
   const currentYear = new Date().getFullYear();
   const earliestStartDate = Math.min(
     ...locations.map((location) => {
@@ -102,7 +103,7 @@ export const LocationTimelineProvider: React.FC<{
 }> = ({ children }) => {
   const {
     familyData,
-    seletedFamilyId: familyId,
+    selectedFamilyId: familyId,
     isLoading: isFamilyLoading,
   } = useFamilyDataContext();
 

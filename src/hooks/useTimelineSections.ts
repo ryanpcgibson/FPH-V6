@@ -53,7 +53,9 @@ export const useTimelineSections = (petId?: number) => {
       };
     }
 
-    const allItems = Object.values(sections).flatMap((section) => section.items);
+    const allItems = Object.values(sections).flatMap(
+      (section) => section.items
+    );
 
     const earliestYear = allItems.reduce(
       (min, item) =>

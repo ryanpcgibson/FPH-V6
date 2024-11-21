@@ -21,6 +21,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
       }
     };
     const { sections, yearsArray } = useTimelineSections();
+    console.log("sections", sections);
     const minWidth = (yearsArray.length + 1) * 80;
 
     const { selectedFamilyId } = useFamilyDataContext();
@@ -47,7 +48,6 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
       scrollToYear,
     }));
 
-
     return (
       <div
         ref={gridContainerRef}
@@ -59,9 +59,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
           id="grid-content"
         >
-          <TimelineHeader
-            headerTexts={yearsArray.map(String)}
-          />
+          <TimelineHeader headerTexts={yearsArray.map(String)} />
 
           {Object.values(sections).map((section) => (
             <FamilyTimelineSection
