@@ -55,12 +55,17 @@ const PetFormPage = () => {
       if (petId) {
         await updatePet({ ...petData, id: petId });
       } else {
-        await createPet(petData);
+        const newPet = await createPet(petData);
+        console.log('Created new pet:', newPet);
       }
       navigate(`/app/family/${currentFamilyId}`);
     } catch (error) {
       console.error("Error saving pet:", error);
     }
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   return (
@@ -71,6 +76,7 @@ const PetFormPage = () => {
       initialData={pet}
       onDelete={handleDelete}
       onSubmit={handleSubmit}
+      onCancel={handleCancel}
     />
   );
 };

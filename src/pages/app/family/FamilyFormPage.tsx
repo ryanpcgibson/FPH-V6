@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import FamilyForm from "@/components/family/FamilyForm";
 import { useFamilies } from "@/hooks/useFamilies";
+import type { FamilyInsert } from "@/db/db_types";
 
 const FamilyFormPage = () => {
   const { familyId: familyIdParam } = useParams<{ familyId?: string }>();
@@ -22,17 +23,22 @@ const FamilyFormPage = () => {
     }
   };
 
-  const handleSubmit = async (values: { name: string }) => {
+  const handleSubmit = async (values: FamilyInsert) => {
     try {
       if (familyId) {
-        await updateFamily(values);
+        await updateFamily({ ...values, id: familyId });
+        navigate(`/app/family/${familyId}`);
       } else {
-        await createFamily(values);
+        const newFamily = await createFamily(values);
+        navigate(`/app/family/${newFamily.id}`);
       }
-      navigate(`/app/family/${familyId}`);
     } catch (error) {
       console.error("Error saving family:", error);
     }
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
   };
 
   return (
@@ -43,6 +49,7 @@ const FamilyFormPage = () => {
       }
       onDelete={handleDelete}
       onSubmit={handleSubmit}
+      onCancel={handleCancel}
     />
   );
 };

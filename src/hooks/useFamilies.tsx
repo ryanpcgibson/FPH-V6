@@ -8,12 +8,14 @@ export function useFamilies() {
 
   const createFamilyMutation = useMutation({
     mutationFn: async (familyData: FamilyInsert) => {
-      const preparedData = prepareEntityForDB(familyData);
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("families")
-        .insert([preparedData]);
+        .insert([familyData])
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["families"] });
@@ -23,16 +25,19 @@ export function useFamilies() {
   const updateFamilyMutation = useMutation({
     mutationFn: async (familyData: FamilyUpdate) => {
       if (!familyData.id) throw new Error("Family ID is required");
-      const preparedData = prepareEntityForDB(familyData);
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("families")
-        .update(preparedData)
-        .eq("id", familyData.id);
+        .update(familyData)
+        .eq("id", familyData.id)
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["families"] });
+      queryClient.invalidateQueries({ queryKey: ["familyData"] });
     },
   });
 
@@ -51,8 +56,8 @@ export function useFamilies() {
   });
 
   return {
-    createFamily: createFamilyMutation.mutate,
-    updateFamily: updateFamilyMutation.mutate,
+    createFamily: createFamilyMutation.mutateAsync,
+    updateFamily: updateFamilyMutation.mutateAsync,
     deleteFamily: deleteFamilyMutation.mutate,
     isLoading:
       createFamilyMutation.isPending ||

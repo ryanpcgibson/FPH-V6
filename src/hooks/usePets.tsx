@@ -9,10 +9,14 @@ export function usePets() {
   const createPetMutation = useMutation({
     mutationFn: async (petData: PetInsert) => {
       const preparedData = prepareEntityForDB(petData);
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("pets")
-        .insert([preparedData]);
+        .insert([preparedData])
+        .select()
+        .single();
+
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["familyData"] });
@@ -24,12 +28,15 @@ export function usePets() {
       if (!petData.id) throw new Error("Pet ID is required");
 
       const preparedData = prepareEntityForDB(petData);
-      const { error } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("pets")
         .update(preparedData)
-        .eq("id", petData.id);
+        .eq("id", petData.id)
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["familyData"] });
@@ -51,9 +58,9 @@ export function usePets() {
   });
 
   return {
-    createPet: createPetMutation.mutate,
-    updatePet: updatePetMutation.mutate,
-    deletePet: deletePetMutation.mutate,
+    createPet: createPetMutation.mutateAsync,
+    updatePet: updatePetMutation.mutateAsync,
+    deletePet: deletePetMutation.mutateAsync,
     isLoading:
       createPetMutation.isPending ||
       updatePetMutation.isPending ||

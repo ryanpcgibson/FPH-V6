@@ -22,7 +22,6 @@ const PetTimelineHeader: React.FC<PetTimelineHeaderProps> = ({
           {year}
         </div>
       ))}
-
       {/* Empty cell for alignment with name column */}
       <div className="sticky right-0 z-20 w-20 h-10" />
     </div>

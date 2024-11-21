@@ -4,6 +4,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import type { Family, FamilyInsert } from "@/db/db_types";
 import {
   Card,
   CardContent,
@@ -24,15 +25,14 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Family name must be at least 2 characters.",
   }),
-});
+}) satisfies z.ZodType<Partial<FamilyInsert>>;
 
 interface FamilyFormProps {
-  familyId?: number;
-  initialData?: {
-    name: string;
-  };
+  familyId?: Family["id"];
+  initialData?: Pick<Family, "name">;
   onDelete?: () => void;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
+  onCancel: () => void;
 }
 
 const FamilyForm: React.FC<FamilyFormProps> = ({
@@ -40,6 +40,7 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
   initialData,
   onDelete,
   onSubmit,
+  onCancel,
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,6 +92,13 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
                   Delete
                 </Button>
               )}
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
               <Button type="submit">
                 {familyId ? "Update" : "Create"}
               </Button>

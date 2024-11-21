@@ -35,22 +35,30 @@ const formSchema = z.object({
   description: z.string().optional(),
 });
 
+interface PetFormValues {
+  name: string;
+  start_date: Date | null;
+  end_date: Date | null;
+}
+
 interface PetFormProps {
   petId?: number;
   familyId: number;
-  onFamilyChange: (newFamilyId: number) => void;
   initialData?: Pet;
-  onDelete: () => Promise<void>;
-  onSubmit: (values: { name: string; start_date: Date | null; end_date: Date | null }) => Promise<void>;
+  onFamilyChange: (familyId: number) => void;
+  onDelete?: () => void;
+  onSubmit: (values: PetFormValues) => void;
+  onCancel: () => void;
 }
 
 const PetForm: React.FC<PetFormProps> = ({
   petId,
   familyId,
-  onFamilyChange,
   initialData,
+  onFamilyChange,
   onDelete,
   onSubmit,
+  onCancel,
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,12 +80,6 @@ const PetForm: React.FC<PetFormProps> = ({
       form.setValue("end_date", initialData?.end_date || null);
     }
   }, [petId, familyId, initialData, form]);
-
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete();
-    }
-  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -169,14 +171,25 @@ const PetForm: React.FC<PetFormProps> = ({
               />
             </CardContent>
             <CardFooter className="flex justify-end space-x-2">
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleDelete}
+              {petId && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={onDelete}
+                >
+                  Delete
+                </Button>
+              )}
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel}
               >
-                Delete
+                Cancel
               </Button>
-              <Button type="submit">Update</Button>
+              <Button type="submit">
+                {petId ? "Update" : "Create"}
+              </Button>
             </CardFooter>
           </Card>
         </form>
