@@ -102,7 +102,7 @@ export const LocationTimelineProvider: React.FC<{
 }> = ({ children }) => {
   const {
     familyData,
-    familyId,
+    seletedFamilyId: familyId,
     isLoading: isFamilyLoading,
   } = useFamilyDataContext();
 

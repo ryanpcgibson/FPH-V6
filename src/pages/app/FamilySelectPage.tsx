@@ -14,7 +14,7 @@ const FamilySelectPage = () => {
         >
           <div className="flex-grow" />
           <div className="text-center text-black font-bold text-xl">
-            <FamilyLink familyId={family.id} familyName={family.name} />
+            <FamilyLink selectedFamilyId={family.id} selectedFamilyName={family.name} />
           </div>
           <div className="flex-grow flex justify-end italic pr-2">
             <span>{family.member_type}</span>

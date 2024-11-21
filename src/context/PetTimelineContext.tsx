@@ -5,6 +5,8 @@ import type { PetTimeline, PetTimelineSegment } from "@/types/timeline";
 import { useParams } from "react-router-dom";
 
 interface PetTimelineContextProps {
+  selectedPetId: number | null;
+  selectedPetName: string | null;
   petTimelines: PetTimeline[];
   isLoading: boolean;
   error: Error | null;
@@ -87,18 +89,22 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
 export const PetTimelineProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { petId: petIdParam } = useParams<{ petId?: string }>();
-  const petId = petIdParam ? parseInt(petIdParam, 10) : null;
-
   const {
     familyData,
-    familyId,
+    selectedFamilyId,
     isLoading: isFamilyLoading,
   } = useFamilyDataContext();
+  const { petId: petIdParam } = useParams<{ petId?: string }>();
+  const selectedPetId = petIdParam ? parseInt(petIdParam, 10) : null;
+  const selectedPetName = selectedPetId
+    ? familyData?.pets.find((pet) => pet.id === selectedPetId)?.name ?? null
+    : null;
 
   const contextValue = useMemo(() => {
-    if (!familyId || !familyData) {
+    if (!selectedFamilyId || !familyData) {
       return {
+        selectedPetId,
+        selectedPetName,
         petTimelines: [],
         isLoading: false,
         error: null,
@@ -112,6 +118,8 @@ export const PetTimelineProvider: React.FC<{
         familyData.moments
       );
       return {
+        selectedPetId,
+        selectedPetName,
         petTimelines: timelines,
         isLoading: isFamilyLoading,
         error: null,
@@ -123,13 +131,15 @@ export const PetTimelineProvider: React.FC<{
       };
     } catch (err) {
       return {
+        selectedPetId,
+        selectedPetName,
         petTimelines: [],
         isLoading: false,
         error: err instanceof Error ? err : new Error("An error occurred"),
         getFilteredPetTimelines: () => [],
       };
     }
-  }, [familyData, familyId, isFamilyLoading]);
+  }, [familyData, selectedFamilyId, isFamilyLoading, selectedPetId]);
 
   if (contextValue.error) {
     return (

@@ -11,20 +11,10 @@ import { Menu } from "lucide-react";
 
 export default function NavMenu() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
   };
-
-  // Extract familyId and petId from URL if they exist
-  const matches = {
-    family: location.pathname.match(/\/app\/family\/(\d+)/),
-    pet: location.pathname.match(/\/app\/family\/\d+\/pet\/(\d+)/),
-  };
-
-  const familyId = matches.family?.[1];
-  const petId = matches.pet?.[1];
 
   return (
     <div className="relative">
@@ -39,16 +29,6 @@ export default function NavMenu() {
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/app")}>
             Switch Family
           </DropdownMenuItem>
-          {familyId && (
-            <DropdownMenuItem onSelect={() => handleMenuItemClick(`/app/family/${familyId}/edit`)}>
-              Edit Family
-            </DropdownMenuItem>
-          )}
-          {petId && (
-            <DropdownMenuItem onSelect={() => handleMenuItemClick(`/app/family/${familyId}/pet/${petId}/edit`)}>
-              Edit Pet
-            </DropdownMenuItem>
-          )}
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/profile")}>
             User Profile
           </DropdownMenuItem>

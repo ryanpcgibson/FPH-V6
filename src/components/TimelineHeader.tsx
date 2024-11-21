@@ -3,13 +3,11 @@ import React from "react";
 interface TimelineHeaderProps {
   headerTexts: string[];
   headerStyles?: string[];
-  editLink?: React.ReactNode;
 }
 
 const TimelineHeader: React.FC<TimelineHeaderProps> = ({
   headerTexts,
   headerStyles,
-  editLink,
 }) => {
   return (
     <div className="sticky top-0 z-50 bg-white" id="column-header-container">
@@ -28,9 +26,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
         <div
           className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold bg-white"
           id="top-right-corner"
-        >
-          {editLink}
-        </div>
+        />
       </div>
     </div>
   );

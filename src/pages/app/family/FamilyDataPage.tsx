@@ -8,7 +8,12 @@ import type { FamilyData } from "@/hooks/useFamilyData";
 import { convertDateToISODateString } from "@/utils/dateUtils";
 
 const DataPage: React.FC = () => {
-  const { familyData, familyId, isLoading, error } = useFamilyDataContext();
+  const {
+    familyData,
+    seletedFamilyId: familyId,
+    isLoading,
+    error,
+  } = useFamilyDataContext();
 
   const convertFamilyData = (familyData: any): FamilyData => {
     if (!familyData) {

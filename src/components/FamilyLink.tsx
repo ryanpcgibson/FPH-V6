@@ -1,16 +1,15 @@
 import Link from "@/components/Link";
 
 interface FamilyLinkProps {
-  familyId: number | null;
-  familyName: string | undefined;
+  selectedFamilyId: number | null;
+  selectedFamilyName: string | null;
 }
 
-function FamilyLink({ familyId, familyName }: FamilyLinkProps) {
+function FamilyLink({ selectedFamilyId, selectedFamilyName }: FamilyLinkProps) {
+  console.log("selectedFamilyName", selectedFamilyName);
   return (
-    <Link href={`/app/family/${familyId}`}>
-      <span className="whitespace-nowrap">
-        The {familyName} Family
-      </span>
+    <Link href={`/app/family/${selectedFamilyId}`}>
+      <span className="whitespace-nowrap">The {selectedFamilyName} Family</span>
     </Link>
   );
 }

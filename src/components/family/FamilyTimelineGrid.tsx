@@ -3,9 +3,8 @@ import TimelineHeader from "@/components/TimelineHeader";
 import FamilyTimelineSection from "@/components/family/FamilyTimelineSection";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
-import { Pencil } from "lucide-react";
 
 export interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
@@ -24,8 +23,8 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     const { sections, yearsArray } = useTimelineSections();
     const minWidth = (yearsArray.length + 1) * 80;
 
-    const { familyId } = useFamilyDataContext();
-    const baseURL = `/app/family/${familyId}`;
+    const { selectedFamilyId } = useFamilyDataContext();
+    const baseURL = `/app/family/${selectedFamilyId}`;
 
     const scrollToYear = (year: number) => {
       if (gridContainerRef.current) {
@@ -48,15 +47,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
       scrollToYear,
     }));
 
-    const editFamilyLink = (
-      <Link 
-        to={`/app/family/${familyId}/edit`}
-        className="p-2 hover:bg-yellow-300 transition-colors rounded-md"
-        aria-label="Edit Family"
-      >
-        <Pencil className="h-4 w-4 text-gray-700" />
-      </Link>
-    );
+
     return (
       <div
         ref={gridContainerRef}
@@ -70,7 +61,6 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
         >
           <TimelineHeader
             headerTexts={yearsArray.map(String)}
-            editLink={editFamilyLink}
           />
 
           {Object.values(sections).map((section) => (

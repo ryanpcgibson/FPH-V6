@@ -6,8 +6,8 @@ import { useFamilyData } from "@/hooks/useFamilyData";
 interface FamilyDataContextType {
   families: Families | undefined;
   familyData: FamilyData | undefined;
-  familyId: number | null;
-  familyName: string | undefined;
+  selectedFamilyId: number | null;
+  selectedFamilyName: string | null;
   isLoading: boolean;
   error: Error | null;
 }
@@ -20,16 +20,16 @@ export const FamilyDataProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { familyId: familyIdParam } = useParams<{ familyId?: string }>();
-  const familyId = familyIdParam ? parseInt(familyIdParam, 10) : null;
+  const selectedFamilyId = familyIdParam ? parseInt(familyIdParam, 10) : null;
 
-  if (!familyId) {
+  if (!selectedFamilyId) {
     return (
       <FamilyDataContext.Provider
         value={{
           families: undefined,
           familyData: undefined,
-          familyId: null,
-          familyName: undefined,
+          selectedFamilyId: null,
+          selectedFamilyName: null,
           isLoading: false,
           error: null,
         }}
@@ -39,18 +39,21 @@ export const FamilyDataProvider: React.FC<{
     );
   }
 
-  const { families, familyData, isLoading, error } = useFamilyData(familyId);
+  const { families, familyData, isLoading, error } =
+    useFamilyData(selectedFamilyId);
 
   const contextValue = useMemo(
     () => ({
       families,
       familyData,
-      familyId,
-      familyName: families?.find((family) => family.id === familyId)?.name,
+      selectedFamilyId,
+      selectedFamilyName:
+        families?.find((family) => family.id === selectedFamilyId)?.name ??
+        null,
       isLoading,
       error,
     }),
-    [familyData, familyId, isLoading, error]
+    [familyData, selectedFamilyId, isLoading, error]
   );
 
   return (
