@@ -5,7 +5,7 @@ import StarIcon from "@/components/StarIcon";
 interface TimelineCellProps {
   segment: TimelineSegment | undefined;
   petId: number;
-  onClick: (petId: number, momentId?: number) => void;
+  onClick?: (petId: number, momentId?: number) => void;
 }
 
 const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
@@ -21,7 +21,7 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
   };
 
   const handleClick = () => {
-    onClick(petId, segment?.moments?.[0]?.id);
+    onClick?.(petId, segment?.moments?.[0]?.id);
   };
 
   let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";

@@ -26,7 +26,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
     return (
       <FamilyTimelineCell
         segment={segment}
-        itemId={item.id}
+        petId={item.id}
         onClick={onSegmentClick}
       />
     );
