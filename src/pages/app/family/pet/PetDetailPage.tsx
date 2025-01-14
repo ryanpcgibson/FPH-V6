@@ -3,13 +3,11 @@ import { useParams } from "react-router-dom";
 import type { FamilyData, Moment } from "@/db/db_types";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import PetCarousel from "@/components/pet/PetCarousel";
-import PetTimelineGrid from "@/components/pet/PetTimelineGrid";
+import PetTimelineFacts from "@/components/pet/PetTimelineFacts";
 
 const PetDetailPage: React.FC = () => {
-  const momentId = 0;
   const { petId: petIdParam } = useParams<{ petId: string }>();
   const petId = petIdParam ? parseInt(petIdParam, 10) : null;
-
   const { familyData } = useFamilyDataContext();
 
   const [moments, setMoments] = useState<FamilyData["moments"]>([]);
@@ -21,15 +19,15 @@ const PetDetailPage: React.FC = () => {
         moment.pets.some((pet: { id: number }) => pet.id === petId)
       );
       setMoments(petMoments);
-
-      if (momentId) {
-        const index = petMoments.findIndex((moment) => moment.id === momentId);
-        setCurrentMomentIndex(index !== -1 ? index : 0);
-      } else {
-        setCurrentMomentIndex(0);
-      }
     }
-  }, [familyData, petId, momentId]);
+  }, [familyData, petId]);
+
+  const handleMomentClick = (momentId: number) => {
+    const index = moments.findIndex((moment) => moment.id === momentId);
+    if (index !== -1) {
+      setCurrentMomentIndex(index);
+    }
+  };
 
   return (
     <div className="flex flex-row" id="page-container">
@@ -41,7 +39,7 @@ const PetDetailPage: React.FC = () => {
         />
       </div>
       <div className="flex flex-row flex-grow w-2/5" id="pet-detail-container">
-        <PetTimelineGrid />
+        <PetTimelineFacts petId={petId} onMomentClick={handleMomentClick} />
       </div>
     </div>
   );
