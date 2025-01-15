@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import type { FamilyData, Moment } from "@/db/db_types";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import { Card, CardContent } from "@/components/ui/card";
 import PetCarousel from "@/components/pet/PetCarousel";
 import PetTimelineFacts from "@/components/pet/PetTimelineFacts";
 
@@ -30,16 +31,24 @@ const PetDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row" id="page-container">
+    <div className="flex flex-row gap-4" id="page-container">
       <div className="flex flex-col flex-grow w-3/5" id="carousel-container">
-        <PetCarousel
-          moments={moments}
-          currentMomentIndex={currentMomentIndex}
-          setCurrentMomentIndex={setCurrentMomentIndex}
-        />
+        <Card className="w-full h-full">
+          <CardContent className="p-4 h-full">
+            <PetCarousel
+              moments={moments}
+              currentMomentIndex={currentMomentIndex}
+              setCurrentMomentIndex={setCurrentMomentIndex}
+            />
+          </CardContent>
+        </Card>
       </div>
       <div className="flex flex-row flex-grow w-2/5" id="pet-detail-container">
-        <PetTimelineFacts petId={petId} onMomentClick={handleMomentClick} />
+        <Card className="w-full">
+          <CardContent className="p-4">
+            <PetTimelineFacts petId={petId} onMomentClick={handleMomentClick} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

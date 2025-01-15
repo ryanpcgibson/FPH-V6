@@ -1,5 +1,5 @@
 import React from "react";
-import { usePetTimelineContext } from "@/context/PetTimelineContext";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { format } from "date-fns";
 
 interface PetTimelineFactsProps {
@@ -11,50 +11,42 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   petId,
   onMomentClick,
 }) => {
-  const { getFilteredPetTimelines } = usePetTimelineContext();
+  const { familyData } = useFamilyDataContext();
 
-  if (!petId) return null;
+  if (!petId || !familyData) return null;
 
-  const timeline = getFilteredPetTimelines(petId)[0];
-  if (!timeline) return null;
+  const pet = familyData.pets.find((p) => p.id === petId);
+  if (!pet) return null;
 
-  // Find birth and death years from segments
-  const birthSegment = timeline.segments.find((s) => s.status === "birth");
-  const deathSegment = timeline.segments.find((s) => s.status === "death");
-
-  // Get all moments with their years, sorted by year
-  const moments = timeline.segments
-    .filter((s) => s.moments && s.moments.length > 0)
-    .flatMap((s) =>
-      (s.moments || []).map((moment) => ({
-        ...moment,
-        year: s.year,
-      }))
-    )
-    .sort((a, b) => a.id - b.id);
+  // Get all moments for this pet, sorted by date
+  const petMoments = familyData.moments
+    .filter((moment) => moment.pets.some((p) => p.id === petId))
+    .sort((a, b) => {
+      if (!a.start_date || !b.start_date) return 0;
+      return a.start_date.getTime() - b.start_date.getTime();
+    });
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">{timeline.petName}</h2>
-      <ul className="space-y-2">
-        {birthSegment && <li>Born: {birthSegment.year}</li>}
-        {deathSegment && <li>Died: {deathSegment.year}</li>}
-        {moments.length > 0 && (
-          <>
-            <li className="font-semibold mt-4">Moments:</li>
-            {moments.map((moment) => (
-              <li
-                key={moment.id}
-                className="ml-4 text-blue-600 hover:text-blue-800 cursor-pointer"
-                onClick={() => onMomentClick(moment.id)}
-              >
-                • {moment.title} ({moment.year})
-              </li>
-            ))}
-          </>
-        )}
-      </ul>
-    </div>
+    <ul className="space-y-2">
+      {pet.start_date && (
+        <li>Born: {format(pet.start_date, "MMMM d, yyyy")}</li>
+      )}
+      {pet.end_date && <li>Died: {format(pet.end_date, "MMMM d, yyyy")}</li>}
+      {petMoments.length > 0 && (
+        <>
+          <li className="font-semibold mt-4">Moments:</li>
+          {petMoments.map((moment) => (
+            <li
+              key={moment.id}
+              className="ml-4 text-blue-600 hover:text-blue-800 cursor-pointer"
+              onClick={() => onMomentClick(moment.id)}
+            >
+              • {moment.title} ({format(moment.start_date!, "MMM d, yyyy")})
+            </li>
+          ))}
+        </>
+      )}
+    </ul>
   );
 };
 
