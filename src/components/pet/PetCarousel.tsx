@@ -58,7 +58,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
                 <img
                   src={`/src/assets/${photo.path}`}
                   alt={`Pet photo ${index + 1}`}
-                  className="w-full h-full object-contain max-h-[330px]"
+                  className="w-full h-full object-contain"
                 />
               </CarouselItem>
             ))}

@@ -53,7 +53,7 @@ const AppHeader: React.FC = () => {
 
   return (
     <div
-      className={`w-full h-8 flex items-center justify-between bg-yellow-400`}
+      className={`w-full h-8 flex items-center justify-between bg-yellow-400 rounded-b-lg`}
       id="family-header"
     >
       <div className="flex-grow" />

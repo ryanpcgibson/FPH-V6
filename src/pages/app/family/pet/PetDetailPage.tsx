@@ -31,13 +31,13 @@ const PetDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row gap-4 h-full" id="page-container">
+    <div className="flex flex-row gap-2 h-full w-full" id="page-container">
       <div
         className="flex flex-col flex-grow w-3/5 h-full overflow-hidden"
         id="carousel-container"
       >
-        <Card className="w-full h-full bg-yellow-400">
-          <CardContent className="p-4 h-full ">
+        <Card className="w-full h-full">
+          <CardContent className="h-full p-0">
             <PetCarousel
               moments={moments}
               currentMomentIndex={currentMomentIndex}
@@ -48,7 +48,7 @@ const PetDetailPage: React.FC = () => {
       </div>
       <div className="flex flex-row flex-grow w-2/5" id="pet-detail-container">
         <Card className="w-full bg-yellow-400">
-          <CardContent className="p-4">
+          <CardContent className="">
             <PetTimelineFacts petId={petId} onMomentClick={handleMomentClick} />
           </CardContent>
         </Card>
