@@ -46,10 +46,13 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
         </div>
       ))}
 
-      <div
-        className={`sticky right-0 z-20 w-20 h-10 flex items-center justify-center font-bold ${headerStyle}`}
-      >
-        <Link href={`${baseURL}/pet/${item.id}`}>{item.name}</Link>
+      {/* Wrapper div with white background to hide pattern */}
+      <div className="sticky right-0 z-20 w-20 h-10 flex items-center justify-center bg-white">
+        <div
+          className={`w-full h-full flex items-center justify-center font-bold rounded-lg ${headerStyle}`}
+        >
+          <Link href={`${baseURL}/pet/${item.id}`}>{item.name}</Link>
+        </div>
       </div>
     </div>
   );

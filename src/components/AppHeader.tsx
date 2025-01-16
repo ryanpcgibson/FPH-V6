@@ -7,13 +7,13 @@ import { Pencil } from "lucide-react";
 
 const AppHeader: React.FC = () => {
   const location = useLocation();
-  const isEditView = location.pathname.includes('/edit');
-  
+  const isEditView = location.pathname.includes("/edit");
+
   let selectedFamilyId = null;
   let selectedFamilyName = null;
   let selectedPetName = null;
   let selectedPetId = null;
-  
+
   try {
     ({ selectedFamilyId, selectedFamilyName } = useFamilyDataContext());
   } catch {}
@@ -34,7 +34,7 @@ const AppHeader: React.FC = () => {
       </>
     );
   } else {
-    headerContent = "Choose a Family";
+    headerContent = "";
   }
 
   const editLink = selectedFamilyId && !isEditView && (

@@ -20,7 +20,11 @@ export default function NavMenu() {
     <div className="relative">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="hover:bg-yellow-300 transition-colors">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-yellow-300 transition-colors"
+          >
             <Menu className="h-6 w-6 text-gray-700" />
             <span className="sr-only">Open menu</span>
           </Button>
@@ -29,7 +33,9 @@ export default function NavMenu() {
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/app")}>
             Switch Family
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => handleMenuItemClick("/profile")}>
+          <DropdownMenuItem
+            onSelect={() => handleMenuItemClick("/app/profile")}
+          >
             User Profile
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => handleMenuItemClick("/logout")}>
