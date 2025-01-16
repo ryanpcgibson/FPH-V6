@@ -1,7 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import { Photo } from "@/db/db_types";
-import EmblaCarousel from "@/components/ui/EmblaCarousel";
-import CarouselControls from "@/components/ui/CarouselControls";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import useEmblaCarousel from "embla-carousel-react";
 
 interface PetCarouselProps {
   moments: any[];
@@ -12,45 +18,64 @@ interface PetCarouselProps {
 const PetCarousel: React.FC<PetCarouselProps> = ({
   moments,
   currentMomentIndex,
-  setCurrentMomentIndex,
 }) => {
-  const [emblaApi, setEmblaApi] = useState<EmblaCarouselType | null>(null);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-
   const photos = moments[currentMomentIndex]?.photos || [];
+  const [emblaRef, emblaApi] = useEmblaCarousel();
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
+  // Define the styles as JavaScript objects
+  const emblaStyle = {
+    overflow: "hidden",
+    height: "100%",
+  };
 
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
+  const emblaContainerStyle = {
+    display: "flex",
+    height: "100%",
+  };
+
+  const emblaSlideStyle = {
+    flex: "0 0 100%",
+    minWidth: "0",
+    height: "100%",
+  };
 
   return (
-    <div className="relative h-full flex flex-col">
-      <div className="flex-grow z-10 overflow-hidden">
-        <EmblaCarousel
-          photos={photos || []}
-          setEmblaApi={setEmblaApi}
-          setCurrentIndex={setCurrentPhotoIndex}
-        />
+    <div className="flex flex-col h-full">
+      <div className="flex-1 min-h-0 z-10">
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          ref={emblaRef}
+          style={emblaStyle}
+        >
+          <CarouselContent style={emblaContainerStyle} className="h-full">
+            {photos.map((photo: Photo, index: number) => (
+              <CarouselItem
+                key={photo.id || index}
+                style={emblaSlideStyle}
+              >
+                <img
+                  src={`/src/assets/${photo.path}`}
+                  alt={`Pet photo ${index + 1}`}
+                  className="w-full h-full object-contain max-h-[330px]"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
+        </Carousel>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 z-20 p-2 bg-white bg-opacity-50">
-        {photos ? (
-          <CarouselControls
-            currentIndex={currentPhotoIndex}
-            totalCount={photos.length}
-            onPrevClick={scrollPrev}
-            onNextClick={scrollNext}
-            renderCenter={() =>
-              `Photo ${currentPhotoIndex + 1} / ${photos.length}`
-            }
-          />
+      {/* <div className="absolute bottom-0 left-0 right-0 z-20 p-2 bg-white bg-opacity-50">
+        {photos.length > 0 ? (
+          <div className="text-center">
+            Photo {currentPhotoIndex + 1} / {photos.length}
+          </div>
         ) : (
           <div className="text-center">No Photos</div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

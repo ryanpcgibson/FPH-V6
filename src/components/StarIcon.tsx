@@ -9,7 +9,7 @@ interface StarIconProps {
 
 const StarIcon: React.FC<StarIconProps> = ({
   size = 24,
-  fillColor = "yellow",
+  fillColor = "#facc15",
   strokeColor = "black",
   strokeWidth = 1,
 }) => {

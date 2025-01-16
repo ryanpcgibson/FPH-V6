@@ -60,14 +60,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({
         </div>
       )}
       <div className="relative flex items-center justify-center h-full">
-        {hasStatus("memory") && (
-          <StarIcon
-            size={24}
-            fillColor="yellow"
-            strokeColor="black"
-            strokeWidth={1}
-          />
-        )}
+        {hasStatus("memory") && <StarIcon />}
       </div>
     </div>
   );
