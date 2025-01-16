@@ -15,7 +15,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
         {headerTexts.map((header, index) => (
           <div
             key={index}
-            className={`w-[80px] h-10 flex items-center justify-center font-bold ${
+            className={`w-[80px] h-10 flex items-center justify-center font-bold rounded-lg ${
               headerStyles?.[index] ?? "bg-gray-200"
             }`}
             id={`column-header-${index}`}
@@ -24,7 +24,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
           </div>
         ))}
         <div
-          className="sticky right-0 z-30 w-20 h-10 flex items-center justify-center font-bold bg-white"
+          className="sticky right-0 z-30 w-28 h-10 flex items-center justify-center font-bold bg-white"
           id="top-right-corner"
         />
       </div>
