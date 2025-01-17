@@ -65,5 +65,3 @@ export type FamilyData = {
   users: User[];
   moments: Moment[];
 };
-
-

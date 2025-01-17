@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabaseClient } from "@/db/supabaseClient";
 import { FamilyInsert, FamilyUpdate } from "@/db/db_types";
-import { prepareEntityForDB } from "@/utils/dbUtils";
 
 export function useFamilies() {
   const queryClient = useQueryClient();

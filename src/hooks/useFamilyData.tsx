@@ -1,7 +1,6 @@
 // src/hooks/useFamilyData.ts
 import { useQuery } from "@tanstack/react-query";
 import { supabaseClient } from "@/db/supabaseClient";
-// import { convertStringToDate } from "@/utils/dateUtils";
 import { convertEntityFromDB } from "@/utils/dbUtils";
 
 import {
@@ -51,7 +50,15 @@ const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
   return convertedData;
 };
 
-export const useFamilyData = (familyId?: number) => {
+export const useFamilyData = (
+  familyId?: number
+): {
+  families: Families | undefined;
+  familyData: FamilyData | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: any;
+} => {
   const familiesQuery = useQuery({
     queryKey: ["families"],
     queryFn: fetchFamilies,

@@ -3,14 +3,15 @@
 import React, { useMemo } from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { JsonToTable } from "react-json-to-table";
-import { Pet, Location, Moment } from "@/db/db_types";
-import type { FamilyData } from "@/hooks/useFamilyData";
+import { Pet, Location, Moment, FamilyData } from "@/db/db_types";
 import { convertDateToISODateString } from "@/utils/dateUtils";
 
 const DataPage: React.FC = () => {
   const {
+    families,
     familyData,
-    seletedFamilyId: familyId,
+    selectedFamilyId: familyId,
+    selectedFamilyName: familyName,
     isLoading,
     error,
   } = useFamilyDataContext();
@@ -18,7 +19,6 @@ const DataPage: React.FC = () => {
   const convertFamilyData = (familyData: any): FamilyData => {
     if (!familyData) {
       return {
-        family_name: "",
         pets: [],
         locations: [],
         users: [],
@@ -26,7 +26,6 @@ const DataPage: React.FC = () => {
       };
     } else {
       return {
-        family_name: familyData.family_name,
         pets: familyData.pets.map((pet: Pet) => ({
           ...pet,
           start_date: convertDateToISODateString(pet.start_date),
@@ -48,11 +47,20 @@ const DataPage: React.FC = () => {
   };
 
   const updatedData = useMemo(
-    () => convertFamilyData(familyData),
-    [familyData]
+    () => ({
+      families,
+      familyData: convertFamilyData(familyData),
+      selectedFamilyId: familyId,
+      selectedFamilyName: familyName,
+    }),
+    [families, familyData, familyId, familyName]
   );
 
-  return <JsonToTable json={updatedData} />;
+  return (
+    <div className="overflow-auto max-h-full max-w-full">
+      <JsonToTable json={updatedData} />
+    </div>
+  );
 };
 
 export default DataPage;
