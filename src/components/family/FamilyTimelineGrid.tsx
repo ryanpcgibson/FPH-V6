@@ -6,7 +6,7 @@ import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
 
-export interface TimelineGridHandle {
+interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
 }
 

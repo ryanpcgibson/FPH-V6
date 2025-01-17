@@ -16,7 +16,7 @@ const FamilyDataContext = createContext<FamilyDataContextType | undefined>(
   undefined
 );
 
-export const FamilyDataProvider: React.FC<{
+const FamilyDataProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const { familyId: familyIdParam } = useParams<{ familyId?: string }>();

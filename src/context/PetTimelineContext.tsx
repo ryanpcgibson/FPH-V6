@@ -86,7 +86,7 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
   });
 }
 
-export const PetTimelineProvider: React.FC<{
+const PetTimelineProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const {

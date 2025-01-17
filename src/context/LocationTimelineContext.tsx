@@ -98,7 +98,7 @@ function generateLocationTimelines(
   });
 }
 
-export const LocationTimelineProvider: React.FC<{
+const LocationTimelineProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const {

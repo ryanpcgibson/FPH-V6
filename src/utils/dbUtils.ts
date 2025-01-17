@@ -9,13 +9,13 @@ export const prepareEntityForDB = <T extends EntityWithDates>(entity: T) => {
   };
 };
 
-export type EntityWithDates = {
+type EntityWithDates = {
   start_date?: Date | null;
   end_date?: Date | null;
   [key: string]: any;
 };
 
-export type EntityWithStringDates = {
+type EntityWithStringDates = {
   start_date?: string | null;
   end_date?: string | null;
   [key: string]: any;
@@ -25,7 +25,9 @@ export const convertEntityFromDB = <T extends EntityWithStringDates>(
 ) => {
   return {
     ...entity,
-    start_date: entity.start_date ? convertStringToDate(entity.start_date) : null,
+    start_date: entity.start_date
+      ? convertStringToDate(entity.start_date)
+      : null,
     end_date: entity.end_date ? convertStringToDate(entity.end_date) : null,
   };
 };

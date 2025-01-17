@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PageLayout from "@/components/layouts/PageLayout";
 
-import { AuthProvider } from "@/context/AuthContext";
+import AuthProvider from "@/context/AuthContext";
 
 import FamilyDataProvider from "@/context/FamilyDataContext";
 import PetTimelineProvider from "@/context/PetTimelineContext";
