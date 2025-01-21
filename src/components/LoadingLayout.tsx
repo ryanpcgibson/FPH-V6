@@ -9,7 +9,7 @@ interface PageLayoutProps {
   centerContent?: boolean;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({
+const LoadingLayout: React.FC<PageLayoutProps> = ({
   children,
   isLoading,
   error,
@@ -42,4 +42,4 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   return <>{children}</>;
 };
 
-export default PageLayout;
+export default LoadingLayout;

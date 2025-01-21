@@ -52,7 +52,7 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
   };
 
   return (
-    <div className="flex justify-center min-h-screen">
+    <div className="flex justify-center">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

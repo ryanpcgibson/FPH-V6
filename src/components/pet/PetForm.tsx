@@ -82,7 +82,7 @@ const PetForm: React.FC<PetFormProps> = ({
   }, [petId, familyId, initialData, form]);
 
   return (
-    <div className="flex justify-center min-h-screen">
+    <div className="flex justify-center">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

@@ -3,7 +3,7 @@ import LoginForm from "@/components/LoginForm";
 
 const WelcomePage = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center min-h-screen p-4 ">
+    <div className="flex flex-col md:flex-row justify-center p-4 ">
       <div className="w-full max-w-md mb-8 md:mb-0 md:mr-8">
         <h1 className="text-4xl font-bold mb-4">Family Pet History</h1>
         <p className="text-lg">

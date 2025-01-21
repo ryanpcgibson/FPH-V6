@@ -1,7 +1,7 @@
 import "./App.css";
 import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import PageLayout from "@/components/layouts/PageLayout";
+import LoadingLayout from "@/components/LoadingLayout";
 
 import AuthProvider from "@/context/AuthContext";
 
@@ -27,7 +27,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Suspense fallback={<PageLayout isLoading>Loading...</PageLayout>}>
+        <Suspense
+          fallback={<LoadingLayout isLoading>Loading...</LoadingLayout>}
+        >
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="/logout" element={<LogoutPage />} />
