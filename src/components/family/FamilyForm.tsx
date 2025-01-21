@@ -5,11 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { Family, FamilyInsert } from "@/db/db_types";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -56,7 +52,7 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center min-h-screen">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -92,16 +88,10 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
                   Delete
                 </Button>
               )}
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
-              <Button type="submit">
-                {familyId ? "Update" : "Create"}
-              </Button>
+              <Button type="submit">{familyId ? "Update" : "Create"}</Button>
             </CardFooter>
           </Card>
         </form>
@@ -110,4 +100,4 @@ const FamilyForm: React.FC<FamilyFormProps> = ({
   );
 };
 
-export default FamilyForm; 
+export default FamilyForm;
