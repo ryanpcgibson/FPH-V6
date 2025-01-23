@@ -22,6 +22,7 @@ import FamilyFormPage from "@/pages/app/family/FamilyFormPage";
 
 import PetInfo from "@/pages/app/family/pet/PetDetailPage";
 import PetFormPage from "@/pages/app/family/pet/PetFormPage";
+import TestPage from "./pages/app/TestPage";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               }
             >
               <Route element={<AppLayout />}>
+                <Route path="test" element={<TestPage />} />
                 <Route path="data" element={<FamilyData />} />
                 <Route index element={<FamilySelectPage />} />
                 <Route path="profile" element={<ProfilePage />} />

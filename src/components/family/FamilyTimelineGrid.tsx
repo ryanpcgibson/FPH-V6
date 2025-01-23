@@ -5,6 +5,7 @@ import { useTimelineSections } from "@/hooks/useTimelineSections";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
+import AddItemButton from "@/components/AddItemButton";
 
 interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
@@ -12,7 +13,7 @@ interface TimelineGridHandle {
 
 const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
   (props, ref) => {
-    const gridContainerRef = useRef<HTMLDivElement>(null);
+    const gridInnerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     const handleSegmentClick = (itemId: number, momentId?: number) => {
@@ -28,12 +29,31 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     const baseURL = `/app/family/${selectedFamilyId}`;
 
     const scrollToYear = (year: number) => {
-      if (gridContainerRef.current) {
+      if (gridInnerRef.current) {
         const scrollPosition = calculateYearScrollPosition(year, yearsArray);
-        gridContainerRef.current.scrollTo({
+        console.log(
+          `Scrolling element:`,
+          gridInnerRef.current,
+          `\nTo position:`,
+          scrollPosition,
+          `\nFor year:`,
+          year,
+          `\nCurrent scroll position:`,
+          gridInnerRef.current.scrollLeft,
+          `\nScrollWidth:`,
+          gridInnerRef.current.scrollWidth,
+          `\nClientWidth:`,
+          gridInnerRef.current.clientWidth
+        );
+
+        // Try both scrollTo and scrollLeft
+        gridInnerRef.current.scrollTo({
           left: scrollPosition,
           behavior: "smooth",
         });
+
+        // Fallback direct assignment
+        gridInnerRef.current.scrollLeft = scrollPosition;
       }
     };
 
@@ -50,8 +70,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
 
     return (
       <div
-        ref={gridContainerRef}
-        className="w-full flex-grow overflow-auto"
+        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-auto"
         id="family-timeline-grid"
       >
         <div
@@ -59,17 +78,43 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
           id="grid-content"
         >
-          <TimelineHeader headerTexts={yearsArray.map(String)} />
-
-          {Object.values(sections).map((section) => (
-            <FamilyTimelineSection
-              key={section.id}
-              section={section}
-              columnHeaders={yearsArray}
-              baseURL={baseURL}
-              onSegmentClick={section.onSegmentClick}
-            />
-          ))}
+          {/* <TimelineHeader headerTexts={yearsArray.map(String)} /> */}
+          <div
+            className="sticky top-0 z-50 bg-white"
+            id="column-header-container"
+          >
+            <div className="flex gap-1" id="column-headers">
+              {yearsArray.map(String).map((header, index) => (
+                <div
+                  key={index}
+                  className={`w-[80px] h-10 flex items-center justify-center font-bold rounded-lg ${"bg-gray-200"}`}
+                  id={`column-header-${index}`}
+                >
+                  {header}
+                </div>
+              ))}
+              <div
+                className="sticky right-0 z-30 w-28 h-10 flex items-center justify-center font-bold bg-white"
+                id="top-right-corner"
+              />
+            </div>
+          </div>
+          <div
+            ref={gridInnerRef}
+            className="w-full relative"
+            id="grid-content-inner"
+          >
+            {Object.values(sections).map((section) => (
+              <FamilyTimelineSection
+                key={section.id}
+                section={section}
+                columnHeaders={yearsArray}
+                baseURL={baseURL}
+                onSegmentClick={section.onSegmentClick}
+              />
+            ))}
+            <AddItemButton />
+          </div>
         </div>
       </div>
     );

@@ -8,7 +8,7 @@ const AppLayout = () => {
       id="app-layout"
     >
       <AppHeader />
-      <div className="flex-1 w-full overflow-auto" id="app-content-layout">
+      <div className="flex-1 w-full" id="app-content-layout">
         <Outlet />
       </div>
     </div>
