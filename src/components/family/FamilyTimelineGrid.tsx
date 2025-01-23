@@ -70,7 +70,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
 
     return (
       <div
-        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-auto"
+        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-auto flex justify-end"
         id="family-timeline-grid"
       >
         <div
