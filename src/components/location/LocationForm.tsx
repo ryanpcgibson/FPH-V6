@@ -162,7 +162,19 @@ const LocationForm: React.FC<LocationFormProps> = ({
             </CardContent>
             <CardFooter className="flex justify-end space-x-2">
               {locationId && (
-                <Button type="button" variant="destructive" onClick={onDelete}>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this location?"
+                      )
+                    ) {
+                      onDelete?.();
+                    }
+                  }}
+                >
                   Delete
                 </Button>
               )}

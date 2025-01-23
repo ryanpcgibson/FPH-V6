@@ -162,7 +162,7 @@ const PetForm: React.FC<PetFormProps> = ({
                         placeholder="Pet description (optional)"
                         {...field}
                         className="w-full"
-                        value={field.value || ''}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -175,21 +175,23 @@ const PetForm: React.FC<PetFormProps> = ({
                 <Button
                   type="button"
                   variant="destructive"
-                  onClick={onDelete}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this pet?"
+                      )
+                    ) {
+                      onDelete?.();
+                    }
+                  }}
                 >
                   Delete
                 </Button>
               )}
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={onCancel}
-              >
+              <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
-              <Button type="submit">
-                {petId ? "Update" : "Create"}
-              </Button>
+              <Button type="submit">{petId ? "Update" : "Create"}</Button>
             </CardFooter>
           </Card>
         </form>
