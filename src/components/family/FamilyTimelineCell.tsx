@@ -1,18 +1,26 @@
 import React from "react";
 import type { TimelineSegment } from "@/types/timeline";
 import StarIcon from "@/components/StarIcon";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface TimelineCellProps {
   segment: TimelineSegment | undefined;
-  petId: number;
-  onClick?: (petId: number, momentId?: number) => void;
+  itemId: number;
+  getSegmentUrl?: (
+    baseURL: string,
+    itemId: number,
+    momentId?: number
+  ) => string;
 }
 
 const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
   segment,
-  petId,
-  onClick,
+  itemId,
+  getSegmentUrl,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const hasStatus = (statuses: string | string[]): boolean => {
     if (!segment?.status) return false;
     return Array.isArray(statuses)
@@ -21,7 +29,13 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
   };
 
   const handleClick = () => {
-    onClick?.(petId, segment?.moments?.[0]?.id);
+    if (!getSegmentUrl) return;
+    const url = getSegmentUrl(
+      location.pathname,
+      itemId,
+      segment?.moments?.[0]?.id
+    );
+    navigate(url);
   };
 
   let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";

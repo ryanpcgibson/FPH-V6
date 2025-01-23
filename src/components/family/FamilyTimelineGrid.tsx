@@ -16,17 +16,15 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     const gridInnerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    const handleSegmentClick = (itemId: number, momentId?: number) => {
-      if (momentId) {
-        navigate(`/pet/${itemId}`, { state: { momentId } });
-      }
-    };
+    // const handleSegmentClick = (itemId: number, momentId?: number) => {
+    //   if (momentId) {
+    //     navigate(`/pet/${itemId}`, { state: { momentId } });
+    //   }
+    // };
     const { sections, yearsArray } = useTimelineSections();
-    console.log("sections", sections);
     const minWidth = (yearsArray.length + 1) * 80;
 
     const { selectedFamilyId } = useFamilyDataContext();
-    const baseURL = `/app/family/${selectedFamilyId}`;
 
     const scrollToYear = (year: number) => {
       if (gridInnerRef.current) {
@@ -109,8 +107,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
                 key={section.id}
                 section={section}
                 columnHeaders={yearsArray}
-                baseURL={baseURL}
-                onSegmentClick={section.onSegmentClick}
+                getSegmentUrl={section.getSegmentUrl}
               />
             ))}
             <AddItemButton />

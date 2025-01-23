@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { Location, Moment } from "@/db/db_types";
 import type {
@@ -7,6 +8,8 @@ import type {
 } from "@/types/timeline";
 
 interface LocationTimelineContextProps {
+  selectedLocationId: number | null;
+  selectedLocationName: string | null;
   locationTimelines: LocationTimeline[];
   isLoading: boolean;
   error: Error | null;
@@ -107,9 +110,21 @@ const LocationTimelineProvider: React.FC<{
     isLoading: isFamilyLoading,
   } = useFamilyDataContext();
 
+  const { locationId: locationIdParam } = useParams<{ locationId?: string }>();
+  const selectedLocationId = locationIdParam
+    ? parseInt(locationIdParam, 10)
+    : null;
+  const selectedLocationName = selectedLocationId
+    ? familyData?.locations.find(
+        (location) => location.id === selectedLocationId
+      )?.name ?? null
+    : null;
+
   const contextValue = useMemo(() => {
     if (!familyId || !familyData) {
       return {
+        selectedLocationId,
+        selectedLocationName,
         locationTimelines: [],
         isLoading: false,
         error: null,
@@ -123,6 +138,8 @@ const LocationTimelineProvider: React.FC<{
         familyData.moments
       );
       return {
+        selectedLocationId,
+        selectedLocationName,
         locationTimelines: timelines,
         isLoading: isFamilyLoading,
         error: null,
@@ -135,13 +152,15 @@ const LocationTimelineProvider: React.FC<{
       };
     } catch (err) {
       return {
+        selectedLocationId,
+        selectedLocationName,
         locationTimelines: [],
         isLoading: false,
         error: err instanceof Error ? err : new Error("An error occurred"),
         getFilteredLocationTimelines: () => [],
       };
     }
-  }, [familyData, familyId, isFamilyLoading]);
+  }, [familyData, familyId, isFamilyLoading, selectedLocationId, selectedLocationName]);
 
   return (
     <LocationTimelineContext.Provider value={contextValue}>

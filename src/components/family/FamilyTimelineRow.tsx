@@ -3,34 +3,39 @@ import Link from "@/components/Link";
 import SvgPattern from "@/components/SvgPattern";
 import FamilyTimelineCell from "@/components/family/FamilyTimelineCell";
 import type { TimelineItem } from "@/types/timeline";
+import { useLocation } from "react-router-dom";
 
 interface TimelineRowProps {
   item: TimelineItem;
   columnHeaders: number[];
-  baseURL: string;
   patternId: string;
-  onSegmentClick?: (itemId: number, momentId?: number) => void;
+  getSegmentUrl?: (
+    baseURL: string,
+    itemId: number,
+    momentId?: number
+  ) => string;
   headerStyle: string;
 }
 
 const TimelineRow: React.FC<TimelineRowProps> = ({
   item,
   columnHeaders,
-  baseURL,
   patternId,
-  onSegmentClick,
   headerStyle,
+  getSegmentUrl,
 }) => {
   const getCellContent = (year: number) => {
     const segment = item.segments.find((s) => s.year === year);
     return (
       <FamilyTimelineCell
         segment={segment}
-        petId={item.id}
-        onClick={onSegmentClick}
+        itemId={item.id}
+        getSegmentUrl={getSegmentUrl}
       />
     );
   };
+  const location = useLocation();
+  const url = getSegmentUrl ? getSegmentUrl(location.pathname, item.id) : "";
 
   return (
     <div className="relative flex" id={`row-${item.id}`}>
@@ -51,7 +56,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
         <div
           className={`w-full h-full flex items-center justify-center font-bold rounded-lg ${headerStyle}`}
         >
-          <Link href={`${baseURL}/pet/${item.id}`}>{item.name}</Link>
+          <Link href={url}>{item.name}</Link>
         </div>
       </div>
     </div>

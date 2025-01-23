@@ -5,12 +5,10 @@ import { useMemo } from "react";
 import type { TimelineSection } from "@/types/timeline";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
-import { useNavigate } from "react-router-dom";
 
 export const useTimelineSections = (petId?: number) => {
   const { petTimelines, getFilteredPetTimelines } = usePetTimelineContext();
   const { locationTimelines } = useLocationTimelineContext();
-  const navigate = useNavigate();
 
   return useMemo(() => {
     const sections: Record<string, TimelineSection> = {};
@@ -31,9 +29,8 @@ export const useTimelineSections = (petId?: number) => {
         })),
         patternIds: ["9", "10", "22", "40"],
         headerStyle: "bg-yellow-400",
-        onSegmentClick: (itemId, momentId) => {
-          navigate(`/pet/${itemId}`, { state: { momentId } });
-        },
+        getSegmentUrl: (baseURL, itemId, momentId) =>
+          `${baseURL}/pet/${itemId}${momentId ? `?momentId=${momentId}` : ""}`,
       };
     }
 
@@ -47,9 +44,10 @@ export const useTimelineSections = (petId?: number) => {
         })),
         patternIds: ["9", "10", "22", "40"],
         headerStyle: "bg-blue-400",
-        onSegmentClick: (itemId, momentId) => {
-          navigate(`/location/${itemId}`, { state: { momentId } });
-        },
+        getSegmentUrl: (baseURL, itemId, momentId) =>
+          `${baseURL}/location/${itemId}${
+            momentId ? `?momentId=${momentId}` : ""
+          }`,
       };
     }
 

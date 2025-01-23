@@ -3,7 +3,7 @@ export interface TimelineSection {
   items: TimelineItem[];
   patternIds: string[];
   headerStyle: string;
-  onSegmentClick?: (itemId: number, momentId?: number) => void;
+  getSegmentUrl: (baseURL: string, itemId: number, momentId?: number) => string;
 }
 
 export interface LocationTimelineSegment {

@@ -1,5 +1,6 @@
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
+import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
 import NavMenu from "@/components/NavMenu";
 import FamilyLink from "./FamilyLink";
 import { Link, useLocation } from "react-router-dom";
@@ -13,6 +14,8 @@ const AppHeader: React.FC = () => {
   let selectedFamilyName = null;
   let selectedPetName = null;
   let selectedPetId = null;
+  let selectedLocationName = null;
+  let selectedLocationId = null;
 
   try {
     ({ selectedFamilyId, selectedFamilyName } = useFamilyDataContext());
@@ -20,6 +23,10 @@ const AppHeader: React.FC = () => {
 
   try {
     ({ selectedPetName, selectedPetId } = usePetTimelineContext());
+  } catch {}
+
+  try {
+    ({ selectedLocationName, selectedLocationId } = useLocationTimelineContext());
   } catch {}
 
   let headerContent = null;
@@ -31,21 +38,34 @@ const AppHeader: React.FC = () => {
           selectedFamilyName={selectedFamilyName}
         />
         {selectedPetName && ` > ${selectedPetName}`}
+        {selectedLocationName && ` > ${selectedLocationName}`}
       </>
     );
   } else {
     headerContent = "";
   }
 
+  const getEditPath = () => {
+    if (selectedPetId) {
+      return `/app/family/${selectedFamilyId}/pet/${selectedPetId}/edit`;
+    }
+    if (selectedLocationId) {
+      return `/app/family/${selectedFamilyId}/location/${selectedLocationId}/edit`;
+    }
+    return `/app/family/${selectedFamilyId}/edit`;
+  };
+
+  const getAriaLabel = () => {
+    if (selectedPetId) return "Edit Pet";
+    if (selectedLocationId) return "Edit Location"; 
+    return "Edit Family";
+  };
+
   const editLink = selectedFamilyId && !isEditView && (
     <Link
-      to={
-        selectedPetId
-          ? `/app/family/${selectedFamilyId}/pet/${selectedPetId}/edit`
-          : `/app/family/${selectedFamilyId}/edit`
-      }
+      to={getEditPath()}
       className="p-2 hover:bg-yellow-300 transition-colors rounded-md"
-      aria-label={selectedPetId ? "Edit Pet" : "Edit Family"}
+      aria-label={getAriaLabel()}
     >
       <Pencil className="h-4 w-4 text-gray-700" />
     </Link>
