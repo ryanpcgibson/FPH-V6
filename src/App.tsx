@@ -51,10 +51,12 @@ function App() {
                 <Route path="data" element={<FamilyData />} />
                 <Route index element={<FamilySelectPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+                <Route path="family/add" element={<FamilyFormPage />} />
                 <Route path="family/:familyId">
                   <Route index element={<TimelinePage />} />
                   <Route path="pet/:petId?" element={<PetInfo />} />
                   <Route path="pet/:petId/edit" element={<PetFormPage />} />
+                  <Route path="pet/add" element={<PetFormPage />} />
                   <Route path="data" element={<FamilyData />} />
                   <Route path="edit" element={<FamilyFormPage />} />
                 </Route>
