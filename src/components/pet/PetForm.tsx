@@ -25,6 +25,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import MomentConnectionManager from "../moment/MomentConnectionManager";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -33,6 +35,7 @@ const formSchema = z.object({
   start_date: z.date().nullable(),
   end_date: z.date().nullable(),
   description: z.string().optional(),
+  moment_connection: z.string().optional(),
 });
 
 interface PetFormValues {
@@ -69,6 +72,8 @@ const PetForm: React.FC<PetFormProps> = ({
     },
   });
 
+  const { familyData } = useFamilyDataContext();
+
   useEffect(() => {
     if (petId === null) {
       form.setValue("name", "");
@@ -89,19 +94,8 @@ const PetForm: React.FC<PetFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            {/* <CardHeader>
-              <CardTitle>Pet Form</CardTitle>
-              <CardDescription>
-                Fill out the details of your pet
-              </CardDescription>
-            </CardHeader> */}
             <CardContent>
-              <div className="flex items-center space-x-2">
-                <FormLabel className="w-1/4">Family ID</FormLabel>
-                <div className="flex-1 w-full text-left">
-                  {familyId.toString()}
-                </div>
-              </div>
+              <div className="flex items-center space-x-2" />
               <FormField
                 control={form.control}
                 name="name"
@@ -169,7 +163,36 @@ const PetForm: React.FC<PetFormProps> = ({
                   </FormItem>
                 )}
               />
+              <MomentConnectionManager
+                control={form.control}
+                name="moment_connection"
+                entityId={petId!}
+                entityType="pet"
+                connectedMoments={
+                  familyData?.moments.filter((m) =>
+                    m.pets.some((p) => p.id === petId)
+                  ) || []
+                }
+                availableMoments={
+                  familyData?.moments.filter(
+                    (m) => !m.pets.some((p) => p.id === petId)
+                  ) || []
+                }
+                onRemoveConnection={(momentId) => {
+                  // TODO: Implement moment connection removal
+                  console.log("Remove connection", momentId);
+                }}
+                onAddConnection={(momentId) => {
+                  // TODO: Implement moment connection addition
+                  console.log("Add connection", momentId);
+                }}
+                onCreateNewMoment={() => {
+                  // TODO: Navigate to new moment form
+                  console.log("Create new moment");
+                }}
+              />
             </CardContent>
+
             <CardFooter className="flex justify-end space-x-2">
               {petId && (
                 <Button

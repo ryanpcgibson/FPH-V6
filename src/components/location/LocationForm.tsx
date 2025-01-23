@@ -17,6 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import MomentConnectionManager from "../moment/MomentConnectionManager";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -62,6 +64,8 @@ const LocationForm: React.FC<LocationFormProps> = ({
       end_date: initialData?.end_date || null,
     },
   });
+
+  const { familyData } = useFamilyDataContext();
 
   useEffect(() => {
     if (locationId === null) {
@@ -160,6 +164,34 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 )}
               />
             </CardContent>
+            <div className="border-t pt-4">
+              <MomentConnectionManager
+                entityId={locationId!}
+                entityType="location"
+                connectedMoments={
+                  familyData?.moments.filter((m) =>
+                    m.locations?.some((l) => l.id === locationId)
+                  ) || []
+                }
+                availableMoments={
+                  familyData?.moments.filter(
+                    (m) => !m.locations?.some((l) => l.id === locationId)
+                  ) || []
+                }
+                onRemoveConnection={(momentId) => {
+                  // TODO: Implement moment connection removal
+                  console.log("Remove connection", momentId);
+                }}
+                onAddConnection={(momentId) => {
+                  // TODO: Implement moment connection addition
+                  console.log("Add connection", momentId);
+                }}
+                onCreateNewMoment={() => {
+                  // TODO: Navigate to new moment form
+                  console.log("Create new moment");
+                }}
+              />
+            </div>
             <CardFooter className="flex justify-end space-x-2">
               {locationId && (
                 <Button
