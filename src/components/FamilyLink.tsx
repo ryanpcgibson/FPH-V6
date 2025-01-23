@@ -6,7 +6,6 @@ interface FamilyLinkProps {
 }
 
 function FamilyLink({ selectedFamilyId, selectedFamilyName }: FamilyLinkProps) {
-  console.log("selectedFamilyName", selectedFamilyName);
   return (
     <Link href={`/app/family/${selectedFamilyId}`}>
       <span className="whitespace-nowrap">The {selectedFamilyName} Family</span>

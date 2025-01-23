@@ -29,20 +29,6 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     const scrollToYear = (year: number) => {
       if (gridInnerRef.current) {
         const scrollPosition = calculateYearScrollPosition(year, yearsArray);
-        console.log(
-          `Scrolling element:`,
-          gridInnerRef.current,
-          `\nTo position:`,
-          scrollPosition,
-          `\nFor year:`,
-          year,
-          `\nCurrent scroll position:`,
-          gridInnerRef.current.scrollLeft,
-          `\nScrollWidth:`,
-          gridInnerRef.current.scrollWidth,
-          `\nClientWidth:`,
-          gridInnerRef.current.clientWidth
-        );
 
         // Try both scrollTo and scrollLeft
         gridInnerRef.current.scrollTo({
@@ -61,8 +47,8 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
       scrollToYear(currentYear);
     }, [yearsArray]);
 
+    // Expose scrollToYear method to parent components via ref - DOM manipulation (e.g. scrolling) is inherently imperative
     useImperativeHandle(ref, () => ({
-      // TODO understand this
       scrollToYear,
     }));
 
