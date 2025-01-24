@@ -52,7 +52,7 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
       let yearMoments = moments
         .filter(
           (moment) =>
-            moment.pets.some((p) => p.id === pet.id) &&
+            moment.pets?.some((p) => p.id === pet.id) && // Add optional chaining
             moment.start_date?.getFullYear() === year
         )
         .map((moment) => ({ id: moment.id, title: moment.title }));

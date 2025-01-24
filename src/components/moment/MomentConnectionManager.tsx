@@ -18,6 +18,8 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Control } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useMoments } from "@/hooks/useMoments";
 
 interface MomentConnectionManagerProps {
   control: Control<any>;
@@ -26,9 +28,6 @@ interface MomentConnectionManagerProps {
   entityType: "pet" | "location";
   connectedMoments: Moment[];
   availableMoments: Moment[];
-  onRemoveConnection: (momentId: number) => void;
-  onAddConnection: (momentId: number) => void;
-  onCreateNewMoment: () => void;
 }
 
 const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
@@ -38,17 +37,34 @@ const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
   entityType,
   connectedMoments,
   availableMoments,
-  onRemoveConnection,
-  onAddConnection,
-  onCreateNewMoment,
 }) => {
-  const handleRemoveConnection = (momentId: number) => {
+  const navigate = useNavigate();
+  const { connectMoment, disconnectMoment } = useMoments();
+
+  const handleRemoveConnection = async (momentId: number) => {
     if (
       window.confirm(
         `Are you sure you want to remove this moment from the ${entityType}?`
       )
     ) {
-      onRemoveConnection(momentId);
+      try {
+        await disconnectMoment(momentId, entityId, entityType);
+      } catch (error) {
+        console.error("Error removing moment connection:", error);
+      }
+    }
+  };
+
+  const handleAddConnection = async (momentId: string) => {
+    if (momentId === "new") {
+      navigate("/app/moment/add"); // Navigate to new moment form
+      return;
+    }
+
+    try {
+      await connectMoment(parseInt(momentId, 10), entityId, entityType);
+    } catch (error) {
+      console.error("Error adding moment connection:", error);
     }
   };
 
@@ -61,7 +77,7 @@ const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
           <FormLabel className="w-1/4 pt-2">Moments</FormLabel>
           <FormControl className="flex-1">
             <div className="space-y-2">
-              <div className="flex flex-col w-full space-y-2">
+              <div className="flex flex-col w-full space-y-2 pb-2">
                 {connectedMoments.map((moment) => (
                   <div
                     key={moment.id}
@@ -84,11 +100,7 @@ const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
-                  if (value === "new") {
-                    onCreateNewMoment();
-                  } else {
-                    onAddConnection(parseInt(value, 10));
-                  }
+                  handleAddConnection(value);
                 }}
                 value={field.value}
               >

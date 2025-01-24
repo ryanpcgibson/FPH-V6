@@ -27,6 +27,7 @@ const formSchema = z.object({
   map_reference: z.string().optional(),
   start_date: z.date().nullable(),
   end_date: z.date().nullable(),
+  moment_connection: z.string().optional(),
 });
 
 interface LocationFormValues {
@@ -89,13 +90,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent>
-              <div className="flex items-center space-x-2">
-                <FormLabel className="w-1/4">Family ID</FormLabel>
-                <div className="flex-1 w-full text-left">
-                  {familyId.toString()}
-                </div>
-              </div>
+            <CardContent className="space-y-2 pt-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -163,9 +158,9 @@ const LocationForm: React.FC<LocationFormProps> = ({
                   </FormItem>
                 )}
               />
-            </CardContent>
-            <div className="border-t pt-4">
               <MomentConnectionManager
+                control={form.control}
+                name="moment_connection"
                 entityId={locationId!}
                 entityType="location"
                 connectedMoments={
@@ -178,20 +173,8 @@ const LocationForm: React.FC<LocationFormProps> = ({
                     (m) => !m.locations?.some((l) => l.id === locationId)
                   ) || []
                 }
-                onRemoveConnection={(momentId) => {
-                  // TODO: Implement moment connection removal
-                  console.log("Remove connection", momentId);
-                }}
-                onAddConnection={(momentId) => {
-                  // TODO: Implement moment connection addition
-                  console.log("Add connection", momentId);
-                }}
-                onCreateNewMoment={() => {
-                  // TODO: Navigate to new moment form
-                  console.log("Create new moment");
-                }}
               />
-            </div>
+            </CardContent>
             <CardFooter className="flex justify-end space-x-2">
               {locationId && (
                 <Button

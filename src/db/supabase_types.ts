@@ -72,14 +72,17 @@ export type Database = {
       }
       location_moments: {
         Row: {
+          added_by: string
           location_id: number
           moment_id: number
         }
         Insert: {
+          added_by?: string
           location_id: number
           moment_id: number
         }
         Update: {
+          added_by?: string
           location_id?: number
           moment_id?: number
         }
@@ -102,7 +105,7 @@ export type Database = {
       }
       locations: {
         Row: {
-          added_by: string | null
+          added_by: string
           created_at: string
           end_date: string | null
           family_id: number | null
@@ -112,7 +115,7 @@ export type Database = {
           start_date: string
         }
         Insert: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           end_date?: string | null
           family_id?: number | null
@@ -122,7 +125,7 @@ export type Database = {
           start_date: string
         }
         Update: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           end_date?: string | null
           family_id?: number | null
@@ -143,44 +146,58 @@ export type Database = {
       }
       moments: {
         Row: {
-          added_by: string | null
+          added_by: string
           body: string | null
           created_at: string
           end_date: string | null
+          family_id: number | null
           id: number
           start_date: string
           title: string
         }
         Insert: {
-          added_by?: string | null
+          added_by?: string
           body?: string | null
           created_at?: string
           end_date?: string | null
+          family_id?: number | null
           id?: number
           start_date: string
           title: string
         }
         Update: {
-          added_by?: string | null
+          added_by?: string
           body?: string | null
           created_at?: string
           end_date?: string | null
+          family_id?: number | null
           id?: number
           start_date?: string
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "moments_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pet_moments: {
         Row: {
+          added_by: string
           moment_id: number
           pet_id: number
         }
         Insert: {
+          added_by?: string
           moment_id: number
           pet_id?: number
         }
         Update: {
+          added_by?: string
           moment_id?: number
           pet_id?: number
         }
@@ -203,7 +220,7 @@ export type Database = {
       }
       pets: {
         Row: {
-          added_by: string | null
+          added_by: string
           created_at: string
           description: string | null
           end_date: string | null
@@ -213,7 +230,7 @@ export type Database = {
           start_date: string
         }
         Insert: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           description?: string | null
           end_date?: string | null
@@ -223,7 +240,7 @@ export type Database = {
           start_date: string
         }
         Update: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           description?: string | null
           end_date?: string | null
@@ -244,21 +261,21 @@ export type Database = {
       }
       photos: {
         Row: {
-          added_by: string | null
+          added_by: string
           created_at: string
           id: number
           moment_id: number | null
           path: string
         }
         Insert: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           id?: number
           moment_id?: number | null
           path: string
         }
         Update: {
-          added_by?: string | null
+          added_by?: string
           created_at?: string
           id?: number
           moment_id?: number | null
@@ -340,27 +357,25 @@ export type Database = {
           member_type: Database["public"]["Enums"]["member_types"]
         }[]
       }
+      get_family_ids_for_user: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          family_id: number
+        }[]
+      }
       get_family_records: {
         Args: {
           param_family_id: number
         }
         Returns: Json
       }
-      get_user_family_ids: {
+      OLD_get_family_records: {
         Args: {
-          p_user_id: string
+          family_id_param: string
         }
-        Returns: {
-          family_id: number
-        }[]
-      }
-      OLD_get_family_ids_for_user: {
-        Args: {
-          p_user_id: string
-        }
-        Returns: {
-          family_id: number
-        }[]
+        Returns: Json
       }
     }
     Enums: {

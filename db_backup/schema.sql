@@ -105,6 +105,79 @@ CREATE TYPE "public"."profile_types" AS ENUM (
 ALTER TYPE "public"."profile_types" OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."OLD_get_family_records"("family_id_param" "uuid") RETURNS "jsonb"
+    LANGUAGE "plpgsql"
+    AS $$DECLARE
+    result jsonb;
+BEGIN
+    WITH pets_data AS (
+        SELECT p.id AS pet_id,
+               p.name AS pet_name,
+               p.type AS pet_type,
+               p.breed AS pet_breed,
+               p.color AS pet_color,
+               p.created_at AS pet_created_at,
+               (
+                   SELECT json_agg(to_jsonb(m.*))
+                   FROM pet_moments pm
+                   JOIN moments m ON m.id = pm.moment_id
+                   WHERE pm.pet_id = p.id
+               ) AS moments
+        FROM pets p
+        WHERE p.family_id = family_id_param
+    ),
+    locations_data AS (
+        SELECT l.id AS location_id,
+               l.name AS location_name,
+               l.created_at AS location_created_at,
+               (
+                   SELECT json_agg(to_jsonb(m.*))
+                   FROM location_moments lm
+                   JOIN moments m ON m.id = lm.moment_id
+                   WHERE lm.location_id = l.id
+               ) AS moments
+        FROM locations l
+        WHERE l.family_id = family_id_param
+    ),
+    moments_data AS (
+        SELECT 
+            m.id AS moment_id,
+            m.title,
+            m.created_at,
+            (
+                SELECT json_agg(to_jsonb(ph.*) ORDER BY ph.created_at DESC)
+                FROM photos ph
+                WHERE ph.moment_id = m.id
+            ) AS photos,
+            (
+                SELECT json_agg(to_jsonb(l.*) ORDER BY l.name)
+                FROM location_moments lm
+                JOIN locations l ON l.id = lm.location_id
+                WHERE lm.moment_id = m.id
+            ) AS locations,
+            (
+                SELECT json_agg(to_jsonb(p.*) ORDER BY p.name)
+                FROM pet_moments pm
+                JOIN pets p ON p.id = pm.pet_id
+                WHERE pm.moment_id = m.id
+            ) AS pets
+        FROM moments m
+        WHERE m.family_id = family_id_param
+    )
+    SELECT jsonb_build_object(
+        'family', (SELECT to_jsonb(f.*) FROM families f WHERE id = family_id_param),
+        'pets_data', (SELECT json_agg(pets_data) FROM pets_data),
+        'locations_data', (SELECT json_agg(locations_data) FROM locations_data),
+        'moments_data', (SELECT json_agg(moments_data) FROM moments_data)
+    ) INTO result;
+
+    RETURN result;
+END;$$;
+
+
+ALTER FUNCTION "public"."OLD_get_family_records"("family_id_param" "uuid") OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."dbg_update_name_by_email"("p_email" character varying, "p_display_name" character varying) RETURNS "void"
     LANGUAGE "plpgsql"
     AS $$DECLARE
@@ -162,6 +235,27 @@ $$;
 ALTER FUNCTION "public"."get_editable_user_family_ids"("p_user_id" "uuid") OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."get_families"() RETURNS TABLE("id" integer, "name" "text", "member_type" "public"."member_types")
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        f.id,
+        f.name,
+        fu.member_type
+    FROM
+        public.families f
+        JOIN public.family_users fu ON f.id = fu.family_id
+    WHERE
+        fu.user_id = auth.uid();
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_families"() OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."get_family_ids_for_user"("p_user_id" "uuid") RETURNS TABLE("family_id" integer)
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$BEGIN
@@ -176,6 +270,79 @@ END;$$;
 
 
 ALTER FUNCTION "public"."get_family_ids_for_user"("p_user_id" "uuid") OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."get_family_records"("param_family_id" integer) RETURNS "json"
+    LANGUAGE "plpgsql"
+    AS $$
+DECLARE
+    result json;
+BEGIN
+    WITH 
+    -- Pets belonging to the family
+    pets_data AS (
+        SELECT json_agg(p ORDER BY p.name) AS pets
+        FROM pets p
+        WHERE family_id = param_family_id
+    ),
+    
+    -- Family locations
+    locations_data AS (
+        SELECT json_agg(l ORDER BY l.created_at DESC) AS locations
+        FROM locations l
+        WHERE family_id = param_family_id
+    ),
+    
+    -- Family users with efficient JOIN
+    users_data AS (
+        SELECT json_agg(u ORDER BY u.created_at) AS users
+        FROM users u
+        INNER JOIN family_users fu ON u.id = fu.user_id
+        WHERE fu.family_id = param_family_id
+    ),
+    
+    -- Updated moments_data CTE
+    moments_data AS (
+        SELECT json_agg(moment_info ORDER BY moment_info.title) AS moments
+        FROM (
+            SELECT 
+                m.*,
+                (
+                    SELECT json_agg(to_jsonb(ph.*) ORDER BY ph.created_at DESC)
+                    FROM photos ph
+                    WHERE ph.moment_id = m.id
+                ) AS photos,
+                (
+                    SELECT json_agg(to_jsonb(l.*) ORDER BY l.name)
+                    FROM location_moments lm
+                    JOIN locations l ON l.id = lm.location_id
+                    WHERE lm.moment_id = m.id AND l.family_id = param_family_id
+                ) AS locations,
+                (
+                    SELECT json_agg(to_jsonb(p.*) ORDER BY p.name)
+                    FROM pet_moments pm
+                    JOIN pets p ON p.id = pm.pet_id
+                    WHERE pm.moment_id = m.id AND p.family_id = param_family_id
+                ) AS pets
+            FROM moments m
+            WHERE m.family_id = param_family_id
+        ) AS moment_info
+    )
+    
+    -- Final result assembly
+    SELECT json_build_object(
+        'pets', COALESCE((SELECT pets FROM pets_data), '[]'::json),
+        'locations', COALESCE((SELECT locations FROM locations_data), '[]'::json),
+        'users', COALESCE((SELECT users FROM users_data), '[]'::json),
+        'moments', COALESCE((SELECT moments FROM moments_data), '[]'::json)
+    ) INTO result;
+
+    RETURN result;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."get_family_records"("param_family_id" integer) OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
@@ -223,8 +390,8 @@ SET default_table_access_method = "heap";
 CREATE TABLE IF NOT EXISTS "public"."families" (
     "id" integer NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "added_by" "uuid",
-    "name" character varying
+    "added_by" "uuid" DEFAULT "auth"."uid"(),
+    "name" "text" NOT NULL
 );
 
 
@@ -252,10 +419,20 @@ CREATE TABLE IF NOT EXISTS "public"."family_users" (
 ALTER TABLE "public"."family_users" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."location_moments" (
+    "moment_id" integer NOT NULL,
+    "location_id" integer NOT NULL,
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL
+);
+
+
+ALTER TABLE "public"."location_moments" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."locations" (
     "id" integer NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "added_by" "uuid",
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "map_reference" character varying,
     "start_date" "date" NOT NULL,
     "end_date" "date",
@@ -281,11 +458,12 @@ ALTER TABLE "public"."locations" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS I
 CREATE TABLE IF NOT EXISTS "public"."moments" (
     "id" integer NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "added_by" "uuid",
-    "start_date" "date",
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "start_date" "date" NOT NULL,
     "end_date" "date",
-    "title" "text",
-    "body" character varying
+    "title" "text" NOT NULL,
+    "body" character varying,
+    "family_id" integer
 );
 
 
@@ -305,7 +483,8 @@ ALTER TABLE "public"."moments" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDE
 
 CREATE TABLE IF NOT EXISTS "public"."pet_moments" (
     "pet_id" integer NOT NULL,
-    "moment_id" integer NOT NULL
+    "moment_id" integer NOT NULL,
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL
 );
 
 
@@ -326,11 +505,12 @@ ALTER TABLE "public"."pet_moments" ALTER COLUMN "pet_id" ADD GENERATED BY DEFAUL
 CREATE TABLE IF NOT EXISTS "public"."pets" (
     "id" integer NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "added_by" "uuid",
-    "name" "text",
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL,
+    "name" "text" NOT NULL,
     "start_date" "date" NOT NULL,
     "end_date" "date",
-    "family_id" integer NOT NULL
+    "family_id" integer NOT NULL,
+    "description" "text"
 );
 
 
@@ -351,9 +531,9 @@ ALTER TABLE "public"."pets" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTI
 CREATE TABLE IF NOT EXISTS "public"."photos" (
     "id" integer NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "added_by" "uuid",
+    "added_by" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "moment_id" integer,
-    "path" "text"
+    "path" "text" NOT NULL
 );
 
 
@@ -382,10 +562,6 @@ CREATE TABLE IF NOT EXISTS "public"."users" (
 ALTER TABLE "public"."users" OWNER TO "postgres";
 
 
-COMMENT ON TABLE "public"."users" IS 'Profile data for each user.';
-
-
-
 COMMENT ON COLUMN "public"."users"."id" IS 'References the internal Supabase Auth user.';
 
 
@@ -410,6 +586,11 @@ ALTER TABLE ONLY "public"."families"
 
 ALTER TABLE ONLY "public"."family_users"
     ADD CONSTRAINT "family_users_pkey" PRIMARY KEY ("family_id", "user_id");
+
+
+
+ALTER TABLE ONLY "public"."location_moments"
+    ADD CONSTRAINT "location_moments_pkey" PRIMARY KEY ("moment_id", "location_id");
 
 
 
@@ -443,23 +624,35 @@ ALTER TABLE ONLY "public"."users"
 
 
 
-CREATE OR REPLACE TRIGGER "set_added_by_before_insert" BEFORE INSERT ON "public"."families" FOR EACH STATEMENT EXECUTE FUNCTION "public"."set_added_by_to_auth_user_id"();
+CREATE INDEX "idx_family_users_family_id" ON "public"."family_users" USING "btree" ("family_id");
 
 
 
-CREATE OR REPLACE TRIGGER "set_added_by_before_insert" BEFORE INSERT ON "public"."locations" FOR EACH STATEMENT EXECUTE FUNCTION "public"."set_added_by_to_auth_user_id"();
+CREATE INDEX "idx_location_moments_location_id" ON "public"."location_moments" USING "btree" ("location_id");
 
 
 
-CREATE OR REPLACE TRIGGER "set_added_by_before_insert" BEFORE INSERT ON "public"."moments" FOR EACH STATEMENT EXECUTE FUNCTION "public"."set_added_by_to_auth_user_id"();
+CREATE INDEX "idx_location_moments_moment_id" ON "public"."location_moments" USING "btree" ("moment_id");
 
 
 
-CREATE OR REPLACE TRIGGER "set_added_by_before_insert" BEFORE INSERT ON "public"."pets" FOR EACH STATEMENT EXECUTE FUNCTION "public"."set_added_by_to_auth_user_id"();
+CREATE INDEX "idx_locations_family_id" ON "public"."locations" USING "btree" ("family_id");
 
 
 
-CREATE OR REPLACE TRIGGER "set_added_by_before_insert" BEFORE INSERT ON "public"."photos" FOR EACH STATEMENT EXECUTE FUNCTION "public"."set_added_by_to_auth_user_id"();
+CREATE INDEX "idx_moments_title" ON "public"."moments" USING "btree" ("title");
+
+
+
+CREATE INDEX "idx_pet_moments_moment_id" ON "public"."pet_moments" USING "btree" ("moment_id");
+
+
+
+CREATE INDEX "idx_pets_family_id" ON "public"."pets" USING "btree" ("family_id");
+
+
+
+CREATE INDEX "idx_photos_moment_id" ON "public"."photos" USING "btree" ("moment_id");
 
 
 
@@ -483,6 +676,21 @@ ALTER TABLE ONLY "public"."family_users"
 
 
 
+ALTER TABLE ONLY "public"."location_moments"
+    ADD CONSTRAINT "location_moments_added_by_fkey" FOREIGN KEY ("added_by") REFERENCES "auth"."users"("id");
+
+
+
+ALTER TABLE ONLY "public"."location_moments"
+    ADD CONSTRAINT "location_moments_location_id_fkey" FOREIGN KEY ("location_id") REFERENCES "public"."locations"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."location_moments"
+    ADD CONSTRAINT "location_moments_moment_id_fkey" FOREIGN KEY ("moment_id") REFERENCES "public"."moments"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."locations"
     ADD CONSTRAINT "locations_added_by_fkey" FOREIGN KEY ("added_by") REFERENCES "auth"."users"("id");
 
@@ -495,6 +703,16 @@ ALTER TABLE ONLY "public"."locations"
 
 ALTER TABLE ONLY "public"."moments"
     ADD CONSTRAINT "moments_added_by_fkey" FOREIGN KEY ("added_by") REFERENCES "auth"."users"("id");
+
+
+
+ALTER TABLE ONLY "public"."moments"
+    ADD CONSTRAINT "moments_family_id_fkey" FOREIGN KEY ("family_id") REFERENCES "public"."families"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."pet_moments"
+    ADD CONSTRAINT "pet_moments_added_by_fkey" FOREIGN KEY ("added_by") REFERENCES "auth"."users"("id");
 
 
 
@@ -537,11 +755,19 @@ CREATE POLICY "Enable ALL based on added_by" ON "public"."families" TO "authenti
 
 
 
+CREATE POLICY "Enable ALL based on added_by" ON "public"."location_moments" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "added_by")) WITH CHECK (true);
+
+
+
 CREATE POLICY "Enable ALL based on added_by" ON "public"."locations" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "added_by"));
 
 
 
 CREATE POLICY "Enable ALL based on added_by" ON "public"."moments" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "added_by"));
+
+
+
+CREATE POLICY "Enable ALL based on added_by" ON "public"."pet_moments" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "added_by")) WITH CHECK (true);
 
 
 
@@ -557,6 +783,9 @@ ALTER TABLE "public"."families" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."family_users" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."location_moments" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."locations" ENABLE ROW LEVEL SECURITY;
@@ -577,10 +806,8 @@ CREATE POLICY "modifiable_by_editors" ON "public"."locations" TO "authenticated"
 
 
 
-CREATE POLICY "modifiable_by_editors" ON "public"."moments" TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."pet_moments" "pm"
-     JOIN "public"."pets" "fp" ON (("pm"."pet_id" = "fp"."id")))
-  WHERE (("pm"."moment_id" = "moments"."id") AND ("fp"."family_id" IN ( SELECT "public"."get_editable_user_family_ids"("auth"."uid"()) AS "get_editable_user_family_ids"))))));
+CREATE POLICY "modifiable_by_editors" ON "public"."moments" TO "authenticated" USING (("family_id" IN ( SELECT "get_editable_user_family_ids"."family_id"
+   FROM "public"."get_editable_user_family_ids"("auth"."uid"()) "get_editable_user_family_ids"("family_id"))));
 
 
 
@@ -621,20 +848,24 @@ CREATE POLICY "viewable_by_family" ON "public"."family_users" TO "authenticated"
 
 
 
+CREATE POLICY "viewable_by_family" ON "public"."location_moments" FOR SELECT USING ((EXISTS ( SELECT 1
+   FROM "public"."locations" "l"
+  WHERE (("location_moments"."location_id" = "l"."id") AND ("l"."family_id" IN ( SELECT "get_family_ids_for_user"."family_id"
+           FROM "public"."get_family_ids_for_user"("auth"."uid"()) "get_family_ids_for_user"("family_id")))))));
+
+
+
 CREATE POLICY "viewable_by_family" ON "public"."locations" FOR SELECT TO "authenticated" USING (("family_id" IN ( SELECT "public"."get_family_ids_for_user"("auth"."uid"()) AS "get_family_ids_for_user")));
 
 
 
-CREATE POLICY "viewable_by_family" ON "public"."moments" FOR SELECT TO "authenticated" USING ((EXISTS ( SELECT 1
-   FROM ("public"."pet_moments" "pm"
-     JOIN "public"."pets" "fp" ON (("pm"."pet_id" = "fp"."id")))
-  WHERE (("pm"."moment_id" = "moments"."id") AND ("fp"."family_id" IN ( SELECT "public"."get_family_ids_for_user"("auth"."uid"()) AS "get_family_ids_for_user"))))));
+CREATE POLICY "viewable_by_family" ON "public"."moments" FOR SELECT TO "authenticated" USING (("family_id" IN ( SELECT "public"."get_family_ids_for_user"("auth"."uid"()) AS "get_family_ids_for_user")));
 
 
 
 CREATE POLICY "viewable_by_family" ON "public"."pet_moments" FOR SELECT USING ((EXISTS ( SELECT 1
-   FROM "public"."pets" "p"
-  WHERE (("pet_moments"."pet_id" = "p"."id") AND ("p"."family_id" IN ( SELECT "get_family_ids_for_user"."family_id"
+   FROM "public"."moments" "m"
+  WHERE (("pet_moments"."moment_id" = "m"."id") AND ("m"."family_id" IN ( SELECT "get_family_ids_for_user"."family_id"
            FROM "public"."get_family_ids_for_user"("auth"."uid"()) "get_family_ids_for_user"("family_id")))))));
 
 
@@ -854,6 +1085,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."OLD_get_family_records"("family_id_param" "uuid") TO "anon";
+GRANT ALL ON FUNCTION "public"."OLD_get_family_records"("family_id_param" "uuid") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."OLD_get_family_records"("family_id_param" "uuid") TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."dbg_update_name_by_email"("p_email" character varying, "p_display_name" character varying) TO "anon";
 GRANT ALL ON FUNCTION "public"."dbg_update_name_by_email"("p_email" character varying, "p_display_name" character varying) TO "authenticated";
 GRANT ALL ON FUNCTION "public"."dbg_update_name_by_email"("p_email" character varying, "p_display_name" character varying) TO "service_role";
@@ -866,9 +1103,21 @@ GRANT ALL ON FUNCTION "public"."get_editable_user_family_ids"("p_user_id" "uuid"
 
 
 
+GRANT ALL ON FUNCTION "public"."get_families"() TO "anon";
+GRANT ALL ON FUNCTION "public"."get_families"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_families"() TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."get_family_ids_for_user"("p_user_id" "uuid") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_family_ids_for_user"("p_user_id" "uuid") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_family_ids_for_user"("p_user_id" "uuid") TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."get_family_records"("param_family_id" integer) TO "anon";
+GRANT ALL ON FUNCTION "public"."get_family_records"("param_family_id" integer) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_family_records"("param_family_id" integer) TO "service_role";
 
 
 
@@ -920,6 +1169,12 @@ GRANT ALL ON SEQUENCE "public"."families_id_seq" TO "service_role";
 GRANT ALL ON TABLE "public"."family_users" TO "anon";
 GRANT ALL ON TABLE "public"."family_users" TO "authenticated";
 GRANT ALL ON TABLE "public"."family_users" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."location_moments" TO "anon";
+GRANT ALL ON TABLE "public"."location_moments" TO "authenticated";
+GRANT ALL ON TABLE "public"."location_moments" TO "service_role";
 
 
 

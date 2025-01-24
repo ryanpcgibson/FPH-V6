@@ -94,8 +94,7 @@ const PetForm: React.FC<PetFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent>
-              <div className="flex items-center space-x-2" />
+            <CardContent className="space-y-2 pt-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -178,18 +177,6 @@ const PetForm: React.FC<PetFormProps> = ({
                     (m) => !m.pets.some((p) => p.id === petId)
                   ) || []
                 }
-                onRemoveConnection={(momentId) => {
-                  // TODO: Implement moment connection removal
-                  console.log("Remove connection", momentId);
-                }}
-                onAddConnection={(momentId) => {
-                  // TODO: Implement moment connection addition
-                  console.log("Add connection", momentId);
-                }}
-                onCreateNewMoment={() => {
-                  // TODO: Navigate to new moment form
-                  console.log("Create new moment");
-                }}
               />
             </CardContent>
 
