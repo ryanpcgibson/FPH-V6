@@ -20,7 +20,7 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
 
   // Get all moments for this pet, sorted by date
   const petMoments = familyData.moments
-    .filter((moment) => moment.pets.some((p) => p.id === petId))
+    .filter((moment) => moment.pets?.some((p) => p.id === petId))
     .sort((a, b) => {
       if (!a.start_date || !b.start_date) return 0;
       return a.start_date.getTime() - b.start_date.getTime();

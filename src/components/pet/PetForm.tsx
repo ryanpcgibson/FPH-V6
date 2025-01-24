@@ -168,13 +168,13 @@ const PetForm: React.FC<PetFormProps> = ({
                 entityId={petId!}
                 entityType="pet"
                 connectedMoments={
-                  familyData?.moments.filter((m) =>
-                    m.pets.some((p) => p.id === petId)
+                  familyData?.moments?.filter((m) =>
+                    m.pets?.some((p) => p.id === petId)
                   ) || []
                 }
                 availableMoments={
                   familyData?.moments.filter(
-                    (m) => !m.pets.some((p) => p.id === petId)
+                    (m) => !m.pets?.some((p) => p.id === petId)
                   ) || []
                 }
               />

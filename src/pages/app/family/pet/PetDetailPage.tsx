@@ -17,7 +17,7 @@ const PetDetailPage: React.FC = () => {
   useEffect(() => {
     if (familyData && petId) {
       const petMoments = familyData.moments.filter((moment: Moment) =>
-        moment.pets.some((pet: { id: number }) => pet.id === petId)
+        moment.pets?.some((pet: { id: number }) => pet.id === petId)
       );
       setMoments(petMoments);
     }
