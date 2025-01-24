@@ -26,6 +26,9 @@ import PetFormPage from "@/pages/app/family/pet/PetFormPage";
 import LocationInfo from "@/pages/app/family/location/LocationDetailPage";
 import LocationFormPage from "@/pages/app/family/location/LocationFormPage";
 
+import MomentInfo from "@/pages/app/family/moment/MomentDetailPage";
+import MomentFormPage from "@/pages/app/family/moment/MomentFormPage";
+
 import TestPage from "./pages/app/TestPage";
 
 function App() {
@@ -70,6 +73,12 @@ function App() {
                     element={<LocationFormPage />}
                   />
                   <Route path="location/add" element={<LocationFormPage />} />
+                  <Route path="moment/:momentId?" element={<MomentInfo />} />
+                  <Route
+                    path="moment/:momentId/edit"
+                    element={<MomentFormPage />}
+                  />
+                  <Route path="moment/add" element={<MomentFormPage />} />
                   <Route path="data" element={<FamilyData />} />
                   <Route path="edit" element={<FamilyFormPage />} />
                 </Route>
