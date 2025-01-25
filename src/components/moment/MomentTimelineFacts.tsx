@@ -10,7 +10,7 @@ interface MomentTimelineFactsProps {
 const MomentTimelineFacts: React.FC<MomentTimelineFactsProps> = ({
   momentId,
 }) => {
-  const { familyData } = useFamilyDataContext();
+  const { familyData, selectedFamilyId } = useFamilyDataContext();
 
   if (!momentId || !familyData) return null;
 
@@ -38,7 +38,9 @@ const MomentTimelineFacts: React.FC<MomentTimelineFactsProps> = ({
           <li className="font-semibold mt-4">Locations in this moment:</li>
           {moment.locations.map((location) => (
             <li key={location.id} className="ml-4">
-              <Link href={`/app/family/location/${location.id}`}>{location.name}</Link>
+              <Link href={`/app/family/${selectedFamilyId}/location/${location.id}`}>
+                {location.name}
+              </Link>
             </li>
           ))}
         </>

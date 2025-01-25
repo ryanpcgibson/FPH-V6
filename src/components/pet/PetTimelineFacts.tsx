@@ -22,6 +22,11 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   const overlappingLocations =
     familyData.overlappingLocationsForPets[petId] || [];
 
+  // Get all moments for this pet
+  const petMoments = familyData.moments.filter((moment) =>
+    moment.pets?.some((p) => p.id === petId)
+  );
+
   return (
     <ul className="space-y-2">
       {pet.start_date && (
@@ -38,6 +43,20 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
               >
                 {location.name}
               </Link>
+            </li>
+          ))}
+        </>
+      )}
+      {petMoments.length > 0 && (
+        <>
+          <li className="font-semibold mt-4">Moments:</li>
+          {petMoments.map((moment) => (
+            <li
+              key={moment.id}
+              className="ml-4 text-blue-600 hover:text-blue-800 cursor-pointer"
+              onClick={() => onMomentClick(moment.id)}
+            >
+              • {moment.title} ({format(moment.start_date!, "MMM d, yyyy")})
             </li>
           ))}
         </>
