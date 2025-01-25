@@ -45,7 +45,56 @@ const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
     moments: data.moments.map(
       (moment) => convertEntityFromDB(moment) as Moment
     ),
+    overlappingPetsForLocations: {},
+    overlappingLocationsForPets: {},
   };
+
+  function areEntitiesOverlapping(
+    entity1: {
+      start_date: Date | undefined;
+      end_date: Date | undefined;
+      name: string;
+    },
+    entity2: {
+      start_date: Date | undefined;
+      end_date: Date | undefined;
+      name: string;
+    }
+  ): boolean {
+    const { start_date: startDate1, end_date: endDate1, name: name1 } = entity1;
+    const { start_date: startDate2, end_date: endDate2, name: name2 } = entity2;
+
+    // console.log(
+    //   `comparing ${entity1.name} ${startDate1}-${endDate1} vs ${entity2.name} ${startDate2}-${endDate2}`
+    // );
+    if (!startDate1 || !startDate2) {
+      console.error(
+        `Error: startDate1 or startDate2 is undefined for ${name1} and ${name2}`
+      );
+      return false;
+    }
+    if (
+      (endDate1 && endDate1 < startDate2) ||
+      (endDate2 && endDate2 < startDate1)
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  convertedData.locations.forEach((location) => {
+    const overlappingPets = convertedData.pets.filter((pet) => {
+      return areEntitiesOverlapping(pet, location);
+    });
+    convertedData.overlappingPetsForLocations[location.id] = overlappingPets;
+  });
+
+  convertedData.pets.forEach((pet) => {
+    const overlappingLocations = convertedData.locations.filter((location) => {
+      return areEntitiesOverlapping(location, pet);
+    });
+    convertedData.overlappingLocationsForPets[pet.id] = overlappingLocations;
+  });
 
   return convertedData;
 };

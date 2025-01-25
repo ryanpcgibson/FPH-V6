@@ -64,4 +64,6 @@ export type FamilyData = {
   locations: Location[];
   users: User[];
   moments: Moment[];
+  overlappingPetsForLocations: Record<number, Pet[]>; // locationId -> overlapping pets
+  overlappingLocationsForPets: Record<number, Location[]>; // petId -> overlapping locations
 };
