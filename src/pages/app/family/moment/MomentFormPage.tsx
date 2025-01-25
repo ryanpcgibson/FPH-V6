@@ -41,13 +41,13 @@ const MomentFormPage = () => {
 
   const handleSubmit = async (values: {
     title: string;
-    description: string;
+    body: string;
     start_date: Date | null;
     end_date: Date | null;
   }) => {
     const momentData = {
       title: values.title,
-      description: values.description,
+      body: values.body,
       start_date: values.start_date || undefined,
       end_date: values.end_date || undefined,
       family_id: currentFamilyId,

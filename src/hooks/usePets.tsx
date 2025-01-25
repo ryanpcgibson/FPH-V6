@@ -28,6 +28,7 @@ export function usePets() {
       if (!petData.id) throw new Error("Pet ID is required");
 
       const preparedData = prepareEntityForDB(petData);
+      console.log("preparedData", preparedData);
       const { data, error } = await supabaseClient
         .from("pets")
         .update(preparedData)

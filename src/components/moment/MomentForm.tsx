@@ -23,14 +23,14 @@ const formSchema = z.object({
   title: z.string().min(2, {
     message: "Moment title must be at least 2 characters.",
   }),
-  description: z.string().optional(),
+  body: z.string().optional(),
   start_date: z.date().nullable(),
   end_date: z.date().nullable(),
 });
 
 interface MomentFormValues {
   title: string;
-  description?: string;
+  body?: string;
   start_date: Date | null;
   end_date: Date | null;
 }
@@ -58,7 +58,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: initialData?.title || "",
-      description: initialData?.description || "",
+      body: initialData?.body || "",
       start_date: initialData?.start_date || null,
       end_date: initialData?.end_date || null,
     },
@@ -69,12 +69,12 @@ const MomentForm: React.FC<MomentFormProps> = ({
   useEffect(() => {
     if (momentId === null) {
       form.setValue("title", "");
-      form.setValue("description", "");
+      form.setValue("body", "");
       form.setValue("start_date", null);
       form.setValue("end_date", null);
     } else {
       form.setValue("title", initialData?.title || "");
-      form.setValue("description", initialData?.description || "");
+      form.setValue("body", initialData?.body || "");
       form.setValue("start_date", initialData?.start_date || null);
       form.setValue("end_date", initialData?.end_date || null);
     }
@@ -108,7 +108,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
               />
               <FormField
                 control={form.control}
-                name="description"
+                name="body"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormLabel className="w-1/4">Description</FormLabel>

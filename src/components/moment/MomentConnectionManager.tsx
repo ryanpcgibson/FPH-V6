@@ -18,7 +18,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Control } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMoments } from "@/hooks/useMoments";
 
 interface MomentConnectionManagerProps {
@@ -39,6 +39,7 @@ const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
   availableMoments,
 }) => {
   const navigate = useNavigate();
+  const { familyId } = useParams<{ familyId: string }>();
   const { connectMoment, disconnectMoment } = useMoments();
 
   const handleRemoveConnection = async (momentId: number) => {
@@ -57,7 +58,7 @@ const MomentConnectionManager: React.FC<MomentConnectionManagerProps> = ({
 
   const handleAddConnection = async (momentId: string) => {
     if (momentId === "new") {
-      navigate("/app/moment/add"); // Navigate to new moment form
+      navigate(`/app/family/${familyId}/moment/add`);
       return;
     }
 
