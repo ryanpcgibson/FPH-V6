@@ -1,12 +1,77 @@
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { usePetTimelineContext } from "@/context/PetTimelineContext";
 import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
-import NavMenu from "@/components/NavMenu";
-import FamilyLink from "./FamilyLink";
-import { Link, useLocation } from "react-router-dom";
-import { Pencil } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Pencil, Menu, ArrowRight } from "lucide-react";
+import { useFamilyData } from "@/hooks/useFamilyData";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const NavMenu = () => {
+  const navigate = useNavigate();
+  const { families } = useFamilyData();
+  const { selectedFamilyId } = useFamilyDataContext();
+
+  const handleMenuItemClick = (path: string) => {
+    navigate(path);
+  };
+
+  return (
+    <div className="relative">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-yellow-300 transition-colors"
+          >
+            <Menu className="h-6 w-6 text-gray-700" />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Switch Family</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              {families
+                ?.filter((family) => family.id !== selectedFamilyId)
+                .map((family) => (
+                  <DropdownMenuItem
+                    key={family.id}
+                    onSelect={() =>
+                      handleMenuItemClick(`/app/family/${family.id}`)
+                    }
+                  >
+                    {family.name}
+                  </DropdownMenuItem>
+                ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuItem
+            onSelect={() => handleMenuItemClick("/app/profile")}
+          >
+            User Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => handleMenuItemClick("/logout")}>
+            Logout
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
 
 const AppHeader: React.FC = () => {
+  const { families } = useFamilyData();
+
   const location = useLocation();
   const isEditView = location.pathname.includes("/edit");
 
@@ -26,24 +91,9 @@ const AppHeader: React.FC = () => {
   } catch {}
 
   try {
-    ({ selectedLocationName, selectedLocationId } = useLocationTimelineContext());
+    ({ selectedLocationName, selectedLocationId } =
+      useLocationTimelineContext());
   } catch {}
-
-  let headerContent = null;
-  if (selectedFamilyId) {
-    headerContent = (
-      <>
-        <FamilyLink
-          selectedFamilyId={selectedFamilyId}
-          selectedFamilyName={selectedFamilyName}
-        />
-        {selectedPetName && ` > ${selectedPetName}`}
-        {selectedLocationName && ` > ${selectedLocationName}`}
-      </>
-    );
-  } else {
-    headerContent = "";
-  }
 
   const getEditPath = () => {
     if (selectedPetId) {
@@ -57,7 +107,7 @@ const AppHeader: React.FC = () => {
 
   const getAriaLabel = () => {
     if (selectedPetId) return "Edit Pet";
-    if (selectedLocationId) return "Edit Location"; 
+    if (selectedLocationId) return "Edit Location";
     return "Edit Family";
   };
 
@@ -72,18 +122,16 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <div
-      className={`w-full h-8 flex items-center justify-between bg-yellow-400 rounded-b-lg`}
-      id="family-header"
-    >
-      <div className="flex-grow" />
-      <div className="text-center text-black font-bold text-xl">
-        {headerContent}
+    <div className="w-full bg-yellow-400 rounded-b-lg flex justify-between pl-4 pr-0">
+      <div className="whitespace-nowrap flex items-center">
+        <Link
+          to={`/app/family/${selectedFamilyId}`}
+          className="text-black font-bold"
+        >
+          {selectedFamilyName && `The ${selectedFamilyName} Family`}
+        </Link>
       </div>
-      <div className="flex-grow flex justify-end items-center gap-2">
-        {editLink}
-        <NavMenu />
-      </div>
+      <NavMenu />
     </div>
   );
 };

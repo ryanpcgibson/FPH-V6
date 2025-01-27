@@ -1,7 +1,7 @@
 import React from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { format } from "date-fns";
-import Link from "@/components/Link";
+import { Link } from "react-router-dom";
 
 interface MomentTimelineFactsProps {
   momentId: number | null;
@@ -28,7 +28,7 @@ const MomentTimelineFacts: React.FC<MomentTimelineFactsProps> = ({
           <li className="font-semibold mt-4">Pets in this moment:</li>
           {moment.pets.map((pet) => (
             <li key={pet.id} className="ml-4">
-              <Link href={`/app/family/pet/${pet.id}`}>{pet.name}</Link>
+              <Link to={`/app/family/pet/${pet.id}`}>{pet.name}</Link>
             </li>
           ))}
         </>

@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "@/components/Link";
+import { Link } from "react-router-dom";
 import SvgPattern from "@/components/SvgPattern";
 import FamilyTimelineCell from "@/components/family/FamilyTimelineCell";
 import type { TimelineItem } from "@/types/timeline";
@@ -56,7 +56,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
         <div
           className={`w-full h-full flex items-center justify-center font-bold rounded-lg ${headerStyle}`}
         >
-          <Link href={url}>{item.name}</Link>
+          <Link to={url}>{item.name}</Link>
         </div>
       </div>
     </div>

@@ -1,8 +1,7 @@
 import React from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { format } from "date-fns";
-import Link from "@/components/Link";
-import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface LocationTimelineFactsProps {
   locationId: number | null;
@@ -41,7 +40,7 @@ const LocationTimelineFacts: React.FC<LocationTimelineFactsProps> = ({
           <li className="font-semibold mt-4">Pets:</li>
           {overlappingPets.map((pet) => (
             <li key={pet.id} className="ml-4">
-              <Link href={`/app/family/${selectedFamilyId}/pet/${pet.id}`}>
+              <Link to={`/app/family/${selectedFamilyId}/pet/${pet.id}`}>
                 {pet.name}
               </Link>
             </li>

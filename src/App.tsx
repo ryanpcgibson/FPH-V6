@@ -16,7 +16,6 @@ import LogoutPage from "@/pages/LogoutPage";
 import ProfilePage from "@/pages/app/ProfilePage";
 
 import TimelinePage from "@/pages/app/family/FamilyTimelinePage";
-import FamilySelectPage from "@/pages/app/FamilySelectPage";
 import FamilyData from "@/pages/app/family/FamilyDataPage";
 import FamilyFormPage from "@/pages/app/family/FamilyFormPage";
 
@@ -56,7 +55,6 @@ function App() {
               <Route element={<AppLayout />}>
                 <Route path="test" element={<TestPage />} />
                 <Route path="data" element={<FamilyData />} />
-                <Route index element={<FamilySelectPage />} />
                 <Route path="profile" element={<ProfilePage />} />
                 <Route path="family/add" element={<FamilyFormPage />} />
                 <Route path="family/:familyId">

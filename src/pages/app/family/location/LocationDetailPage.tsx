@@ -36,15 +36,11 @@ const LocationDetailPage: React.FC = () => {
         className="flex flex-col flex-grow w-3/5 h-full overflow-hidden"
         id="carousel-container"
       >
-        <Card className="w-full h-full">
-          <CardContent className="h-full p-0">
-            <PetCarousel
-              moments={moments}
-              currentMomentIndex={currentMomentIndex}
-              setCurrentMomentIndex={setCurrentMomentIndex}
-            />
-          </CardContent>
-        </Card>
+        <PetCarousel
+          moments={moments}
+          currentMomentIndex={currentMomentIndex}
+          setCurrentMomentIndex={setCurrentMomentIndex}
+        />
       </div>
       <div
         className="flex flex-row flex-grow w-2/5"

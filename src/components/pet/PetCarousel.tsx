@@ -7,6 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface PetCarouselProps {
@@ -40,8 +41,10 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 min-h-0 z-10">
+    <Card className="w-full h-full">
+      <CardContent className="h-full">
+        {/* <div className="flex flex-col h-full">
+          <div className="flex-1 min-h-0 z-10"> */}
         <Carousel
           opts={{
             align: "start",
@@ -51,10 +54,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
         >
           <CarouselContent style={emblaContainerStyle} className="h-full">
             {photos.map((photo: Photo, index: number) => (
-              <CarouselItem
-                key={photo.id || index}
-                style={emblaSlideStyle}
-              >
+              <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
                 <img
                   src={`/src/assets/${photo.path}`}
                   alt={`Pet photo ${index + 1}`}
@@ -66,8 +66,8 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
           <CarouselPrevious className="left-4" />
           <CarouselNext className="right-4" />
         </Carousel>
-      </div>
-      {/* <div className="absolute bottom-0 left-0 right-0 z-20 p-2 bg-white bg-opacity-50">
+        {/* </div> */}
+        {/* <div className="absolute bottom-0 left-0 right-0 z-20 p-2 bg-white bg-opacity-50">
         {photos.length > 0 ? (
           <div className="text-center">
             Photo {currentPhotoIndex + 1} / {photos.length}
@@ -76,7 +76,9 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
           <div className="text-center">No Photos</div>
         )}
       </div> */}
-    </div>
+        {/* </div> */}
+      </CardContent>
+    </Card>
   );
 };
 

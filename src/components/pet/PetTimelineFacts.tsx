@@ -1,12 +1,27 @@
 import React from "react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { format } from "date-fns";
-import Link from "@/components/Link";
+import DateSpan from "@/components/DateSpan";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface PetTimelineFactsProps {
   petId: number | null;
   onMomentClick: (momentId: number) => void;
 }
+
+const MoreLink: React.FC<{ url: string }> = ({ url }) => {
+  const { selectedFamilyId } = useFamilyDataContext();
+  return (
+    <div className="text-right">
+      <a href={`/app/family/${selectedFamilyId}/${url}`}>more...</a>
+    </div>
+  );
+};
 
 const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   petId,
@@ -28,40 +43,52 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   );
 
   return (
-    <ul className="space-y-2">
-      {pet.start_date && (
-        <li>Born: {format(pet.start_date, "MMMM d, yyyy")}</li>
-      )}
-      {pet.end_date && <li>Died: {format(pet.end_date, "MMMM d, yyyy")}</li>}
-      {overlappingLocations.length > 0 && (
-        <>
-          <li className="font-semibold mt-4">Locations:</li>
-          {overlappingLocations.map((location) => (
-            <li key={location.id} className="ml-4">
-              <Link
-                href={`/app/family/${selectedFamilyId}/location/${location.id}`}
-              >
-                {location.name}
-              </Link>
-            </li>
-          ))}
-        </>
-      )}
-      {petMoments.length > 0 && (
-        <>
-          <li className="font-semibold mt-4">Moments:</li>
-          {petMoments.map((moment) => (
-            <li
-              key={moment.id}
-              className="ml-4 text-blue-600 hover:text-blue-800 cursor-pointer"
-              onClick={() => onMomentClick(moment.id)}
-            >
-              • {moment.title} ({format(moment.start_date!, "MMM d, yyyy")})
-            </li>
-          ))}
-        </>
-      )}
-    </ul>
+    <Card className="w-full h-full overflow-y-auto">
+      <CardContent className="">
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="pet-info">
+            <AccordionTrigger className="text-xl font-bold">
+              {pet.name}
+            </AccordionTrigger>
+            <AccordionContent>
+              <DateSpan start_date={pet.start_date} end_date={pet.end_date} />
+            </AccordionContent>
+          </AccordionItem>
+          {overlappingLocations.length > 0 && (
+            <>
+              {overlappingLocations.map((location) => (
+                <AccordionItem key={location.id} value={location.id.toString()}>
+                  <AccordionTrigger>{location.name}</AccordionTrigger>
+                  <AccordionContent>
+                    <DateSpan
+                      start_date={location.start_date}
+                      end_date={location.end_date || "current"}
+                    />
+                    <MoreLink url={`location/${location.id}`} />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </>
+          )}
+          {petMoments.length > 0 && (
+            <>
+              {petMoments.map((moment) => (
+                <AccordionItem key={moment.id} value={moment.id.toString()}>
+                  <AccordionTrigger>{moment.title}</AccordionTrigger>
+                  <AccordionContent>
+                    <DateSpan
+                      start_date={moment.start_date}
+                      end_date={moment.end_date}
+                    />
+                    <MoreLink url={`moment/${moment.id}`} />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </>
+          )}
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 };
 

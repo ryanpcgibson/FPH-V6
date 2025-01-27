@@ -1,6 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
-
 const AppLayout = () => {
   return (
     <div
