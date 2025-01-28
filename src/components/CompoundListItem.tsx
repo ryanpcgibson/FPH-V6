@@ -7,12 +7,13 @@ import {
 import DateSpan from "./DateSpan";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import {
-  CameraIcon,
   GlobeIcon,
   LinkBreak1Icon,
   Pencil1Icon,
   HeartIcon,
+  HeartFilledIcon,
 } from "@radix-ui/react-icons";
+import PawPrintIcon from "./PawPrintIcon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
+import ColoredHeartIcon from "@/components/ColoredHeartIcon";
 
 interface CompoundListItemProps {
   item: any;
@@ -58,11 +60,13 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
 
   let customIcon = undefined;
   if (itemType === "moment") {
-    customIcon = <CameraIcon />;
+    customIcon = (
+      <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />
+    );
   } else if (itemType === "location") {
     customIcon = <GlobeIcon />;
   } else if (itemType === "pet") {
-    customIcon = <HeartIcon />;
+    customIcon = <PawPrintIcon />;
   }
 
   return (

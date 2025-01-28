@@ -1,6 +1,8 @@
 import React from "react";
 import type { TimelineSegment } from "@/types/timeline";
-import StarIcon from "@/components/StarIcon";
+import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import ColoredHeartIcon from "@/components/ColoredHeartIcon";
+
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface TimelineCellProps {
@@ -73,9 +75,15 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
           <div className="w-full h-[2px] bg-gray-300"></div>
         </div>
       )}
-      <div className="relative flex items-center justify-center h-full">
-        {hasStatus("memory") && <StarIcon />}
-      </div>
+      {hasStatus("memory") && (
+        <div className="relative flex items-center justify-center h-full">
+          <ColoredHeartIcon
+            size={24}
+            fillColor="#ff0000"
+            outlineColor="black"
+          />
+        </div>
+      )}
     </div>
   );
 };
