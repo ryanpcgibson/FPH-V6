@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
+import { Button } from "@/components/ui/button";
 
 interface PetCarouselProps {
   moments: any[];
@@ -43,14 +44,13 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   return (
     <Card className="w-full h-full">
       <CardContent className="h-full">
-        {/* <div className="flex flex-col h-full">
-          <div className="flex-1 min-h-0 z-10"> */}
         <CardHeader className="text-xl font-bold">
           <CardTitle>{moments[currentMomentIndex]?.title}</CardTitle>
         </CardHeader>
         <Carousel
           opts={{
             align: "start",
+            loop: true,
           }}
           ref={emblaRef}
           style={emblaStyle}
@@ -65,21 +65,19 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
                 />
               </CarouselItem>
             ))}
+            <CarouselItem>
+              <div className="h-full flex items-center justify-center">
+                <Button>Add photo</Button>
+              </div>
+            </CarouselItem>
           </CarouselContent>
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
+          {photos.length > 0 && (
+            <>
+              <CarouselPrevious className="left-4" />
+              <CarouselNext className="right-4" />
+            </>
+          )}
         </Carousel>
-        {/* </div> */}
-        {/* <div className="absolute bottom-0 left-0 right-0 z-20 p-2 bg-white bg-opacity-50">
-        {photos.length > 0 ? (
-          <div className="text-center">
-            Photo {currentPhotoIndex + 1} / {photos.length}
-          </div>
-        ) : (
-          <div className="text-center">No Photos</div>
-        )}
-      </div> */}
-        {/* </div> */}
       </CardContent>
     </Card>
   );
