@@ -18,7 +18,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
   getSegmentUrl,
 }) => {
   return (
-    <div className=" space-y-1 pt-1 w-full" id={`${section.id}-section`}>
+    <div className="w-full" id={`${section.id}-section`}>
       {section.items.map((item, index) => (
         <TimelineRow
           key={`${section.id}-${item.id}`}

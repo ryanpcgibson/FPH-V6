@@ -21,14 +21,14 @@ export const useTimelineSections = (petId?: number) => {
 
     if (filteredPetTimelines.length > 0) {
       sections.pets = {
-        id: "pets",
+        id: "pet",
         items: filteredPetTimelines.map((pet) => ({
           id: pet.petId,
           name: pet.petName,
           segments: pet.segments,
         })),
         patternIds: ["9", "10", "22", "40"],
-        headerStyle: "bg-yellow-400",
+        headerStyle: "",
         getSegmentUrl: (baseURL, itemId, momentId) =>
           `${baseURL}/pet/${itemId}${momentId ? `?momentId=${momentId}` : ""}`,
       };
@@ -36,14 +36,14 @@ export const useTimelineSections = (petId?: number) => {
 
     if (locationTimelines.length > 0) {
       sections.locations = {
-        id: "locations",
+        id: "location",
         items: locationTimelines.map((location) => ({
           id: location.locationId,
           name: location.locationName,
           segments: location.segments,
         })),
         patternIds: ["9", "10", "22", "40"],
-        headerStyle: "bg-blue-400",
+        headerStyle: "",
         getSegmentUrl: (baseURL, itemId, momentId) =>
           `${baseURL}/location/${itemId}${
             momentId ? `?momentId=${momentId}` : ""

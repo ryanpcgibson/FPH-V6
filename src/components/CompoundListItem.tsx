@@ -6,14 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import DateSpan from "./DateSpan";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import {
-  GlobeIcon,
-  LinkBreak1Icon,
-  Pencil1Icon,
-  HeartIcon,
-  HeartFilledIcon,
-} from "@radix-ui/react-icons";
-import PawPrintIcon from "./PawPrintIcon";
+import { LinkBreak1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
-import ColoredHeartIcon from "@/components/ColoredHeartIcon";
+import EntityLink from "@/components/EntityLink";
 
 interface CompoundListItemProps {
   item: any;
@@ -44,47 +37,21 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
   const { selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (customOnClick) {
-      customOnClick();
-    } else {
-      navigate(`/app/family/${selectedFamilyId}/${itemType}/${item.id}`);
-    }
-  };
-
   const handleDisconnect = () => {
     if (customOnDisconnect) {
       customOnDisconnect();
     }
   };
 
-  let customIcon = undefined;
-  if (itemType === "moment") {
-    customIcon = (
-      <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />
-    );
-  } else if (itemType === "location") {
-    customIcon = <GlobeIcon />;
-  } else if (itemType === "pet") {
-    customIcon = <PawPrintIcon />;
-  }
-
   return (
     <AccordionItem value={itemType + "-" + item.id.toString()}>
       <AccordionTrigger>
-        <div className="flex justify-between items-center w-full">
-          <div
-            className="cursor-pointer hover:underline"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent accordion from toggling
-              handleClick();
-            }}
-          >
-            <div className="flex items-center gap-2">
-              {customIcon}
-              {item.name}
-            </div>
-          </div>
+        <div className="w-full flex items-center justify-between ">
+          <EntityLink
+            item={item}
+            itemType={itemType}
+            customOnClick={customOnClick}
+          />
         </div>
       </AccordionTrigger>
       <AccordionContent>
@@ -95,7 +62,7 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
               className="cursor-pointer hover:opacity-70"
               onClick={() =>
                 navigate(
-                  `/app/family/${selectedFamilyId}/${itemType}/${item.id}/edit`
+                  `/app/family/${selectedFamilyId}/${itemType}/${item.id.toString()}`
                 )
               }
             />

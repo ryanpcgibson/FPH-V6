@@ -5,12 +5,14 @@ interface ColoredHeartIconProps {
   size?: number;
   fillColor?: string;
   outlineColor?: string;
+  outerOutlineColor?: string;
 }
 
 const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
-  size = 15, // same default as other radix icons
+  size = 15,
   fillColor = "#ff0000", // Default red fill
   outlineColor = "black", // Default black outline
+  outerOutlineColor = "white", // Default white outer outline
 }) => {
   return (
     <div
@@ -21,19 +23,31 @@ const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
         height: size,
       }}
     >
-      <HeartFilledIcon
+      <HeartIcon
         style={{
-          color: fillColor,
+          color: outerOutlineColor,
           position: "absolute",
           top: 0,
           left: 0,
           width: size,
           height: size,
+          transform: "scale(1.2)", // Slightly larger for outer outline
         }}
       />
       <HeartIcon
         style={{
           color: outlineColor,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: size,
+          height: size,
+          transform: "scale(1.1)", // Slightly larger for black outline
+        }}
+      />
+      <HeartFilledIcon
+        style={{
+          color: fillColor,
           position: "absolute",
           top: 0,
           left: 0,

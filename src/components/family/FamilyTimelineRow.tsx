@@ -1,9 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import SvgPattern from "@/components/SvgPattern";
 import FamilyTimelineCell from "@/components/family/FamilyTimelineCell";
 import type { TimelineItem } from "@/types/timeline";
 import { useLocation } from "react-router-dom";
+import EntityLink from "../EntityLink";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 interface TimelineRowProps {
   item: TimelineItem;
@@ -41,10 +42,9 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
 
   return (
     <div className="relative flex w-full" id={`${sectionId}-row-${item.id}`}>
-
       {/* Background Pattern */}
       <div
-        className="absolute w-full h-full z-0"
+        className="absolute w-full h-full z-0 py-1"
         id={`${sectionId}-row-${item.id}-pattern`}
       >
         <SvgPattern patternId={patternId} />
@@ -52,7 +52,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
 
       {/* Cells */}
       {columnHeaders.map((year) => (
-        <div key={year} className="w-20 h-10">
+        <div key={year} className="w-20 h-10 py-1">
           {getCellContent(year)}
         </div>
       ))}
@@ -60,10 +60,11 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
       {/* Wrapper div with white background to hide pattern */}
       <div className="sticky right-0 z-20 w-28 h-10 flex items-center justify-center bg-white">
         <div
-          className={`w-full h-full flex items-center justify-center font-bold rounded-lg ${headerStyle}`}
+          className={`w-full h-full flex items-center justify-between px-2 ${headerStyle} border-b border-gray-200`}
           id={`${sectionId}-row-${item.id}-header`}
         >
-          <Link to={url}>{item.name}</Link>
+          {/* <Link to={url}>{item.name}</Link> */}
+          <EntityLink item={item} itemType={sectionId} />
         </div>
       </div>
     </div>

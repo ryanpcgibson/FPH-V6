@@ -78,7 +78,7 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
       {hasStatus("memory") && (
         <div className="relative flex items-center justify-center h-full">
           <ColoredHeartIcon
-            size={24}
+            size={18}
             fillColor="#ff0000"
             outlineColor="black"
           />
