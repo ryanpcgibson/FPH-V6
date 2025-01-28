@@ -11,6 +11,7 @@ import {
   GlobeIcon,
   LinkBreak1Icon,
   Pencil1Icon,
+  HeartIcon,
 } from "@radix-ui/react-icons";
 import {
   AlertDialog,
@@ -60,10 +61,12 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
     customIcon = <CameraIcon />;
   } else if (itemType === "location") {
     customIcon = <GlobeIcon />;
+  } else if (itemType === "pet") {
+    customIcon = <HeartIcon />;
   }
 
   return (
-    <AccordionItem value={item.id.toString()}>
+    <AccordionItem value={itemType + "-" + item.id.toString()}>
       <AccordionTrigger>
         <div className="flex justify-between items-center w-full">
           <div

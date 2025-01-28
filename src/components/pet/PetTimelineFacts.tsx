@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import CompoundListItem from "@/components/CompoundListItem";
 import { useNavigate } from "react-router-dom";
 import { useMoments } from "@/hooks/useMoments";
+import { Pencil1Icon } from "@radix-ui/react-icons";
 
 interface PetTimelineFactsProps {
   petId: number | null;
@@ -47,11 +48,16 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
               {pet.name}
             </AccordionTrigger>
             <AccordionContent>
-              <DateSpan start_date={pet.start_date} end_date={pet.end_date} />
-              <div className="text-right">
-                <a href={`/app/family/${selectedFamilyId}/pet/${petId}/edit`}>
-                  edit...
-                </a>
+              <div className="flex justify-between items-center w-full">
+                <DateSpan start_date={pet.start_date} end_date={pet.end_date} />
+                <Pencil1Icon
+                  className="cursor-pointer hover:opacity-70"
+                  onClick={() =>
+                    navigate(
+                      `/app/family/${selectedFamilyId}/pet/${pet.id}/edit`
+                    )
+                  }
+                />
               </div>
             </AccordionContent>
           </AccordionItem>
