@@ -1,4 +1,4 @@
-import "./App.css";
+import "./index.css";
 import { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoadingLayout from "@/components/LoadingLayout";

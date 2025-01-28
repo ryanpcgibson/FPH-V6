@@ -23,7 +23,7 @@ export default function NavMenu() {
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-yellow-300 transition-colors"
+            className=""
           >
             <Menu className="h-6 w-6 text-gray-700" />
             <span className="sr-only">Open menu</span>

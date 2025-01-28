@@ -28,12 +28,8 @@ const NavMenu = () => {
     <div className="relative">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hover:bg-yellow-300 transition-colors"
-          >
-            <Menu className="h-6 w-6 text-gray-700" />
+          <Button variant="ghost" size="icon" className="">
+            <Menu className="h-6 w-6 " />
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
@@ -114,7 +110,7 @@ const AppHeader: React.FC = () => {
   const editLink = selectedFamilyId && !isEditView && (
     <Link
       to={getEditPath()}
-      className="p-2 hover:bg-yellow-300 transition-colors rounded-md"
+      className="p-2 transition-colors rounded-md"
       aria-label={getAriaLabel()}
     >
       <Pencil className="h-4 w-4 text-gray-700" />
@@ -122,11 +118,11 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <div className="w-full bg-yellow-400 rounded-b-lg flex justify-between pl-4 pr-0">
+    <div className="w-full bg-slate-400 rounded-b-lg flex justify-between pl-4 pr-0">
       <div className="whitespace-nowrap flex items-center">
         <Link
           to={`/app/family/${selectedFamilyId}`}
-          className="text-black font-bold"
+          className="text-xl font-bold"
         >
           {selectedFamilyName && `The ${selectedFamilyName} Family`}
         </Link>

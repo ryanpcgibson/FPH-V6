@@ -10,7 +10,7 @@ import {
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import CompoundListItem from "@/components/CompoundListItem";
 import { useNavigate } from "react-router-dom";
-import { CameraIcon, GlobeIcon } from "@radix-ui/react-icons";
+import { useMoments } from "@/hooks/useMoments";
 
 interface PetTimelineFactsProps {
   petId: number | null;
@@ -23,6 +23,7 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
 }) => {
   const { familyData, selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
+  const { disconnectMoment } = useMoments();
 
   if (!petId || !familyData) return null;
 
@@ -57,13 +58,13 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
           {petMoments.map((moment) => {
             return (
               <CompoundListItem
-                id={moment.id}
-                title={moment.title}
-                start_date={moment.start_date}
-                end_date={moment.end_date}
+                key={moment.id}
+                item={{ ...moment, name: moment.title }}
+                itemType="moment"
                 customOnClick={() => onMomentClick(moment.id)}
-                url={`moment/${moment.id}`}
-                icon={<CameraIcon />}
+                customOnDisconnect={() =>
+                  disconnectMoment(moment.id, petId!, "pet")
+                }
               />
             );
           })}
@@ -71,17 +72,9 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
             <>
               {overlappingLocations.map((location) => (
                 <CompoundListItem
-                  id={location.id}
-                  title={location.name}
-                  start_date={location.start_date}
-                  end_date={location.end_date}
-                  customOnClick={() =>
-                    navigate(
-                      `/app/family/${selectedFamilyId}/location/${location.id}`
-                    )
-                  }
-                  url={`location/${location.id}`}
-                  icon={<GlobeIcon />}
+                  key={location.id}
+                  item={location}
+                  itemType="location"
                 />
               ))}
             </>
