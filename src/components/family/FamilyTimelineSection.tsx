@@ -5,7 +5,11 @@ import type { TimelineSection as TimelineSectionType } from "@/types/timeline";
 interface TimelineSectionProps {
   section: TimelineSectionType;
   columnHeaders: number[];
-  getSegmentUrl?: (baseURL: string, itemId: number, momentId?: number) => string;
+  getSegmentUrl?: (
+    baseURL: string,
+    itemId: number,
+    momentId?: number
+  ) => string;
 }
 
 const TimelineSection: React.FC<TimelineSectionProps> = ({
@@ -14,11 +18,12 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
   getSegmentUrl,
 }) => {
   return (
-    <div className="relative space-y-1 pt-1" id={`${section.id}-section`}>
+    <div className=" space-y-1 pt-1 w-full" id={`${section.id}-section`}>
       {section.items.map((item, index) => (
         <TimelineRow
-          key={item.id}
+          key={`${section.id}-${item.id}`}
           item={item}
+          sectionId={section.id}
           columnHeaders={columnHeaders}
           patternId={section.patternIds[index % section.patternIds.length]}
           getSegmentUrl={getSegmentUrl}

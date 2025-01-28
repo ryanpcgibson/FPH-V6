@@ -15,6 +15,7 @@ interface TimelineRowProps {
     momentId?: number
   ) => string;
   headerStyle: string;
+  sectionId: string;
 }
 
 const TimelineRow: React.FC<TimelineRowProps> = ({
@@ -23,6 +24,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   patternId,
   headerStyle,
   getSegmentUrl,
+  sectionId,
 }) => {
   const getCellContent = (year: number) => {
     const segment = item.segments.find((s) => s.year === year);
@@ -38,9 +40,13 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   const url = getSegmentUrl ? getSegmentUrl(location.pathname, item.id) : "";
 
   return (
-    <div className="relative flex" id={`row-${item.id}`}>
+    <div className="relative flex w-full" id={`${sectionId}-row-${item.id}`}>
+
       {/* Background Pattern */}
-      <div className="absolute w-full h-full z-0">
+      <div
+        className="absolute w-full h-full z-0"
+        id={`${sectionId}-row-${item.id}-pattern`}
+      >
         <SvgPattern patternId={patternId} />
       </div>
 
@@ -55,6 +61,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
       <div className="sticky right-0 z-20 w-28 h-10 flex items-center justify-center bg-white">
         <div
           className={`w-full h-full flex items-center justify-center font-bold rounded-lg ${headerStyle}`}
+          id={`${sectionId}-row-${item.id}-header`}
         >
           <Link to={url}>{item.name}</Link>
         </div>

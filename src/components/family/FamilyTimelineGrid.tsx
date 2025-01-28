@@ -54,7 +54,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
 
     return (
       <div
-        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-auto flex justify-end"
+        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-x-auto"
         id="family-timeline-grid"
       >
         <div
@@ -64,10 +64,10 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
         >
           {/* <TimelineHeader headerTexts={yearsArray.map(String)} /> */}
           <div
-            className="sticky top-0 z-50 bg-white"
+            className="sticky top-0 z-50 bg-white w-full"
             id="column-header-container"
           >
-            <div className="flex gap-1" id="column-headers">
+            <div className="flex gap-1 w-full" id="column-headers">
               {yearsArray.map(String).map((header, index) => (
                 <div
                   key={index}
@@ -85,7 +85,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           </div>
           <div
             ref={gridInnerRef}
-            className="w-full relative"
+            className="relative w-full flex flex-col"
             id="grid-content-inner"
           >
             {Object.values(sections).map((section) => (

@@ -21,9 +21,9 @@ const AddItemButton = () => {
   };
 
   return (
-    <div className="relative flex" id="add-item-row">
+    <div className="relative flex w-full" id="add-item-row">
       {/* Empty cells to match timeline width */}
-      <div className="flex-grow flex">
+      <div className="flex-grow flex w-full">
         {/* This div will take up the space of the timeline cells */}
       </div>
 
