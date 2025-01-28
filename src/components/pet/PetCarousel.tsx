@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
 
 interface PetCarouselProps {
@@ -45,6 +45,9 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
       <CardContent className="h-full">
         {/* <div className="flex flex-col h-full">
           <div className="flex-1 min-h-0 z-10"> */}
+        <CardHeader className="text-xl font-bold">
+          <CardTitle>{moments[currentMomentIndex]?.title}</CardTitle>
+        </CardHeader>
         <Carousel
           opts={{
             align: "start",

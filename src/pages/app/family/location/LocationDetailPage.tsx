@@ -31,9 +31,12 @@ const LocationDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row gap-2 h-full w-full" id="page-container">
+    <div
+      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-44px)]"
+      id="page-container"
+    >
       <div
-        className="flex flex-col flex-grow w-3/5 h-full overflow-hidden"
+        className="flex flex-col flex-grow w-3/5 overflow-hidden h-full"
         id="carousel-container"
       >
         <PetCarousel
@@ -43,17 +46,13 @@ const LocationDetailPage: React.FC = () => {
         />
       </div>
       <div
-        className="flex flex-row flex-grow w-2/5"
+        className="flex flex-col flex-grow w-2/5 h-full"
         id="location-detail-container"
       >
-        <Card className="w-full bg-blue-400">
-          <CardContent className="">
-            <LocationTimelineFacts
-              locationId={locationId}
-              onMomentClick={handleMomentClick}
-            />
-          </CardContent>
-        </Card>
+        <LocationTimelineFacts
+          locationId={locationId}
+          onMomentClick={handleMomentClick}
+        />
       </div>
     </div>
   );

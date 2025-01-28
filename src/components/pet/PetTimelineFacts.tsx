@@ -8,26 +8,21 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import CompoundListItem from "@/components/CompoundListItem";
+import { useNavigate } from "react-router-dom";
+import { CameraIcon, GlobeIcon } from "@radix-ui/react-icons";
 
 interface PetTimelineFactsProps {
   petId: number | null;
   onMomentClick: (momentId: number) => void;
 }
 
-const MoreLink: React.FC<{ url: string }> = ({ url }) => {
-  const { selectedFamilyId } = useFamilyDataContext();
-  return (
-    <div className="text-right">
-      <a href={`/app/family/${selectedFamilyId}/${url}`}>more...</a>
-    </div>
-  );
-};
-
 const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   petId,
   onMomentClick,
 }) => {
   const { familyData, selectedFamilyId } = useFamilyDataContext();
+  const navigate = useNavigate();
 
   if (!petId || !familyData) return null;
 
@@ -52,37 +47,42 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
             </AccordionTrigger>
             <AccordionContent>
               <DateSpan start_date={pet.start_date} end_date={pet.end_date} />
+              <div className="text-right">
+                <a href={`/app/family/${selectedFamilyId}/pet/${petId}/edit`}>
+                  edit...
+                </a>
+              </div>
             </AccordionContent>
           </AccordionItem>
+          {petMoments.map((moment) => {
+            return (
+              <CompoundListItem
+                id={moment.id}
+                title={moment.title}
+                start_date={moment.start_date}
+                end_date={moment.end_date}
+                customOnClick={() => onMomentClick(moment.id)}
+                url={`moment/${moment.id}`}
+                icon={<CameraIcon />}
+              />
+            );
+          })}
           {overlappingLocations.length > 0 && (
             <>
               {overlappingLocations.map((location) => (
-                <AccordionItem key={location.id} value={location.id.toString()}>
-                  <AccordionTrigger>{location.name}</AccordionTrigger>
-                  <AccordionContent>
-                    <DateSpan
-                      start_date={location.start_date}
-                      end_date={location.end_date || "current"}
-                    />
-                    <MoreLink url={`location/${location.id}`} />
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </>
-          )}
-          {petMoments.length > 0 && (
-            <>
-              {petMoments.map((moment) => (
-                <AccordionItem key={moment.id} value={moment.id.toString()}>
-                  <AccordionTrigger>{moment.title}</AccordionTrigger>
-                  <AccordionContent>
-                    <DateSpan
-                      start_date={moment.start_date}
-                      end_date={moment.end_date}
-                    />
-                    <MoreLink url={`moment/${moment.id}`} />
-                  </AccordionContent>
-                </AccordionItem>
+                <CompoundListItem
+                  id={location.id}
+                  title={location.name}
+                  start_date={location.start_date}
+                  end_date={location.end_date}
+                  customOnClick={() =>
+                    navigate(
+                      `/app/family/${selectedFamilyId}/location/${location.id}`
+                    )
+                  }
+                  url={`location/${location.id}`}
+                  icon={<GlobeIcon />}
+                />
               ))}
             </>
           )}
