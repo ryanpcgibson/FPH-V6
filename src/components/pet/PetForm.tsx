@@ -25,7 +25,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import MomentConnectionManager from "../moment/MomentConnectionManager";
+import EntityConnectionManager from "@/components/EntityConnectionManager";
+import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
 const formSchema = z.object({
@@ -71,6 +72,8 @@ const PetForm: React.FC<PetFormProps> = ({
       end_date: initialData?.end_date || null,
     },
   });
+
+  const { connectMoment, disconnectMoment } = useMoments();
 
   const { familyData } = useFamilyDataContext();
 
@@ -162,20 +165,24 @@ const PetForm: React.FC<PetFormProps> = ({
                   </FormItem>
                 )}
               />
-              <MomentConnectionManager
+              <EntityConnectionManager
                 control={form.control}
                 name="moment_connection"
-                entityId={petId!}
-                entityType="pet"
-                connectedMoments={
+                label="Connected Moments"
+                entityType="moment"
+                connectedEntities={
                   familyData?.moments?.filter((m) =>
                     m.pets?.some((p) => p.id === petId)
                   ) || []
                 }
-                availableMoments={
+                availableEntities={
                   familyData?.moments.filter(
                     (m) => !m.pets?.some((p) => p.id === petId)
                   ) || []
+                }
+                onConnect={(momentId) => connectMoment(momentId, petId!, "pet")}
+                onDisconnect={(momentId) =>
+                  disconnectMoment(momentId, petId!, "pet")
                 }
               />
             </CardContent>

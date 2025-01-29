@@ -62,7 +62,7 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
               className="cursor-pointer hover:opacity-70"
               onClick={() =>
                 navigate(
-                  `/app/family/${selectedFamilyId}/${itemType}/${item.id.toString()}`
+                  `/app/family/${selectedFamilyId}/${itemType}/${item.id.toString()}/edit`
                 )
               }
             />

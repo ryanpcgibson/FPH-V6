@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import MomentConnectionManager from "../moment/MomentConnectionManager";
+import EntityConnectionManager from "@/components/EntityConnectionManager";
+import { useMoments } from "@/hooks/useMoments";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -67,7 +68,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
   });
 
   const { familyData } = useFamilyDataContext();
-
+  const { connectMoment, disconnectMoment } = useMoments();
   useEffect(() => {
     if (locationId === null) {
       form.setValue("name", "");
@@ -158,20 +159,26 @@ const LocationForm: React.FC<LocationFormProps> = ({
                   </FormItem>
                 )}
               />
-              <MomentConnectionManager
+              <EntityConnectionManager
                 control={form.control}
                 name="moment_connection"
-                entityId={locationId!}
-                entityType="location"
-                connectedMoments={
-                  familyData?.moments.filter((m) =>
+                label="Connected Moments"
+                entityType="moment"
+                connectedEntities={
+                  familyData?.moments?.filter((m) =>
                     m.locations?.some((l) => l.id === locationId)
                   ) || []
                 }
-                availableMoments={
+                availableEntities={
                   familyData?.moments.filter(
                     (m) => !m.locations?.some((l) => l.id === locationId)
                   ) || []
+                }
+                onConnect={(momentId) =>
+                  connectMoment(momentId, locationId!, "location")
+                }
+                onDisconnect={(momentId) =>
+                  disconnectMoment(momentId, locationId!, "location")
                 }
               />
             </CardContent>

@@ -30,8 +30,6 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
       : segment.status === statuses;
   };
 
-  console.log(segment?.status);
-
   const handleClick = () => {
     if (!getSegmentUrl) return;
     const url = getSegmentUrl(
