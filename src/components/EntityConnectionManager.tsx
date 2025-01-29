@@ -50,9 +50,16 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
   const { familyId } = useParams<{ familyId: string }>();
 
   const getEntityDisplayName = (entity: Entity) => {
-    const displayName = entity.name || entity.title;
+    const displayName = entity.name || entity.title || "Unnamed";
     if (entity.start_date) {
-      return `${displayName} (${format(entity.start_date, "MMM d, yyyy")})`;
+      try {
+        return `${displayName} (${format(
+          new Date(entity.start_date),
+          "MMM d, yyyy"
+        )})`;
+      } catch (error) {
+        return displayName;
+      }
     }
     return displayName;
   };

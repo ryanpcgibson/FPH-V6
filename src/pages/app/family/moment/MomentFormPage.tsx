@@ -46,15 +46,17 @@ const MomentFormPage = () => {
   if (error) return <div>Error loading family data: {error.message}</div>;
 
   return (
-    <MomentForm
-      momentId={momentId}
-      familyId={currentFamilyId}
-      onFamilyChange={handleFamilyChange}
-      initialData={moment}
-      onDelete={handleDelete}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-    />
+    <div className="mt-2" id="moment-form-page">
+      <MomentForm
+        momentId={momentId}
+        familyId={currentFamilyId}
+        onFamilyChange={handleFamilyChange}
+        initialData={moment}
+        onDelete={handleDelete}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+      />
+    </div>
   );
 };
 

@@ -43,15 +43,17 @@ const PetFormPage = () => {
   if (error) return <div>Error loading family data: {error.message}</div>;
 
   return (
-    <PetForm
-      petId={petId}
-      familyId={currentFamilyId}
-      onFamilyChange={handleFamilyChange}
-      initialData={pet}
-      onDelete={handleDelete}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-    />
+    <div className="mt-2" id="pet-form-page">
+      <PetForm
+        petId={petId}
+        familyId={currentFamilyId}
+        onFamilyChange={handleFamilyChange}
+        initialData={pet}
+        onDelete={handleDelete}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+      />
+    </div>
   );
 };
 

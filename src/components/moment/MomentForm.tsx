@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -56,8 +54,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
   onCancel,
 }) => {
   const { familyData } = useFamilyDataContext();
-  const { connectPet, disconnectPet, connectLocation, disconnectLocation } =
-    useMoments();
+  const { connectMoment, disconnectMoment } = useMoments();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,25 +82,25 @@ const MomentForm: React.FC<MomentFormProps> = ({
 
   const handleConnectPet = async (petId: number) => {
     if (momentId) {
-      await connectPet(momentId, petId);
+      await connectMoment(momentId, petId, "pet");
     }
   };
 
   const handleDisconnectPet = async (petId: number) => {
     if (momentId) {
-      await disconnectPet(momentId, petId);
+      await disconnectMoment(momentId, petId, "pet");
     }
   };
 
   const handleConnectLocation = async (locationId: number) => {
     if (momentId) {
-      await connectLocation(momentId, locationId);
+      await connectMoment(momentId, locationId, "location");
     }
   };
 
   const handleDisconnectLocation = async (locationId: number) => {
     if (momentId) {
-      await disconnectLocation(momentId, locationId);
+      await disconnectMoment(momentId, locationId, "location");
     }
   };
 

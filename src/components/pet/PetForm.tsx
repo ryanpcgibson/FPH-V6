@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -90,7 +88,7 @@ const PetForm: React.FC<PetFormProps> = ({
   }, [petId, familyId, initialData, form]);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center" id="pet-form">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

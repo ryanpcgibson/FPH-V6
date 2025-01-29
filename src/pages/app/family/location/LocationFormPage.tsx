@@ -46,15 +46,17 @@ const LocationFormPage = () => {
   if (error) return <div>Error loading family data: {error.message}</div>;
 
   return (
-    <LocationForm
-      locationId={locationId}
-      familyId={currentFamilyId}
-      onFamilyChange={handleFamilyChange}
-      initialData={location}
-      onDelete={handleDelete}
-      onSubmit={handleSubmit}
-      onCancel={handleCancel}
-    />
+    <div className="mt-2" id="location-form-page">
+      <LocationForm
+        locationId={locationId}
+        familyId={currentFamilyId}
+        onFamilyChange={handleFamilyChange}
+        initialData={location}
+        onDelete={handleDelete}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+      />
+    </div>
   );
 };
 
