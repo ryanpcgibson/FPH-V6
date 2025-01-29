@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
-const AddItemButton = () => {
+const AddItemButton = ({ headerWidth }: { headerWidth: number }) => {
   const navigate = useNavigate();
   const { familyId } = useParams<{ familyId: string }>();
 
@@ -21,30 +21,35 @@ const AddItemButton = () => {
   };
 
   return (
-    <div className="relative flex w-full" id="add-item-row">
-      {/* Empty cells to match timeline width */}
-      <div className="flex-grow flex w-full">
-        {/* This div will take up the space of the timeline cells */}
-      </div>
-
-      {/* Add Button */}
-      <div className="sticky right-0 z-20 w-28 h-10 flex items-center justify-center bg-white">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="w-full h-full flex items-center justify-center hover:bg-gray-100 rounded-lg"
-            >
-              <Plus className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={handleAddPet}>Add Pet</DropdownMenuItem>
-            <DropdownMenuItem onSelect={handleAddLocation}>
-              Add Location
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div
+      className="relative flex w-full justify-end items-center"
+      id="add-item-button-row"
+    >
+      <div
+        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 "
+        style={{ width: `${headerWidth}px` }}
+        id="add-item-button"
+      >
+        <div className="w-full h-full flex items-center justify-between px-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full h-full flex items-center justify-center"
+              >
+                <Plus className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onSelect={handleAddPet}>
+                Add Pet
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={handleAddLocation}>
+                Add Location
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </div>
   );

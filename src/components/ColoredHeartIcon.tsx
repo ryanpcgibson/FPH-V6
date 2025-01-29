@@ -8,12 +8,7 @@ interface ColoredHeartIconProps {
   outerOutlineColor?: string;
 }
 
-const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
-  size = 15,
-  fillColor = "#ff0000", // Default red fill
-  outlineColor = "black", // Default black outline
-  outerOutlineColor = "white", // Default white outer outline
-}) => {
+const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({ size = 15 }) => {
   return (
     <div
       style={{
@@ -25,7 +20,7 @@ const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
     >
       <HeartIcon
         style={{
-          color: outerOutlineColor,
+          color: "hsl(var(--background))",
           position: "absolute",
           top: 0,
           left: 0,
@@ -36,7 +31,7 @@ const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
       />
       <HeartIcon
         style={{
-          color: outlineColor,
+          color: "hsl(var(--foreground))",
           position: "absolute",
           top: 0,
           left: 0,
@@ -47,7 +42,7 @@ const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
       />
       <HeartFilledIcon
         style={{
-          color: fillColor,
+          color: "hsl(var(--primary))",
           position: "absolute",
           top: 0,
           left: 0,

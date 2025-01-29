@@ -10,12 +10,16 @@ interface TimelineSectionProps {
     itemId: number,
     momentId?: number
   ) => string;
+  cellWidth: number;
+  headerWidth: number;
 }
 
 const TimelineSection: React.FC<TimelineSectionProps> = ({
   section,
   columnHeaders,
   getSegmentUrl,
+  cellWidth,
+  headerWidth,
 }) => {
   return (
     <div className="w-full" id={`${section.id}-section`}>
@@ -28,6 +32,8 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({
           patternId={section.patternIds[index % section.patternIds.length]}
           getSegmentUrl={getSegmentUrl}
           headerStyle={section.headerStyle}
+          cellWidth={cellWidth}
+          headerWidth={headerWidth}
         />
       ))}
     </div>

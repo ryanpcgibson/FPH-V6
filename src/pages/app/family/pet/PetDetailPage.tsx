@@ -53,7 +53,7 @@ const PetDetailPage: React.FC = () => {
 
   return (
     <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-44px)]"
+      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-44px)] mt-2"
       id="page-container"
     >
       <div

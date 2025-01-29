@@ -6,6 +6,8 @@ import "./index.css";
 
 const queryClient = new QueryClient();
 
+document.documentElement.classList.add("cheerful");
+
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

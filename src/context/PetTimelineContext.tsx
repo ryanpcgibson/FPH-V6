@@ -4,6 +4,22 @@ import { Pet, Moment } from "@/db/db_types";
 import type { PetTimeline, PetTimelineSegment } from "@/types/timeline";
 import { useParams } from "react-router-dom";
 
+type PetStatus =
+  | "birth"
+  | "birth-and-death"
+  | "birth-with-memory"
+  | "birth-and-death-with-memory"
+  | "alive"
+  | "alive-with-memory"
+  | "death"
+  | "death-with-memory"
+  | "memory"
+  | "deceased"
+  | "not-born"
+  | "transferred"
+  | "adopted"
+  | "lost";
+
 interface PetTimelineContextProps {
   selectedPetId: number | null;
   selectedPetName: string | null;
@@ -58,7 +74,22 @@ function generatePetTimelines(pets: Pet[], moments: Moment[]): PetTimeline[] {
         .map((moment) => ({ id: moment.id, title: moment.title }));
 
       if (yearMoments.length > 0) {
-        status = "memory";
+        switch (status) {
+          case "birth":
+            status = "birth-with-memory";
+            break;
+          case "death":
+            status = "death-with-memory";
+            break;
+          case "birth-and-death":
+            status = "birth-and-death-with-memory";
+            break;
+          case "alive":
+            status = "alive-with-memory";
+            break;
+          default:
+            status = "memory";
+        }
       }
 
       segments.push({ year, status, moments: yearMoments });

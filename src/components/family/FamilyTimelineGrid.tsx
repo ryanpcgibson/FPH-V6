@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { calculateYearScrollPosition } from "@/utils/timelineUtils";
 import AddItemButton from "@/components/AddItemButton";
 
+const cellWidth = 80;
+const headerWidth = 110;
+
 interface TimelineGridHandle {
   scrollToYear: (year: number) => void;
 }
@@ -22,7 +25,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
     //   }
     // };
     const { sections, yearsArray } = useTimelineSections();
-    const minWidth = (yearsArray.length + 1) * 80;
+    const minWidth = (yearsArray.length + 1) * cellWidth + headerWidth;
 
     const { selectedFamilyId } = useFamilyDataContext();
 
@@ -54,7 +57,7 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
 
     return (
       <div
-        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-x-auto"
+        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-auto"
         id="family-timeline-grid"
       >
         <div
@@ -62,27 +65,10 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
           style={{ minWidth: `${minWidth}px`, width: `${minWidth}px` }}
           id="grid-content"
         >
-          {/* <TimelineHeader headerTexts={yearsArray.map(String)} /> */}
-          <div
-            className="sticky top-0 z-50 bg-white w-full"
-            id="column-header-container"
-          >
-            <div className="flex gap-1 w-full" id="column-headers">
-              {yearsArray.map(String).map((header, index) => (
-                <div
-                  key={index}
-                  className={`w-[80px] h-10 flex items-center justify-center font-bold rounded-lg ${"bg-gray-200"}`}
-                  id={`column-header-${index}`}
-                >
-                  {header}
-                </div>
-              ))}
-              <div
-                className="sticky right-0 z-30 w-28 h-10 flex items-center justify-center font-bold bg-white"
-                id="top-right-corner"
-              />
-            </div>
-          </div>
+          <TimelineHeader
+            headerTexts={yearsArray.map(String)}
+            cellWidth={cellWidth}
+          />
           <div
             ref={gridInnerRef}
             className="relative w-full flex flex-col"
@@ -94,9 +80,11 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
                 section={section}
                 columnHeaders={yearsArray}
                 getSegmentUrl={section.getSegmentUrl}
+                cellWidth={cellWidth}
+                headerWidth={headerWidth}
               />
             ))}
-            <AddItemButton />
+            <AddItemButton headerWidth={headerWidth} />
           </div>
         </div>
       </div>

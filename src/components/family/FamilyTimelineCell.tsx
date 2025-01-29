@@ -30,6 +30,8 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
       : segment.status === statuses;
   };
 
+  console.log(segment?.status);
+
   const handleClick = () => {
     if (!getSegmentUrl) return;
     const url = getSegmentUrl(
@@ -40,19 +42,28 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
     navigate(url);
   };
 
-  let cellClass = "w-full h-full cursor-pointer relative overflow-hidden";
+  let cellClass =
+    "w-full h-full cursor-pointer relative overflow-hidden box-border";
 
   if (
     hasStatus([
-      "birth",
-      "birth-and-death",
       "alive",
+      "alive-with-memory",
+      "birth",
+      "birth-with-memory",
+      "birth-and-death",
+      "birth-and-death-with-memory",
       "death",
+      "death-with-memory",
       "memory",
       "move-in",
+      "move-in-with-memory",
       "move-in-and-out",
+      "move-in-and-out-with-memory",
       "residing",
+      "residing-with-memory",
       "move-out",
+      "move-out-with-memory",
     ])
   ) {
     cellClass += " bg-opacity-0 border-t-2 border-b-2 border-black";
@@ -60,13 +71,39 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
     cellClass += " bg-white";
   }
 
-  if (hasStatus(["birth", "birth-and-death", "move-in", "move-in-and-out"])) {
+  if (
+    hasStatus([
+      "birth",
+      "birth-and-death",
+      "birth-with-memory",
+      "birth-and-death-with-memory",
+      "move-in",
+      "move-in-with-memory",
+      "move-in-and-out",
+      "move-in-and-out-with-memory",
+    ])
+  ) {
     cellClass += " border-l-2";
   }
 
-  if (hasStatus(["death", "birth-and-death", "move-out", "move-in-and-out"])) {
+  if (
+    hasStatus([
+      "death",
+      "birth-and-death",
+      "death-with-memory",
+      "birth-and-death-with-memory",
+      "move-out",
+      "move-out-with-memory",
+      "move-in-and-out",
+      "move-in-and-out-with-memory",
+    ])
+  ) {
     cellClass += " border-r-2";
   }
+
+  // DEBUGGING
+  // cellClass =
+  //   "w-full h-full cursor-pointer relative overflow-hidden box-content border border-red-700";
 
   return (
     <div className={cellClass} onClick={handleClick}>
@@ -75,7 +112,17 @@ const FamilyTimelineCell: React.FC<TimelineCellProps> = ({
           <div className="w-full h-[2px] bg-gray-300"></div>
         </div>
       )}
-      {hasStatus("memory") && (
+      {hasStatus([
+        "memory",
+        "birth-with-memory",
+        "birth-and-death-with-memory",
+        "alive-with-memory",
+        "death-with-memory",
+        "move-in-with-memory",
+        "residing-with-memory",
+        "move-out-with-memory",
+        "move-in-and-out-with-memory",
+      ]) && (
         <div className="relative flex items-center justify-center h-full">
           <ColoredHeartIcon
             size={18}

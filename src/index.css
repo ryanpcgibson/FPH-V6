@@ -57,6 +57,40 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  .cheerful {
+    --tiffany-blue: 168 50% 87%;
+    --tiffany-blue-desaturated: 168 50% 77%; /* Desaturated Tiffany Blue */
+    --cornflower: 210 20% 28%;
+    --hot-pink: 330 89% 65%;
+    --cyan: 180 80% 60%;
+    --white: 0 0% 100%;
+
+    --background: var(--white);
+    --foreground: var(--cornflower);
+    --card: var(--tiffany-blue);
+    --card-foreground: var(--cornflower);
+    --popover: var(--tiffany-blue);
+    --popover-foreground: var(--cornflower);
+    --primary: var(--hot-pink);
+    --primary-foreground: var(--white);
+    --secondary: var(--cyan);
+    --secondary-foreground: var(--white);
+    --muted: var(--tiffany-blue-desaturated);
+    --muted-foreground: var(--cornflower);
+    --accent: var(--hot-pink);
+    --accent-foreground: var(--white);
+    --destructive: var(--hot-pink);
+    --destructive-foreground: var(--white);
+    --border: var(--tiffany-blue-desaturated);
+    --input: var(--tiffany-blue-desaturated);
+    --ring: var(--hot-pink);
+    --chart-1: var(--hot-pink);
+    --chart-2: var(--cyan);
+    --chart-3: var(--hot-pink);
+    --chart-4: var(--cornflower);
+    --chart-5: 168 50% 50%; /* Tiffany Blue */
+  }
 }
 
 @layer base {

@@ -17,6 +17,8 @@ interface TimelineRowProps {
   ) => string;
   headerStyle: string;
   sectionId: string;
+  cellWidth: number;
+  headerWidth: number;
 }
 
 const TimelineRow: React.FC<TimelineRowProps> = ({
@@ -26,6 +28,8 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   headerStyle,
   getSegmentUrl,
   sectionId,
+  cellWidth,
+  headerWidth,
 }) => {
   const getCellContent = (year: number) => {
     const segment = item.segments.find((s) => s.year === year);
@@ -41,10 +45,15 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
   const url = getSegmentUrl ? getSegmentUrl(location.pathname, item.id) : "";
 
   return (
-    <div className="relative flex w-full" id={`${sectionId}-row-${item.id}`}>
+    <div
+      className="relative flex w-full justify-end items-center"
+      id={`${sectionId}-row-${item.id}`}
+    >
       {/* Background Pattern */}
+      {/* // TODO make height dynamic */}
       <div
-        className="absolute w-full h-full z-0 py-1"
+        className={"absolute h-[28px] z-0 border-y-2 border-white box-content"}
+        style={{ width: `${cellWidth * columnHeaders.length}px` }}
         id={`${sectionId}-row-${item.id}-pattern`}
       >
         <SvgPattern patternId={patternId} />
@@ -57,15 +66,13 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
         </div>
       ))}
 
-      {/* Wrapper div with white background to hide pattern */}
-      <div className="sticky right-0 z-20 w-28 h-10 flex items-center justify-center bg-white">
-        <div
-          className={`w-full h-full flex items-center justify-between px-2 ${headerStyle} border-b border-gray-200`}
-          id={`${sectionId}-row-${item.id}-header`}
-        >
-          {/* <Link to={url}>{item.name}</Link> */}
-          <EntityLink item={item} itemType={sectionId} />
-        </div>
+      {/* Sticky row header */}
+      <div
+        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 border-b border-foreground"
+        style={{ width: `${headerWidth}px` }}
+        id={`${sectionId}-row-${item.id}-entity-link`}
+      >
+        <EntityLink item={item} itemType={sectionId} />
       </div>
     </div>
   );

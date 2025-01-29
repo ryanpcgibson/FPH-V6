@@ -10,9 +10,13 @@ export interface LocationTimelineSegment {
   year: number;
   status:
     | "move-in"
+    | "move-in-with-memory"
     | "residing"
+    | "residing-with-memory"
     | "move-out"
+    | "move-out-with-memory"
     | "move-in-and-out"
+    | "move-in-and-out-with-memory"
     | "memory"
     | "not-moved-in"
     | "former";
@@ -30,13 +34,17 @@ export interface LocationTimeline {
 export interface PetTimelineSegment {
   year: number;
   status:
-    | "not-born"
     | "birth"
     | "birth-and-death"
+    | "birth-with-memory"
+    | "birth-and-death-with-memory"
     | "alive"
+    | "alive-with-memory"
     | "death"
+    | "death-with-memory"
     | "memory"
     | "deceased"
+    | "not-born"
     | "transferred"
     | "adopted"
     | "lost";

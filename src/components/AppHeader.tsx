@@ -113,16 +113,16 @@ const AppHeader: React.FC = () => {
       className="p-2 transition-colors rounded-md"
       aria-label={getAriaLabel()}
     >
-      <Pencil className="h-4 w-4 text-gray-700" />
+      <Pencil className="h-4 w-4 text-foreground" />
     </Link>
   );
 
   return (
-    <div className="w-full bg-slate-400 rounded-b-lg flex justify-between pl-4 pr-0">
+    <div className="w-full bg-card rounded-bl-lg flex justify-between pl-4 pr-0">
       <div className="whitespace-nowrap flex items-center">
         <Link
           to={`/app/family/${selectedFamilyId}`}
-          className="text-xl font-bold"
+          className="text-xl font-bold text-foreground"
         >
           {selectedFamilyName && `The ${selectedFamilyName} Family`}
         </Link>

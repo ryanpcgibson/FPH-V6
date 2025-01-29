@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useCallback } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { Location, Moment } from "@/db/db_types";
@@ -7,13 +7,26 @@ import type {
   LocationTimelineSegment,
 } from "@/types/timeline";
 
+type LocationStatus =
+  | "move-in"
+  | "move-in-with-memory"
+  | "residing"
+  | "residing-with-memory"
+  | "move-out"
+  | "move-out-with-memory"
+  | "move-in-and-out"
+  | "move-in-and-out-with-memory"
+  | "memory"
+  | "not-moved-in"
+  | "former";
+
 interface LocationTimelineContextProps {
   selectedLocationId: number | null;
   selectedLocationName: string | null;
   locationTimelines: LocationTimeline[];
   isLoading: boolean;
   error: Error | null;
-  getFilteredLocationTimelines: (petId?: number) => LocationTimeline[];
+  getFilteredLocationTimelines: (locationId?: number) => LocationTimeline[];
 }
 
 const LocationTimelineContext = createContext<
@@ -26,9 +39,9 @@ function generateLocationTimelines(
 ): LocationTimeline[] {
   const currentYear = new Date().getFullYear();
   const earliestStartDate = Math.min(
-    ...locations.map((location) => {
-      return location.start_date?.getFullYear() ?? currentYear;
-    })
+    ...locations.map(
+      (location) => location.start_date?.getFullYear() ?? currentYear
+    )
   );
 
   return locations.map((location) => {
@@ -67,8 +80,24 @@ function generateLocationTimelines(
           .map((moment) => ({ id: moment.id, title: moment.title }));
 
         if (yearMoments.length > 0) {
-          status = "memory";
+          switch (status) {
+            case "move-in":
+              status = "move-in-with-memory";
+              break;
+            case "residing":
+              status = "residing-with-memory";
+              break;
+            case "move-out":
+              status = "move-out-with-memory";
+              break;
+            case "move-in-and-out":
+              status = "move-in-and-out-with-memory";
+              break;
+            default:
+              status = "memory";
+          }
         }
+
         segments.push({ year, status, moments: yearMoments });
       }
 
@@ -90,7 +119,6 @@ function generateLocationTimelines(
         segments,
       };
     } catch (error) {
-      // Return a default timeline for this location to prevent the entire map from failing
       return {
         locationId: location.id,
         locationName: location.name,
@@ -105,7 +133,7 @@ const LocationTimelineProvider: React.FC<{
 }> = ({ children }) => {
   const {
     familyData,
-    selectedFamilyId: familyId,
+    selectedFamilyId,
     isLoading: isFamilyLoading,
   } = useFamilyDataContext();
 
@@ -120,7 +148,7 @@ const LocationTimelineProvider: React.FC<{
     : null;
 
   const contextValue = useMemo(() => {
-    if (!familyId || !familyData) {
+    if (!selectedFamilyId || !familyData) {
       return {
         selectedLocationId,
         selectedLocationName,
@@ -142,11 +170,10 @@ const LocationTimelineProvider: React.FC<{
         locationTimelines: timelines,
         isLoading: isFamilyLoading,
         error: null,
-        getFilteredLocationTimelines: (petId?: number) => {
-          return generateLocationTimelines(
-            familyData.locations,
-            familyData.moments
-          );
+        getFilteredLocationTimelines: (locationId?: number) => {
+          return locationId
+            ? timelines.filter((timeline) => timeline.locationId === locationId)
+            : timelines;
         },
       };
     } catch (err) {
@@ -161,11 +188,23 @@ const LocationTimelineProvider: React.FC<{
     }
   }, [
     familyData,
-    familyId,
+    selectedFamilyId,
     isFamilyLoading,
     selectedLocationId,
     selectedLocationName,
   ]);
+
+  if (contextValue.error) {
+    return (
+      <div>
+        Error generating location timelines: {contextValue.error.message}
+      </div>
+    );
+  }
+
+  if (contextValue.isLoading) {
+    return <div>Loading location timelines...</div>;
+  }
 
   return (
     <LocationTimelineContext.Provider value={contextValue}>
