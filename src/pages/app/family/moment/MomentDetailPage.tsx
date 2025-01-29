@@ -27,7 +27,7 @@ const MomentDetailPage: React.FC = () => {
   return (
     <div className="flex flex-row gap-2 h-full w-full" id="page-container">
       <div
-        className="flex flex-col flex-grow w-3/5 h-full overflow-hidden"
+        className="flex flex-col flex-grow w-3/5 h-full"
         id="carousel-container"
       >
             <PetCarousel
