@@ -100,7 +100,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                       <Input
                         placeholder="Location Name"
                         {...field}
-                        className="w-full"
+                        className="w-full bg-background"
                       />
                     </FormControl>
                     <FormMessage />
@@ -117,7 +117,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                       <Input
                         placeholder="Map Reference (optional)"
                         {...field}
-                        className="w-full"
+                        className="w-full bg-background"
                         value={field.value || ""}
                       />
                     </FormControl>

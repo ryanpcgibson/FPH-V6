@@ -106,13 +106,11 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
                 }}
                 value={field.value?.toString()}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-background">
                   <SelectValue placeholder={`Add ${entityType}...`} />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new">
-                    Create new {entityType}...
-                  </SelectItem>
+                <SelectContent className="bg-background">
+                  <SelectItem value="new">Add new {entityType}...</SelectItem>
                   {availableEntities.map((entity) => (
                     <SelectItem key={entity.id} value={entity.id.toString()}>
                       {getEntityDisplayName(entity)}

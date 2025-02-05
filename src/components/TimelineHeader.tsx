@@ -30,7 +30,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
         ))}
         {/* Blank cell to match the width of the timeline */}
         <div
-          className="sticky right-0 z-20 w-[110px] h-10 flex bg-card"
+          className="sticky right-0 z-20 w-[110px] h-10 flex bg-background"
           id="top-right-corner"
         />
       </div>

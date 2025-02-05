@@ -70,7 +70,7 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
 
       {/* Sticky row header */}
       <div
-        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 border-b border-foreground"
+        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 rounded-lg border-2 border-white"
         style={{ width: `${headerWidth}px` }}
         id={`${sectionId}-row-${item.id}-entity-link`}
       >

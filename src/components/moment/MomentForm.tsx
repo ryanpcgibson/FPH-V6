@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import EntityConnectionManager from "../EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
+import UploadForm from "@/components/UploadForm";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -48,7 +49,6 @@ const MomentForm: React.FC<MomentFormProps> = ({
   momentId,
   familyId,
   initialData,
-  onFamilyChange,
   onDelete,
   onSubmit,
   onCancel,
@@ -75,8 +75,8 @@ const MomentForm: React.FC<MomentFormProps> = ({
     } else {
       form.setValue("title", initialData?.title || "");
       form.setValue("body", initialData?.body || "");
-      form.setValue("start_date", initialData?.start_date || null);
-      form.setValue("end_date", initialData?.end_date || null);
+      form.setValue("start_date", initialData?.start_date || null); // TODO: convert to string?
+      form.setValue("end_date", initialData?.end_date || null); // TODO: convert to string?
     }
   }, [momentId, familyId, initialData, form]);
 
@@ -105,52 +105,25 @@ const MomentForm: React.FC<MomentFormProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>{momentId ? "Edit Moment" : "New Moment"}</CardTitle>
-      </CardHeader>
+    <div className="flex justify-center">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="body"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex gap-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-full max-w-lg"
+        >
+          <Card>
+            <CardContent className="space-y-2 pt-2">
               <FormField
                 control={form.control}
-                name="start_date"
+                name="title"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Start Date</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">Title</FormLabel>
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Title"
+                        {...field}
+                        className="w-full bg-background"
                       />
                     </FormControl>
                     <FormMessage />
@@ -160,71 +133,117 @@ const MomentForm: React.FC<MomentFormProps> = ({
 
               <FormField
                 control={form.control}
-                name="end_date"
+                name="body"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <DatePicker
-                        date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                  <FormItem className="flex items-center space-x-2">
+                    <FormLabel className="w-1/4">Description</FormLabel>
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Description (optional)"
+                        {...field}
+                        className="w-full bg-background"
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
 
-            <EntityConnectionManager
-              control={form.control}
-              name="pet_connection"
-              label="Connected Pets"
-              entityType="pet"
-              connectedEntities={initialData?.pets || []}
-              availableEntities={
-                familyData?.pets.filter(
-                  (p) => !initialData?.pets?.some((mp) => mp.id === p.id)
-                ) || []
-              }
-              onConnect={handleConnectPet}
-              onDisconnect={handleDisconnectPet}
-            />
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="start_date"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center space-x-2">
+                      <FormLabel className="w-1/4">Start Date</FormLabel>
+                      <FormControl className="flex-1">
+                        <DatePicker
+                          date={field.value}
+                          setDate={(date) => field.onChange(date)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <EntityConnectionManager
-              control={form.control}
-              name="location_connection"
-              label="Connected Locations"
-              entityType="location"
-              connectedEntities={initialData?.locations || []}
-              availableEntities={
-                familyData?.locations.filter(
-                  (l) => !initialData?.locations?.some((ml) => ml.id === l.id)
-                ) || []
-              }
-              onConnect={handleConnectLocation}
-              onDisconnect={handleDisconnectLocation}
-            />
-          </CardContent>
+                <FormField
+                  control={form.control}
+                  name="end_date"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center space-x-2">
+                      <FormLabel className="w-1/4">End Date</FormLabel>
+                      <FormControl className="flex-1">
+                        <DatePicker
+                          date={field.value}
+                          setDate={(date) => field.onChange(date)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          <CardFooter className="flex justify-between">
-            <div>
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-            </div>
-            <div className="flex gap-2">
+              <EntityConnectionManager
+                control={form.control}
+                name="pet_connection"
+                label="Connected Pets"
+                entityType="pet"
+                connectedEntities={initialData?.pets || []}
+                availableEntities={
+                  familyData?.pets.filter(
+                    (p) => !initialData?.pets?.some((mp) => mp.id === p.id)
+                  ) || []
+                }
+                onConnect={handleConnectPet}
+                onDisconnect={handleDisconnectPet}
+              />
+
+              <EntityConnectionManager
+                control={form.control}
+                name="location_connection"
+                label="Connected Locations"
+                entityType="location"
+                connectedEntities={initialData?.locations || []}
+                availableEntities={
+                  familyData?.locations.filter(
+                    (l) => !initialData?.locations?.some((ml) => ml.id === l.id)
+                  ) || []
+                }
+                onConnect={handleConnectLocation}
+                onDisconnect={handleDisconnectLocation}
+              />
+            </CardContent>
+
+            <CardFooter className="flex justify-end space-x-2">
               {momentId && onDelete && (
-                <Button type="button" variant="destructive" onClick={onDelete}>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this moment?"
+                      )
+                    ) {
+                      onDelete();
+                    }
+                  }}
+                >
                   Delete
                 </Button>
               )}
-              <Button type="submit">Save</Button>
-            </div>
-          </CardFooter>
+              <Button type="button" variant="outline" onClick={onCancel}>
+                Cancel
+              </Button>
+              <Button type="submit">{momentId ? "Update" : "Create"}</Button>
+            </CardFooter>
+          </Card>
         </form>
       </Form>
-    </Card>
+    </div>
   );
 };
 

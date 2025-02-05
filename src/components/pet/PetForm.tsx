@@ -57,7 +57,6 @@ const PetForm: React.FC<PetFormProps> = ({
   petId,
   familyId,
   initialData,
-  onFamilyChange,
   onDelete,
   onSubmit,
   onCancel,
@@ -106,7 +105,7 @@ const PetForm: React.FC<PetFormProps> = ({
                       <Input
                         placeholder="Pet Name"
                         {...field}
-                        className="w-full"
+                        className="w-full bg-background"
                       />
                     </FormControl>
                     <FormMessage />
@@ -155,7 +154,7 @@ const PetForm: React.FC<PetFormProps> = ({
                       <Input
                         placeholder="Pet description (optional)"
                         {...field}
-                        className="w-full"
+                        className="w-full bg-background"
                         value={field.value || ""}
                       />
                     </FormControl>

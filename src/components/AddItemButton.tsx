@@ -26,7 +26,7 @@ const AddItemButton = ({ headerWidth }: { headerWidth: number }) => {
       id="add-item-button-row"
     >
       <div
-        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 "
+        className="h-10 sticky right-0 z-20 flex items-center bg-card justify-between px-2 rounded-lg border-2 border-white"
         style={{ width: `${headerWidth}px` }}
         id="add-item-button"
       >

@@ -118,7 +118,7 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <div className="w-full bg-card rounded-bl-lg flex justify-between pl-4 pr-0">
+    <div className="w-full bg-card rounded-b-lg flex justify-between pl-4 pr-0">
       <div className="whitespace-nowrap flex items-center">
         <Link
           to={`/app/family/${selectedFamilyId}`}

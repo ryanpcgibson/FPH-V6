@@ -37,7 +37,7 @@ const EntityLink = ({
 
   return (
     <div
-      className="cursor-pointer hover:underline"
+      className="cursor-pointer hover:underline w-full"
       onClick={(e) => {
         e.stopPropagation(); // Prevent accordion from toggling
         handleClick();
@@ -45,7 +45,7 @@ const EntityLink = ({
     >
       <div className="flex items-center gap-2">
         {customIcon}
-        {item.name}
+        <span className="truncate">{item.name}</span>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import "./index.css";
 import { Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import LoadingLayout from "@/components/LoadingLayout";
 
 import AuthProvider from "@/context/AuthContext";
@@ -28,8 +28,10 @@ import LocationFormPage from "@/pages/app/family/location/LocationFormPage";
 import MomentInfo from "@/pages/app/family/moment/MomentDetailPage";
 import MomentFormPage from "@/pages/app/family/moment/MomentFormPage";
 
-import TestPage from "./pages/app/TestPage";
-import UploadTest from "./pages/app/UploadTest";
+// import TestPage from "./pages/app/TestPage";
+// import UploadTest from "./pages/app/UploadTest";
+import FamilyListPage from "@/pages/app/FamilyListPage";
+
 function App() {
   return (
     <BrowserRouter>
@@ -53,17 +55,16 @@ function App() {
               }
             >
               <Route element={<AppLayout />}>
-                <Route path="test" element={<TestPage />} />
-                <Route path="data" element={<FamilyData />} />
+                <Route index element={<FamilyListPage />} />
                 <Route path="profile" element={<ProfilePage />} />
                 <Route path="family/add" element={<FamilyFormPage />} />
                 <Route path="family/:familyId">
                   <Route index element={<TimelinePage />} />
-                  <Route path="pet/:petId?" element={<PetInfo />} />
+                  <Route path="pet/:petId" element={<PetInfo />} />
                   <Route path="pet/:petId/edit" element={<PetFormPage />} />
                   <Route path="pet/add" element={<PetFormPage />} />
                   <Route
-                    path="location/:locationId?"
+                    path="location/:locationId"
                     element={<LocationInfo />}
                   />
                   <Route
@@ -71,15 +72,16 @@ function App() {
                     element={<LocationFormPage />}
                   />
                   <Route path="location/add" element={<LocationFormPage />} />
-                  <Route path="moment/:momentId?" element={<MomentInfo />} />
-                  <Route path="moment/:momentId">
-                    <Route path="edit" element={<MomentFormPage />} />
-                    <Route path="upload" element={<UploadTest />} />
-                  </Route>
+                  <Route path="moment/:momentId" element={<MomentInfo />} />
+                  <Route
+                    path="moment/:momentId/edit"
+                    element={<MomentFormPage />}
+                  />
                   <Route path="moment/add" element={<MomentFormPage />} />
                   <Route path="data" element={<FamilyData />} />
                   <Route path="edit" element={<FamilyFormPage />} />
                 </Route>
+                <Route path="*" element={<Navigate to="/app" replace />} />
               </Route>
             </Route>
           </Routes>
