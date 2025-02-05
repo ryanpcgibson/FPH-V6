@@ -11,7 +11,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
   cellWidth,
 }) => {
   const borderWidth = 2;
-  const insideCellWidth = cellWidth - (borderWidth * 2);
+  const insideCellWidth = cellWidth - borderWidth * 2;
   return (
     <div
       className="sticky top-0 z-50 bg-white w-full"
@@ -21,7 +21,8 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
         {headerTexts.map((header, index) => (
           <div
             key={index}
-            className={`w-[${cellWidth}px] h-10 border-t-4 box-border flex items-center justify-center font-bold rounded-lg bg-foreground text-background border-2 border-white`}
+            style={{ width: `${cellWidth}px` }}
+            className="h-10 border-t-4 box-border flex items-center justify-center font-bold rounded-lg bg-foreground text-background border-2 border-white"
             id={`column-header-${index}`}
           >
             {header}

@@ -53,7 +53,9 @@ const TimelineRow: React.FC<TimelineRowProps> = ({
       {/* // TODO make height dynamic */}
       <div
         className={"absolute h-[28px] z-0 border-y-2 border-white box-content"}
-        style={{ width: `${cellWidth * columnHeaders.length}px` }}
+        style={{
+          width: ` ${headerWidth + cellWidth * columnHeaders.length}px `,
+        }}
         id={`${sectionId}-row-${item.id}-pattern`}
       >
         <SvgPattern patternId={patternId} />
