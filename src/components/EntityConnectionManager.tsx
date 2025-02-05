@@ -18,11 +18,13 @@ import {
 import { Control } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 
+// Entity is a generic type that can be used for pets, locations, and moments
 interface Entity {
   id: number;
   name?: string;
   title?: string;
-  start_date?: Date;
+  start_date: Date;
+  end_date?: Date;
 }
 
 interface EntityConnectionManagerProps {

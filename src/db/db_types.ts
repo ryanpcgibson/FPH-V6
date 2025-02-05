@@ -1,11 +1,14 @@
 import type { Tables, TablesInsert, TablesUpdate } from "./supabase_types";
 
 // JSON doesn't support object types, so fields are converted to Date objects in the app.
-// Note: hard coded list of commonly named date fields to convert across multiple tables.
 // Where interal type doesn't match DB exactly, there is a *DB type as well for insert/update.
+// Note: using same named date fields across multiple tables
+// Assumes start_date is always present, end_date is optional across all tables
 type DateFields = "start_date" | "end_date";
-type WithDateFields<T> = Omit<T, DateFields> &
-  Record<DateFields, Date | undefined>;
+type WithDateFields<T> = Omit<T, DateFields> & {
+  start_date: Date;
+  end_date?: Date;
+};
 
 export type Family = Tables<"families">;
 export type Families = Array<{
@@ -30,8 +33,8 @@ export type MomentDB = Omit<
   "photos" | "pets" | "locations"
 > & {
   photos: Photo[];
-  pets: PetDB[];
-  locations: LocationDB[];
+  pets: Pet[];
+  locations: Location[];
 };
 
 export type Moment = WithDateFields<MomentDB>;
