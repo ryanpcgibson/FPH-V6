@@ -29,7 +29,7 @@ import MomentInfo from "@/pages/app/family/moment/MomentDetailPage";
 import MomentFormPage from "@/pages/app/family/moment/MomentFormPage";
 
 import TestPage from "./pages/app/TestPage";
-
+import UploadTest from "./pages/app/UploadTest";
 function App() {
   return (
     <BrowserRouter>
@@ -72,10 +72,10 @@ function App() {
                   />
                   <Route path="location/add" element={<LocationFormPage />} />
                   <Route path="moment/:momentId?" element={<MomentInfo />} />
-                  <Route
-                    path="moment/:momentId/edit"
-                    element={<MomentFormPage />}
-                  />
+                  <Route path="moment/:momentId">
+                    <Route path="edit" element={<MomentFormPage />} />
+                    <Route path="upload" element={<UploadTest />} />
+                  </Route>
                   <Route path="moment/add" element={<MomentFormPage />} />
                   <Route path="data" element={<FamilyData />} />
                   <Route path="edit" element={<FamilyFormPage />} />

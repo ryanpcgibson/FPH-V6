@@ -4,6 +4,7 @@ import { usePets } from "@/hooks/usePets";
 import PetForm from "@/components/pet/PetForm";
 import { useEntityFormPage } from "@/hooks/useEntityFormPage";
 import type { Pet } from "@/db/db_types";
+import { useMoments } from "@/hooks/useMoments";
 
 interface PetFormValues {
   name: string;
@@ -18,7 +19,7 @@ const PetFormPage = () => {
   }>();
 
   const petId = petIdParam ? parseInt(petIdParam, 10) : undefined;
-  const { createPet, updatePet, deletePet } = usePets();
+  const { createMoment, updateMoment, deleteMoment } = useMoments();
 
   const {
     currentFamilyId,
@@ -34,9 +35,9 @@ const PetFormPage = () => {
     familyId: familyIdParam ? parseInt(familyIdParam, 10) : undefined,
     entityType: "pet",
     findEntity: (data, id) => data?.pets.find((p) => p.id === id),
-    createEntity: createPet,
-    updateEntity: updatePet,
-    deleteEntity: deletePet,
+    createEntity: createMoment,
+    updateEntity: updateMoment,
+    deleteEntity: deleteMoment,
   });
 
   if (isLoading) return <div>Loading...</div>;
