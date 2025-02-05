@@ -1,4 +1,6 @@
-export type Json =
+Need to install the following packages:
+supabase@2.9.6
+Ok to proceed? (y) export type Json =
   | string
   | number
   | boolean
@@ -144,6 +146,32 @@ export type Database = {
           },
         ]
       }
+      moment_photos: {
+        Row: {
+          created_at: string
+          moment_id: number
+          photo_id: string
+        }
+        Insert: {
+          created_at?: string
+          moment_id: number
+          photo_id: string
+        }
+        Update: {
+          created_at?: string
+          moment_id?: number
+          photo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moment_photos_moment_id_fkey"
+            columns: ["moment_id"]
+            isOneToOne: false
+            referencedRelation: "moments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       moments: {
         Row: {
           added_by: string
@@ -259,26 +287,29 @@ export type Database = {
           },
         ]
       }
-      photos: {
+      "TBDEL-photos": {
         Row: {
           added_by: string
           created_at: string
-          id: number
+          id: string | null
           moment_id: number | null
+          old_id: number
           path: string
         }
         Insert: {
           added_by?: string
           created_at?: string
-          id?: number
+          id?: string | null
           moment_id?: number | null
+          old_id?: number
           path: string
         }
         Update: {
           added_by?: string
           created_at?: string
-          id?: number
+          id?: string | null
           moment_id?: number | null
+          old_id?: number
           path?: string
         }
         Relationships: [
