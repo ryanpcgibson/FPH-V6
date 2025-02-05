@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabaseClient } from "../db/supabaseClient";
+import { supabaseClient } from "@/db/supabaseClient";
 import { Session, User } from "@supabase/supabase-js";
 
 interface AuthState {
