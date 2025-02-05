@@ -57,8 +57,9 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
 
     return (
       <div
-        className="w-full max-h-[calc(100vh-44px)] flex-grow"
+        className="w-full max-h-[calc(100vh-44px)] flex-grow overflow-x-auto"
         id="family-timeline-grid"
+        ref={gridInnerRef}
       >
         <div
           className="relative"
@@ -70,7 +71,6 @@ const FamilyTimelineGrid = React.forwardRef<TimelineGridHandle>(
             cellWidth={cellWidth}
           />
           <div
-            ref={gridInnerRef}
             className="relative w-full flex flex-col"
             id="grid-content-inner"
           >
