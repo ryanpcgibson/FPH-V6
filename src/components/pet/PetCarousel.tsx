@@ -48,23 +48,6 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
     });
   }, [photos]);
 
-  // Define the styles as JavaScript objects
-  const emblaStyle = {
-    overflow: "hidden",
-    height: "100%",
-  };
-
-  const emblaContainerStyle = {
-    display: "flex",
-    height: "100%",
-  };
-
-  const emblaSlideStyle = {
-    flex: "0 0 100%",
-    minWidth: "0",
-    height: "100%",
-  };
-
   return (
     <Card className="w-full h-full p-0">
       <CardContent className="h-full p-2">
@@ -74,21 +57,24 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
             loop: true,
           }}
           ref={emblaRef}
-          className="h-full"
+          className="h-full overflow-hidden"
         >
           <CarouselContent className="h-full">
             {photos.map(
               (photo: { id?: string; path: string }, index: number) => (
-                <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
+                <CarouselItem
+                  key={photo.id || index}
+                  className="flex-[0_0_100%] min-w-0 h-full rounded-lg"
+                >
                   <img
-                    src={photoUrls[photo.id]}
+                    src={photoUrls[photo.id || ""]}
                     alt={`Pet photo ${index + 1}`}
-                    className="w-full h-full object-contain"
+                    className="w-auto h-auto m-auto max-w-full max-h-full object-contain rounded-lg"
                   />
                 </CarouselItem>
               )
             )}
-            <CarouselItem>
+            <CarouselItem className="rounded-lg overflow-hidden">
               <div className="h-full flex items-center justify-center">
                 <Button onClick={() => setIsUploadModalOpen(true)}>
                   Add photo
@@ -98,8 +84,8 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
           </CarouselContent>
           {photos.length > 0 && (
             <>
-              <CarouselPrevious className="left-4" />
-              <CarouselNext className="right-4" />
+              <CarouselPrevious className="left-4 hover:bg-background hover:text-foreground focus-visible:bg-background focus-visible:text-foreground" />
+              <CarouselNext className="right-4 hover:bg-background hover:text-foreground focus-visible:bg-background focus-visible:text-foreground" />
             </>
           )}
         </Carousel>
@@ -108,7 +94,6 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
         <PhotoUploadModal
           isOpen={isUploadModalOpen}
           onClose={() => setIsUploadModalOpen(false)}
-          familyId={currentMoment.family_id}
           momentId={currentMoment.id}
           onUploadComplete={(files) => {
             setIsUploadModalOpen(false);
