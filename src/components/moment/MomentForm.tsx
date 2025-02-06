@@ -225,6 +225,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
                 name="photo_connection"
                 label="Photos"
                 entityType="photo"
+                addUrl={`moment/${momentId}/upload`}
                 connectedEntities={initialData?.photos || []}
                 availableEntities={[]}
                 onConnect={() => {}}

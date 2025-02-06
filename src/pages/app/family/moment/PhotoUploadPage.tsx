@@ -19,17 +19,28 @@ interface UploadFormProps {
   ) => void;
 }
 
-const UploadForm = ({
-  bucket,
+// TODO: Handle collisions
+const generateRandomFilename = (originalName: string) => {
+  const extension = originalName.split(".").pop();
+  const randomString = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 16);
+  return `${randomString}.${extension}`;
+};
+
+const PhotoUploadPage = ({
   folder = "",
   onUploadComplete,
 }: UploadFormProps) => {
   const { session } = useAuthData();
   const [uppy] = useState(() => new Uppy());
+  const STORAGE_BUCKET = "photos";
 
   useEffect(() => {
     if (!session?.access_token) return;
 
+    // Clean up any existing plugins and event listeners
     const tusPlugin = uppy.getPlugin("Tus");
     if (tusPlugin) {
       uppy.removePlugin(tusPlugin);
@@ -54,10 +65,13 @@ const UploadForm = ({
       },
     });
 
-    uppy.on("file-added", (file) => {
+    const handleFileAdded = (file: any) => {
+      if (!file.name) throw new Error("File must have a name");
+      const randomFilename = generateRandomFilename(file.name);
+      console.log(file.name, " -> ", STORAGE_BUCKET, randomFilename);
       const supabaseMetadata = {
-        bucketName: bucket,
-        objectName: folder ? `${folder}/${file.name}` : file.name,
+        bucketName: STORAGE_BUCKET,
+        objectName: folder ? `${folder}/${randomFilename}` : randomFilename,
         contentType: file.type,
       };
 
@@ -65,7 +79,9 @@ const UploadForm = ({
         ...file.meta,
         ...supabaseMetadata,
       };
-    });
+    };
+
+    uppy.on("file-added", handleFileAdded);
 
     uppy.on(
       "complete",
@@ -77,15 +93,21 @@ const UploadForm = ({
         }
       }
     );
-  }, [session, uppy, bucket, folder, onUploadComplete]);
+
+    return () => {
+      uppy.off("file-added", handleFileAdded);
+    };
+  }, [session, uppy, STORAGE_BUCKET, folder, onUploadComplete]);
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <Dashboard uppy={uppy} />
-      </CardContent>
-    </Card>
+    <div className="mt-2" id="moment-form-page">
+      <Card>
+        <CardContent className="">
+          <Dashboard uppy={uppy} />
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
-export default UploadForm;
+export default PhotoUploadPage;
