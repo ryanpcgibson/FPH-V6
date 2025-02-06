@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { supabaseClient } from "@/db/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 interface PetCarouselProps {
   moments: any[];
@@ -32,6 +33,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   const photos = moments[currentMomentIndex]?.photos || [];
   const [emblaRef, emblaApi] = useEmblaCarousel();
   const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     photos.forEach(async (photo) => {
@@ -87,7 +89,15 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
             )}
             <CarouselItem>
               <div className="h-full flex items-center justify-center">
-                <Button>Add photo</Button>
+                <Button
+                  onClick={() =>
+                    navigate(
+                      `/app/family/${moments[currentMomentIndex].family_id}/moment/${moments[currentMomentIndex].id}/upload`
+                    )
+                  }
+                >
+                  Add photo
+                </Button>
               </div>
             </CarouselItem>
           </CarouselContent>

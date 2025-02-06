@@ -24,7 +24,6 @@ import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import EntityConnectionManager from "../EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
-import UploadForm from "@/components/UploadForm";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
