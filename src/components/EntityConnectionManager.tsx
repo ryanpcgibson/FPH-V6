@@ -31,7 +31,9 @@ interface EntityConnectionManagerProps {
   control: Control<any>;
   name: string;
   label: string;
+  onAdd?: () => void;
   addUrl?: string;
+  addButton?: React.ReactNode;
   connectedEntities: Entity[];
   availableEntities: Entity[];
   onConnect: (entityId: number) => void;
@@ -39,12 +41,13 @@ interface EntityConnectionManagerProps {
   entityType: "pet" | "location" | "moment" | "photo";
 }
 
-
 const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
   control,
   name,
   label,
+  onAdd,
   addUrl,
+  addButton,
   connectedEntities,
   availableEntities,
   onConnect,
@@ -53,7 +56,15 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
 }) => {
   const navigate = useNavigate();
   const { familyId } = useParams<{ familyId: string }>();
-  const baseUrl = `/app/family/${familyId}`; // TODO: set this in layout
+  const baseUrl = `/app/family/${familyId}`;
+
+  const handleAdd = () => {
+    if (onAdd) {
+      onAdd();
+    } else if (addUrl) {
+      navigate(`${baseUrl}/${addUrl}`);
+    }
+  };
 
   const getEntityDisplayName = (entity: Entity) => {
     const displayName = entity.name || entity.title || "Unnamed";
@@ -98,35 +109,32 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
                   </div>
                 ))}
               </div>
-              <Select
-                onValueChange={(value) => {
-                  if (value === "new") {
-                    console.log("addUrl", `${baseUrl}/${addUrl}`);
-                    if (addUrl) {
-                      navigate(`${baseUrl}/${addUrl}`);
+              {addButton || (
+                <Select
+                  onValueChange={(value) => {
+                    if (value === "new") {
+                      handleAdd();
                     } else {
-                      navigate(`${baseUrl}/${entityType}/add`);
+                      const entityId = parseInt(value, 10);
+                      field.onChange(entityId);
+                      onConnect(entityId);
                     }
-                    return;
-                  }
-                  const entityId = parseInt(value, 10);
-                  field.onChange(entityId);
-                  onConnect(entityId);
-                }}
-                value={field.value?.toString()}
-              >
-                <SelectTrigger className="w-full bg-background">
-                  <SelectValue placeholder={`Add ${entityType}...`} />
-                </SelectTrigger>
-                <SelectContent className="bg-background">
-                  <SelectItem value="new">Add new {entityType}...</SelectItem>
-                  {availableEntities.map((entity) => (
-                    <SelectItem key={entity.id} value={entity.id.toString()}>
-                      {getEntityDisplayName(entity)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  }}
+                  value={field.value?.toString()}
+                >
+                  <SelectTrigger className="w-full bg-background">
+                    <SelectValue placeholder={`Add ${entityType}...`} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background">
+                    <SelectItem value="new">Add new {entityType}...</SelectItem>
+                    {availableEntities.map((entity) => (
+                      <SelectItem key={entity.id} value={entity.id.toString()}>
+                        {getEntityDisplayName(entity)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </FormControl>
         </FormItem>

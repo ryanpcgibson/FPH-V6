@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,8 +22,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import EntityConnectionManager from "../EntityConnectionManager";
+import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
+import PhotoUploadModal from "@/components/photo/PhotoUploadModal";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -59,6 +60,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
   });
   const { familyData } = useFamilyDataContext();
   const { connectMoment, disconnectMoment } = useMoments();
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -224,7 +226,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
                 name="photo_connection"
                 label="Photos"
                 entityType="photo"
-                addUrl={`moment/${momentId}/upload`}
+                onAdd={() => setIsUploadModalOpen(true)}
                 connectedEntities={initialData?.photos || []}
                 availableEntities={[]}
                 onConnect={() => {}}
@@ -258,6 +260,18 @@ const MomentForm: React.FC<MomentFormProps> = ({
           </Card>
         </form>
       </Form>
+      {momentId && (
+        <PhotoUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          familyId={familyId}
+          momentId={momentId}
+          onUploadComplete={(files) => {
+            setIsUploadModalOpen(false);
+            // You might want to refresh the moment data here
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -12,6 +12,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import { supabaseClient } from "@/db/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import PhotoUploadModal from "@/components/photo/PhotoUploadModal";
 
 interface PetCarouselProps {
   moments: any[];
@@ -29,11 +30,14 @@ const getSignedUrlForPhoto = async (photo: Photo) => {
 const PetCarousel: React.FC<PetCarouselProps> = ({
   moments,
   currentMomentIndex,
+  setCurrentMomentIndex,
 }) => {
   const photos = moments[currentMomentIndex]?.photos || [];
   const [emblaRef, emblaApi] = useEmblaCarousel();
   const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
   const navigate = useNavigate();
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const currentMoment = moments[currentMomentIndex];
 
   useEffect(() => {
     photos.forEach(async (photo) => {
@@ -64,48 +68,53 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   return (
     <Card className="w-full h-full p-0">
       <CardContent className="h-full p-2">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            ref={emblaRef}
-            className="h-full"
-          >
-            <CarouselContent className="h-full">
-              {photos.map(
-                (photo: { id?: string; path: string }, index: number) => (
-                  <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
-                    <img
-                      src={photoUrls[photo.id]}
-                      alt={`Pet photo ${index + 1}`}
-                      className="w-full h-full object-contain"
-                    />
-                  </CarouselItem>
-                )
-              )}
-              <CarouselItem>
-                <div className="h-full flex items-center justify-center">
-                  <Button
-                    onClick={() =>
-                      navigate(
-                        `/app/family/${moments[currentMomentIndex].family_id}/moment/${moments[currentMomentIndex].id}/upload`
-                      )
-                    }
-                  >
-                    Add photo
-                  </Button>
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-            {photos.length > 0 && (
-              <>
-                <CarouselPrevious className="left-4" />
-                <CarouselNext className="right-4" />
-              </>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          ref={emblaRef}
+          className="h-full"
+        >
+          <CarouselContent className="h-full">
+            {photos.map(
+              (photo: { id?: string; path: string }, index: number) => (
+                <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
+                  <img
+                    src={photoUrls[photo.id]}
+                    alt={`Pet photo ${index + 1}`}
+                    className="w-full h-full object-contain"
+                  />
+                </CarouselItem>
+              )
             )}
-          </Carousel>
+            <CarouselItem>
+              <div className="h-full flex items-center justify-center">
+                <Button onClick={() => setIsUploadModalOpen(true)}>
+                  Add photo
+                </Button>
+              </div>
+            </CarouselItem>
+          </CarouselContent>
+          {photos.length > 0 && (
+            <>
+              <CarouselPrevious className="left-4" />
+              <CarouselNext className="right-4" />
+            </>
+          )}
+        </Carousel>
       </CardContent>
+      {currentMoment && (
+        <PhotoUploadModal
+          isOpen={isUploadModalOpen}
+          onClose={() => setIsUploadModalOpen(false)}
+          familyId={currentMoment.family_id}
+          momentId={currentMoment.id}
+          onUploadComplete={(files) => {
+            setIsUploadModalOpen(false);
+          }}
+        />
+      )}
     </Card>
   );
 };

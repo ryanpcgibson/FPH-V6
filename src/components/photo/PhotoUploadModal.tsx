@@ -2,63 +2,38 @@ import { useEffect, useState } from "react";
 import Uppy from "@uppy/core";
 import { DashboardModal } from "@uppy/react";
 import Tus from "@uppy/tus";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { supabaseStorageURL } from "@/db/supabaseClient";
 import { useAuthData } from "@/hooks/useAuthData";
-import { useParams } from "react-router-dom";
 import type { UploadResult, UppyFile } from "@uppy/core";
-
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 // Import Uppy CSS
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 
-interface UploadFormProps {
-  folder?: string;
+interface PhotoUploadModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  momentId: number;
   onUploadComplete?: (
     files: UppyFile<Record<string, unknown>, Record<string, never>>[]
   ) => void;
 }
 
-// TODO: Handle collisions
-const generateRandomFilename = (originalName: string) => {
-  const extension = originalName.split(".").pop();
-  const randomString = Array.from(crypto.getRandomValues(new Uint8Array(16)))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 16);
-  return `${randomString}.${extension}`;
-};
-
-const PhotoUploadPage = ({
-  folder = "",
+const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({
+  isOpen,
+  onClose,
+  momentId,
   onUploadComplete,
-}: UploadFormProps) => {
+}) => {
   const { session } = useAuthData();
   const [uppy] = useState(() => new Uppy());
   const STORAGE_BUCKET = "photos";
-  const { momentId: momentIdParam, familyId: familyIdParam } = useParams<{
-    momentId?: string;
-    familyId?: string;
-  }>();
-
-  if (!momentIdParam || !familyIdParam) {
-    throw new Error("momentId and familyId are required");
-  }
-  const momentId = parseInt(momentIdParam, 10);
-  const familyId = parseInt(familyIdParam, 10);
-  const storagePath = `${familyId}/${momentId}`;
+  const { selectedFamilyId } = useFamilyDataContext();
+  const storagePath = `${selectedFamilyId}/${momentId}`;
 
   useEffect(() => {
     if (!session?.access_token) return;
 
-    // Clean up any existing plugins and event listeners
     const tusPlugin = uppy.getPlugin("Tus");
     if (tusPlugin) {
       uppy.removePlugin(tusPlugin);
@@ -87,7 +62,6 @@ const PhotoUploadPage = ({
       if (!file.name) throw new Error("File must have a name");
       const randomFilename = generateRandomFilename(file.name);
       const objectName = `${storagePath}/${randomFilename}`;
-      console.log("Uploading to:", objectName);
 
       const supabaseMetadata = {
         bucketName: STORAGE_BUCKET,
@@ -108,9 +82,9 @@ const PhotoUploadPage = ({
       (
         result: UploadResult<Record<string, unknown>, Record<string, never>>
       ) => {
-        console.log("Upload complete", result);
         if (onUploadComplete && result.successful) {
           onUploadComplete(result.successful);
+          onClose();
         }
       }
     );
@@ -118,40 +92,25 @@ const PhotoUploadPage = ({
     return () => {
       uppy.off("file-added", handleFileAdded);
     };
-  }, [session, uppy, STORAGE_BUCKET, storagePath, onUploadComplete]);
+  }, [session, uppy, STORAGE_BUCKET, storagePath, onUploadComplete, onClose]);
 
   return (
-    <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-52px)] my-[8px]"
-      id="photo-upload-form"
-    >
-      {/* <div className="flex justify-center mt-2" id="photo-upload-form">
-      <div className="w-full max-w-2xl"> */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Upload Photos</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DashboardModal
-            uppy={uppy}
-            open={true}
-            proudlyDisplayPoweredByUppy={false}
-          />
-        </CardContent>
-        <CardFooter className="flex justify-end space-x-2">
-          <Button
-            variant="outline"
-            onClick={() =>
-              navigate(`/app/family/${familyId}/moment/${momentId}`)
-            }
-          >
-            Cancel
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
-    // </div>
+    <DashboardModal
+      uppy={uppy}
+      open={isOpen}
+      onRequestClose={onClose}
+      proudlyDisplayPoweredByUppy={false}
+    />
   );
 };
 
-export default PhotoUploadPage;
+const generateRandomFilename = (originalName: string) => {
+  const extension = originalName.split(".").pop();
+  const randomString = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 16);
+  return `${randomString}.${extension}`;
+};
+
+export default PhotoUploadModal;

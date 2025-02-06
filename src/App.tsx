@@ -27,7 +27,6 @@ import LocationFormPage from "@/pages/app/family/location/LocationFormPage";
 
 import MomentInfo from "@/pages/app/family/moment/MomentDetailPage";
 import MomentFormPage from "@/pages/app/family/moment/MomentFormPage";
-import PhotoUploadPage from "@/pages/app/family/moment/PhotoUploadPage";
 
 // import TestPage from "./pages/app/TestPage";
 import FamilyListPage from "@/pages/app/FamilyListPage";
@@ -78,7 +77,6 @@ function App() {
                     element={<MomentFormPage />}
                   />
                   <Route path="moment/add" element={<MomentFormPage />} />
-                  <Route path="moment/:momentId/upload" element={<PhotoUploadPage />} />
                   <Route path="data" element={<FamilyData />} />
                   <Route path="edit" element={<FamilyFormPage />} />
                 </Route>
