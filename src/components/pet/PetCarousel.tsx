@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Photo } from "@/db/db_types";
 import {
   Carousel,
@@ -10,6 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
+import { supabaseClient } from "@/db/supabaseClient";
 
 interface PetCarouselProps {
   moments: any[];
@@ -17,12 +18,29 @@ interface PetCarouselProps {
   setCurrentMomentIndex: (index: number) => void;
 }
 
+const getSignedUrlForPhoto = async (photo: Photo) => {
+  const { data, error } = await supabaseClient.storage
+    .from("photos")
+    .createSignedUrl(photo.name, 60);
+  return data?.signedUrl;
+};
+
 const PetCarousel: React.FC<PetCarouselProps> = ({
   moments,
   currentMomentIndex,
 }) => {
   const photos = moments[currentMomentIndex]?.photos || [];
   const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    photos.forEach(async (photo) => {
+      const url = await getSignedUrlForPhoto(photo);
+      if (url) {
+        setPhotoUrls((prev) => ({ ...prev, [photo.id]: url }));
+      }
+    });
+  }, [photos]);
 
   // Define the styles as JavaScript objects
   const emblaStyle = {
@@ -56,15 +74,17 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
           style={emblaStyle}
         >
           <CarouselContent style={emblaContainerStyle} className="h-full">
-            {photos.map((photo: Photo, index: number) => (
-              <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
-                <img
-                  src={`/src/assets/${photo.path}`}
-                  alt={`Pet photo ${index + 1}`}
-                  className="w-full h-full object-contain"
-                />
-              </CarouselItem>
-            ))}
+            {photos.map(
+              (photo: { id?: string; path: string }, index: number) => (
+                <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
+                  <img
+                    src={photoUrls[photo.id]}
+                    alt={`Pet photo ${index + 1}`}
+                    className="w-full h-full object-contain"
+                  />
+                </CarouselItem>
+              )
+            )}
             <CarouselItem>
               <div className="h-full flex items-center justify-center">
                 <Button>Add photo</Button>

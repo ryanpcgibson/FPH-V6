@@ -46,10 +46,6 @@ export type Pet = WithDateFields<PetDB>;
 export type PetInsert = WithDateFields<TablesInsert<"pets">>;
 export type PetUpdate = WithDateFields<TablesUpdate<"pets">>;
 
-export type Photo = Tables<"photos">;
-export type PhotoInsert = TablesInsert<"photos">;
-export type PhotoUpdate = TablesUpdate<"photos">;
-
 export type UserDB = Tables<"users">;
 export type User = UserDB;
 export type UserInsert = TablesInsert<"users">;
@@ -69,4 +65,17 @@ export type FamilyData = {
   moments: Moment[];
   overlappingPetsForLocations: Record<number, Pet[]>; // locationId -> overlapping pets
   overlappingLocationsForPets: Record<number, Location[]>; // petId -> overlapping locations
+  photos: Photo[];
+};
+
+// For photos specifically
+export type Photo = {
+  id: string; 
+  name: string; // :familyId/:momentId/filename.ext
+  bucket_id: string; // "photos"
+  owner: string; // user_id
+  mimeType: string;
+  created_at: Date;
+  updated_at: Date;
+  last_accessed_at: Date;
 };
