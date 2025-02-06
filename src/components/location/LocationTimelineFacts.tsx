@@ -16,11 +16,13 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 interface LocationTimelineFactsProps {
   locationId: number | null;
   onMomentClick: (momentId: number) => void;
+  currentMomentId?: number;
 }
 
 const LocationTimelineFacts: React.FC<LocationTimelineFactsProps> = ({
   locationId,
   onMomentClick,
+  currentMomentId,
 }) => {
   const { familyData, selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -73,6 +75,7 @@ const LocationTimelineFacts: React.FC<LocationTimelineFactsProps> = ({
               customOnDisconnect={() =>
                 disconnectMoment(moment.id, locationId!, "location")
               }
+              isSelected={currentMomentId === moment.id}
             />
           ))}
           {overlappingPets.length > 0 && (

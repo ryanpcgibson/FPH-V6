@@ -19,12 +19,15 @@ const LocationDetailPage: React.FC = () => {
   useEffect(() => {
     if (familyData && locationId) {
       const locationMoments = familyData.moments.filter((moment: Moment) =>
-        moment.locations?.some((location) => location.id === locationId)
+        moment.locations?.some(
+          (location: { id: number }) => location.id === locationId
+        )
       );
       setMoments(locationMoments);
 
       const queryParams = new URLSearchParams(location.search);
       const momentIdParam = queryParams.get("momentId");
+
       if (momentIdParam) {
         const momentId = parseInt(momentIdParam, 10);
         const index = locationMoments.findIndex(
@@ -33,9 +36,17 @@ const LocationDetailPage: React.FC = () => {
         if (index !== -1) {
           setCurrentMomentIndex(index);
         }
+      } else if (locationMoments.length === 1) {
+        // If there's only one moment, select it by default
+        setCurrentMomentIndex(0);
+        // Update URL to reflect the selected moment
+        navigate(`${location.pathname}?momentId=${locationMoments[0].id}`);
+      } else if (locationMoments.length > 0) {
+        // Set first moment as default if none specified
+        setCurrentMomentIndex(0);
       }
     }
-  }, [familyData, locationId, location.search]);
+  }, [familyData, locationId, location.search, navigate]);
 
   useEffect(() => {
     if (moments.length > 0) {
@@ -56,7 +67,7 @@ const LocationDetailPage: React.FC = () => {
 
   return (
     <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-44px)] mt-2"
+      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-52px)] my-[8px]"
       id="page-container"
     >
       <div
@@ -76,6 +87,7 @@ const LocationDetailPage: React.FC = () => {
         <LocationTimelineFacts
           locationId={locationId}
           onMomentClick={handleMomentClick}
+          currentMomentId={moments[currentMomentIndex]?.id}
         />
       </div>
     </div>

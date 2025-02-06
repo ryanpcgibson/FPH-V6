@@ -16,11 +16,13 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 interface PetTimelineFactsProps {
   petId: number | null;
   onMomentClick: (momentId: number) => void;
+  currentMomentId?: number;
 }
 
 const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   petId,
   onMomentClick,
+  currentMomentId,
 }) => {
   const { familyData, selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -71,6 +73,7 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
                 customOnDisconnect={() =>
                   disconnectMoment(moment.id, petId!, "pet")
                 }
+                isSelected={currentMomentId === moment.id}
               />
             );
           })}

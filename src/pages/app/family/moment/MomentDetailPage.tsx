@@ -30,11 +30,11 @@ const MomentDetailPage: React.FC = () => {
         className="flex flex-col flex-grow w-3/5 h-full"
         id="carousel-container"
       >
-            <PetCarousel
-              moments={moments}
-              currentMomentIndex={currentMomentIndex}
-              setCurrentMomentIndex={setCurrentMomentIndex}
-            />
+        <PetCarousel
+          moments={moments}
+          currentMomentIndex={currentMomentIndex}
+          setCurrentMomentIndex={setCurrentMomentIndex}
+        />
       </div>
       <div
         className="flex flex-row flex-grow w-2/5"

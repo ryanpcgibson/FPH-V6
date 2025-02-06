@@ -8,10 +8,12 @@ const EntityLink = ({
   item,
   itemType,
   customOnClick,
+  isSelected,
 }: {
   item: { name: string; id: number };
   itemType: string;
   customOnClick?: () => void;
+  isSelected?: boolean;
 }) => {
   const { selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -45,7 +47,13 @@ const EntityLink = ({
     >
       <div className="flex items-center gap-2">
         {customIcon}
-        <span className="truncate">{item.name}</span>
+        <span
+          className={`truncate ${
+            isSelected ? "text-accent text-bold" : "text-slate-500"
+          }`}
+        >
+          {item.name}
+        </span>
       </div>
     </div>
   );

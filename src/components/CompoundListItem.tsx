@@ -26,6 +26,7 @@ interface CompoundListItemProps {
   itemType: string;
   customOnClick?: () => void;
   customOnDisconnect?: () => void;
+  isSelected?: boolean;
 }
 
 const CompoundListItem: React.FC<CompoundListItemProps> = ({
@@ -33,6 +34,7 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
   itemType,
   customOnClick,
   customOnDisconnect,
+  isSelected = false,
 }) => {
   const { selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -44,13 +46,16 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
   };
 
   return (
-    <AccordionItem value={itemType + "-" + item.id.toString()}>
+    <AccordionItem
+      value={itemType + "-" + item.id.toString()}
+    >
       <AccordionTrigger>
         <div className="w-full flex items-center justify-between ">
           <EntityLink
             item={item}
             itemType={itemType}
             customOnClick={customOnClick}
+            isSelected={isSelected}
           />
         </div>
       </AccordionTrigger>

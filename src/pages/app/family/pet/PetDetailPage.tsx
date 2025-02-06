@@ -24,15 +24,24 @@ const PetDetailPage: React.FC = () => {
 
       const queryParams = new URLSearchParams(location.search);
       const momentIdParam = queryParams.get("momentId");
+
       if (momentIdParam) {
         const momentId = parseInt(momentIdParam, 10);
         const index = petMoments.findIndex((moment) => moment.id === momentId);
         if (index !== -1) {
           setCurrentMomentIndex(index);
         }
+      } else if (petMoments.length === 1) {
+        // If there's only one moment, select it by default
+        setCurrentMomentIndex(0);
+        // Update URL to reflect the selected moment
+        navigate(`${location.pathname}?momentId=${petMoments[0].id}`);
+      } else if (petMoments.length > 0) {
+        // Set first moment as default if none specified
+        setCurrentMomentIndex(0);
       }
     }
-  }, [familyData, petId, location.search]);
+  }, [familyData, petId, location.search, navigate]);
 
   useEffect(() => {
     if (moments.length > 0) {
@@ -53,7 +62,7 @@ const PetDetailPage: React.FC = () => {
 
   return (
     <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-44px)] mt-2"
+      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-52px)] my-[8px]"
       id="page-container"
     >
       <div
@@ -70,7 +79,11 @@ const PetDetailPage: React.FC = () => {
         className="flex flex-col flex-grow w-2/5 h-full"
         id="pet-detail-container"
       >
-        <PetTimelineFacts petId={petId} onMomentClick={handleMomentClick} />
+        <PetTimelineFacts
+          petId={petId}
+          onMomentClick={handleMomentClick}
+          currentMomentId={moments[currentMomentIndex]?.id}
+        />
       </div>
     </div>
   );

@@ -62,52 +62,49 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   };
 
   return (
-    <Card className="w-full h-full">
-      <CardContent className="h-full">
-        <CardHeader className="text-xl font-bold">
-          <CardTitle>{moments[currentMomentIndex]?.title}</CardTitle>
-        </CardHeader>
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          ref={emblaRef}
-          style={emblaStyle}
-        >
-          <CarouselContent style={emblaContainerStyle} className="h-full">
-            {photos.map(
-              (photo: { id?: string; path: string }, index: number) => (
-                <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
-                  <img
-                    src={photoUrls[photo.id]}
-                    alt={`Pet photo ${index + 1}`}
-                    className="w-full h-full object-contain"
-                  />
-                </CarouselItem>
-              )
+    <Card className="w-full h-full p-0">
+      <CardContent className="h-full p-2">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            ref={emblaRef}
+            className="h-full"
+          >
+            <CarouselContent className="h-full">
+              {photos.map(
+                (photo: { id?: string; path: string }, index: number) => (
+                  <CarouselItem key={photo.id || index} style={emblaSlideStyle}>
+                    <img
+                      src={photoUrls[photo.id]}
+                      alt={`Pet photo ${index + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                  </CarouselItem>
+                )
+              )}
+              <CarouselItem>
+                <div className="h-full flex items-center justify-center">
+                  <Button
+                    onClick={() =>
+                      navigate(
+                        `/app/family/${moments[currentMomentIndex].family_id}/moment/${moments[currentMomentIndex].id}/upload`
+                      )
+                    }
+                  >
+                    Add photo
+                  </Button>
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+            {photos.length > 0 && (
+              <>
+                <CarouselPrevious className="left-4" />
+                <CarouselNext className="right-4" />
+              </>
             )}
-            <CarouselItem>
-              <div className="h-full flex items-center justify-center">
-                <Button
-                  onClick={() =>
-                    navigate(
-                      `/app/family/${moments[currentMomentIndex].family_id}/moment/${moments[currentMomentIndex].id}/upload`
-                    )
-                  }
-                >
-                  Add photo
-                </Button>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-          {photos.length > 0 && (
-            <>
-              <CarouselPrevious className="left-4" />
-              <CarouselNext className="right-4" />
-            </>
-          )}
-        </Carousel>
+          </Carousel>
       </CardContent>
     </Card>
   );
