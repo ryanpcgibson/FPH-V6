@@ -144,32 +144,6 @@ export type Database = {
           },
         ]
       }
-      moment_photos: {
-        Row: {
-          created_at: string
-          moment_id: number
-          photo_id: string
-        }
-        Insert: {
-          created_at?: string
-          moment_id: number
-          photo_id: string
-        }
-        Update: {
-          created_at?: string
-          moment_id?: number
-          photo_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "moment_photos_moment_id_fkey"
-            columns: ["moment_id"]
-            isOneToOne: false
-            referencedRelation: "moments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       moments: {
         Row: {
           added_by: string
