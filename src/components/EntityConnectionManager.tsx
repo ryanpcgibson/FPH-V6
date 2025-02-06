@@ -35,7 +35,7 @@ interface EntityConnectionManagerProps {
   availableEntities: Entity[];
   onConnect: (entityId: number) => void;
   onDisconnect: (entityId: number) => void;
-  entityType: "pet" | "location" | "moment";
+  entityType: "pet" | "location" | "moment" | "photo";
 }
 
 const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({

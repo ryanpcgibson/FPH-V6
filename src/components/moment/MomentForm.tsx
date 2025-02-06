@@ -53,6 +53,11 @@ const MomentForm: React.FC<MomentFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
+  console.log("MomentForm", {
+    momentId,
+    familyId,
+    initialData,
+  });
   const { familyData } = useFamilyDataContext();
   const { connectMoment, disconnectMoment } = useMoments();
 
@@ -189,7 +194,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
               <EntityConnectionManager
                 control={form.control}
                 name="pet_connection"
-                label="Connected Pets"
+                label="Pets"
                 entityType="pet"
                 connectedEntities={initialData?.pets || []}
                 availableEntities={
@@ -204,7 +209,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
               <EntityConnectionManager
                 control={form.control}
                 name="location_connection"
-                label="Connected Locations"
+                label="Locations"
                 entityType="location"
                 connectedEntities={initialData?.locations || []}
                 availableEntities={
@@ -214,6 +219,16 @@ const MomentForm: React.FC<MomentFormProps> = ({
                 }
                 onConnect={handleConnectLocation}
                 onDisconnect={handleDisconnectLocation}
+              />
+              <EntityConnectionManager
+                control={form.control}
+                name="photo_connection"
+                label="Photos"
+                entityType="photo"
+                connectedEntities={initialData?.photos || []}
+                availableEntities={[]}
+                onConnect={() => {}}
+                onDisconnect={() => {}}
               />
             </CardContent>
 
