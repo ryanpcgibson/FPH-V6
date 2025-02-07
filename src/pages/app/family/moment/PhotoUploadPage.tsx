@@ -122,7 +122,7 @@ const PhotoUploadPage = ({
 
   return (
     <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-52px)] my-[8px]"
+      className="flex flex-row gap-2 h-full w-full max-h-[454px] my-[8px]"
       id="photo-upload-form"
     >
       {/* <div className="flex justify-center mt-2" id="photo-upload-form">

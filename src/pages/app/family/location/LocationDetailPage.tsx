@@ -67,7 +67,7 @@ const LocationDetailPage: React.FC = () => {
 
   return (
     <div
-      className="flex flex-row gap-2 h-full w-full max-h-[calc(100vh-52px)] my-[8px]"
+      className="flex flex-row gap-2 h-[calc(100vh-54px)] max-h-[446px] w-full my-[8px]"
       id="page-container"
     >
       <div

@@ -14,6 +14,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card } from "./ui/card";
 
 const NavMenu = () => {
   const navigate = useNavigate();
@@ -118,8 +119,11 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <div className="w-full bg-card rounded-b-lg flex justify-between pl-4 pr-0">
-      <div className="whitespace-nowrap flex items-center">
+    <Card className="w-full flex justify-between rounded-t-none">
+      <div
+        className="whitespace-nowrap flex items-center px-2"
+        id="app-header-text-container"
+      >
         <Link
           to={`/app/family/${selectedFamilyId}`}
           className="text-xl font-bold text-foreground"
@@ -128,7 +132,7 @@ const AppHeader: React.FC = () => {
         </Link>
       </div>
       <NavMenu />
-    </div>
+    </Card>
   );
 };
 
