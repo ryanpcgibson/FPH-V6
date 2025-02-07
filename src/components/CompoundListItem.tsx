@@ -1,25 +1,19 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import DateSpan from "./DateSpan";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { LinkBreak1Icon, Pencil1Icon } from "@radix-ui/react-icons";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  DotsHorizontalIcon,
+  Pencil1Icon,
+  LinkBreak1Icon,
+} from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
 import EntityLink from "@/components/EntityLink";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
+import TimelineListItem from "@/components/DetailListItem";
 
 interface CompoundListItemProps {
   item: any;
@@ -39,66 +33,39 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
   const { selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
 
-  const handleDisconnect = () => {
-    if (customOnDisconnect) {
-      customOnDisconnect();
-    }
-  };
+  const dropdownItems = [
+    {
+      icon: <Pencil1Icon className="mr-2" />,
+      label: "Edit",
+      onClick: () =>
+        navigate(
+          `/app/family/${selectedFamilyId}/${itemType}/${item.id.toString()}/edit`
+        ),
+    },
+  ];
+
+  if (itemType === "moment" && customOnDisconnect) {
+    dropdownItems.push({
+      icon: <LinkBreak1Icon className="mr-2" />,
+      label: "Disconnect",
+      onClick: customOnDisconnect,
+      className: "text-destructive focus:text-destructive",
+    });
+  }
 
   return (
-    <AccordionItem
-      value={itemType + "-" + item.id.toString()}
+    <TimelineListItem
+      startDate={item.start_date}
+      endDate={item.end_date}
+      dropdownItems={dropdownItems}
     >
-      <AccordionTrigger>
-        <div className="w-full flex items-center justify-between ">
-          <EntityLink
-            item={item}
-            itemType={itemType}
-            customOnClick={customOnClick}
-            isSelected={isSelected}
-          />
-        </div>
-      </AccordionTrigger>
-      <AccordionContent>
-        <div className="flex justify-between items-center w-full">
-          <DateSpan start_date={item.start_date} end_date={item.end_date} />
-          <div className="flex items-center gap-2">
-            <Pencil1Icon
-              className="cursor-pointer hover:opacity-70"
-              onClick={() =>
-                navigate(
-                  `/app/family/${selectedFamilyId}/${itemType}/${item.id.toString()}/edit`
-                )
-              }
-            />
-            {itemType === "moment" && (
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <LinkBreak1Icon className="cursor-pointer hover:opacity-70" />
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Manage Connection</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to disconnect this {itemType}?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDisconnect}
-                      className="bg-destructive hover:bg-destructive/90"
-                    >
-                      Disconnect
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
-          </div>
-        </div>
-      </AccordionContent>
-    </AccordionItem>
+      <EntityLink
+        item={item}
+        itemType={itemType}
+        customOnClick={customOnClick}
+        isSelected={isSelected}
+      />
+    </TimelineListItem>
   );
 };
 

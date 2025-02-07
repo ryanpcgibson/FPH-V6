@@ -61,11 +61,13 @@
   .cheerful {
     --tiffany-blue: 168 50% 87%;
     --tiffany-blue-desaturated: 168 50% 77%; /* Desaturated Tiffany Blue */
-    --cornflower: 210 20% 28%;
+    --cornflower: 210 28% 35%;
     --hot-pink: 330 89% 65%;
     --cyan: 180 80% 60%;
     --white: 0 0% 100%;
+    --dark-blue-gray: 210 58% 30%;
 
+    --title-color: var(--black);
     --background: var(--white);
     --foreground: var(--cornflower);
     --card: var(--tiffany-blue);
@@ -73,7 +75,7 @@
     --popover: var(--tiffany-blue);
     --popover-foreground: var(--cornflower);
     --primary: var(--hot-pink);
-    --primary-foreground: var(--white);
+    --primary-foreground: var(--dark-blue-gray);
     --secondary: var(--cyan);
     --secondary-foreground: var(--white);
     --muted: var(--tiffany-blue-desaturated);

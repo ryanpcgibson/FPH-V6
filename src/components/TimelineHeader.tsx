@@ -17,12 +17,15 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
       className="sticky top-0 z-50 bg-white w-full"
       id="column-header-container"
     >
-      <div className="flex w-full justify-end border-white" id="column-headers">
+      <div
+        className="flex w-full justify-end border-t-2 border-background"
+        id="column-headers"
+      >
         {headerTexts.map((header, index) => (
           <div
             key={index}
             style={{ width: `${cellWidth}px` }}
-            className="h-10 border-t-4 box-border flex items-center justify-center font-bold rounded-lg bg-foreground text-background border-2 border-white"
+            className="h-10 box-border flex items-center justify-center font-bold rounded-lg bg-foreground text-background border-2 border-background"
             id={`column-header-${index}`}
           >
             {header}

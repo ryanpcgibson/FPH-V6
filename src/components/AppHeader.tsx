@@ -126,7 +126,7 @@ const AppHeader: React.FC = () => {
       >
         <Link
           to={`/app/family/${selectedFamilyId}`}
-          className="text-xl font-bold text-foreground"
+          className="text-xl font-bold text-primary-foreground"
         >
           {selectedFamilyName && `The ${selectedFamilyName} Family`}
         </Link>

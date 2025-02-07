@@ -4,16 +4,20 @@ import PawPrintIcon from "@/components/PawPrintIcon";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
 
-const EntityLink = ({
-  item,
-  itemType,
-  customOnClick,
-  isSelected,
-}: {
+interface EntityLinkProps {
   item: { name: string; id: number };
   itemType: string;
   customOnClick?: () => void;
   isSelected?: boolean;
+  iconOnly?: boolean;
+  textOnly?: boolean;
+}
+
+const EntityLink: React.FC<EntityLinkProps> = ({
+  item,
+  itemType,
+  customOnClick,
+  isSelected,
 }) => {
   const { selectedFamilyId } = useFamilyDataContext();
   const navigate = useNavigate();
@@ -28,28 +32,28 @@ const EntityLink = ({
     }
   };
 
-  let customIcon = undefined;
+  let icon = undefined;
   if (itemType === "moment") {
-    customIcon = <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />;
+    icon = <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />;
   } else if (itemType === "location") {
-    customIcon = <GlobeIcon />;
+    icon = <GlobeIcon />;
   } else if (itemType === "pet") {
-    customIcon = <PawPrintIcon />;
+    icon = <PawPrintIcon />;
   }
 
   return (
     <div
-      className="cursor-pointer hover:underline w-full"
       onClick={(e) => {
-        e.stopPropagation(); // Prevent accordion from toggling
+        e.stopPropagation();
         handleClick();
       }}
+      className="cursor-pointer hover:underline w-full"
     >
       <div className="flex items-center gap-2">
-        {customIcon}
+        <span className="text-primary-foreground">{icon}</span>
         <span
           className={`truncate ${
-            isSelected ? "text-accent text-bold" : "text-slate-500"
+            isSelected ? "text-accent font-medium" : "text-primary-foreground"
           }`}
         >
           {item.name}
