@@ -3,7 +3,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import type { FamilyData, Moment } from "@/db/db_types";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import PetCarousel from "@/components/pet/PetCarousel";
-import PetTimelineFacts from "@/components/pet/PetTimelineFacts";
+import PetConnectionList from "@/components/pet/PetConnectionList";
 
 const PetDetailPage: React.FC = () => {
   const { petId: petIdParam } = useParams<{ petId: string }>();
@@ -79,7 +79,7 @@ const PetDetailPage: React.FC = () => {
         className="flex flex-col flex-grow w-2/5 h-full"
         id="pet-detail-container"
       >
-        <PetTimelineFacts
+        <PetConnectionList
           petId={petId}
           onMomentClick={handleMomentClick}
           currentMomentId={moments[currentMomentIndex]?.id}

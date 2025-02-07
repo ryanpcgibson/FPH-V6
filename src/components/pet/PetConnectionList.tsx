@@ -10,7 +10,7 @@ import DetailListItem, {
 } from "@/components/DetailListItem";
 import EntityLink from "@/components/EntityLink";
 
-interface PetTimelineFactsProps {
+interface PetConnectionListProps {
   petId: number | null;
   onMomentClick: (momentId: number) => void;
   currentMomentId?: number;
@@ -25,7 +25,7 @@ interface TimelineItem {
   originalItem: any;
 }
 
-const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
+const PetConnectionList: React.FC<PetConnectionListProps> = ({
   petId,
   onMomentClick,
   currentMomentId,
@@ -48,7 +48,7 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
 
   console.log("overlappingLocations", overlappingLocations);
   console.log("overlappingPets", overlappingPets);
-  
+
   // Combine moments and locations (excluding pet)
   const timelineItems: TimelineItem[] = [
     ...petMoments.map((moment) => ({
@@ -153,4 +153,4 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   );
 };
 
-export default PetTimelineFacts;
+export default PetConnectionList;

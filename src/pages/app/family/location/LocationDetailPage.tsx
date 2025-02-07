@@ -4,7 +4,7 @@ import type { FamilyData, Moment } from "@/db/db_types";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { Card, CardContent } from "@/components/ui/card";
 import PetCarousel from "@/components/pet/PetCarousel";
-import LocationTimelineFacts from "@/components/location/LocationTimelineFacts";
+import LocationConnectionList from "@/components/location/LocationConnectionList";
 
 const LocationDetailPage: React.FC = () => {
   const { locationId: locationIdParam } = useParams<{ locationId: string }>();
@@ -19,9 +19,7 @@ const LocationDetailPage: React.FC = () => {
   useEffect(() => {
     if (familyData && locationId) {
       const locationMoments = familyData.moments.filter((moment: Moment) =>
-        moment.locations?.some(
-          (location: { id: number }) => location.id === locationId
-        )
+        moment.locations?.some((loc) => loc.id === locationId)
       );
       setMoments(locationMoments);
 
@@ -37,12 +35,9 @@ const LocationDetailPage: React.FC = () => {
           setCurrentMomentIndex(index);
         }
       } else if (locationMoments.length === 1) {
-        // If there's only one moment, select it by default
         setCurrentMomentIndex(0);
-        // Update URL to reflect the selected moment
         navigate(`${location.pathname}?momentId=${locationMoments[0].id}`);
       } else if (locationMoments.length > 0) {
-        // Set first moment as default if none specified
         setCurrentMomentIndex(0);
       }
     }
@@ -84,7 +79,7 @@ const LocationDetailPage: React.FC = () => {
         className="flex flex-col flex-grow w-2/5 h-full"
         id="location-detail-container"
       >
-        <LocationTimelineFacts
+        <LocationConnectionList
           locationId={locationId}
           onMomentClick={handleMomentClick}
           currentMomentId={moments[currentMomentIndex]?.id}
