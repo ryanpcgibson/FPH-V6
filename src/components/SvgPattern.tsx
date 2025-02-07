@@ -5,17 +5,19 @@ interface SvgPatternProps {
 }
 
 // Import SVG files from the patterns directory
-const patterns: Record<string, string> = Object.fromEntries(
-  Object.entries(
-    import.meta.glob("@/assets/patterns/*.svg", {
-      eager: true,
-      as: "url",
-    })
-  ).map(([path, url]) => [
-    path.split("/").pop()?.replace(".svg", ""),
-    url as string,
-  ])
-);
+const patterns: Record<string, string> = {};
+const modules = import.meta.glob("@/assets/patterns/*.svg", {
+  eager: true,
+  import: "default", // Change to import the default export
+});
+
+// Process the modules to create the patterns dictionary
+Object.entries(modules).forEach(([path, module]) => {
+  const patternId = path.split("/").pop()?.replace(".svg", "");
+  if (patternId) {
+    patterns[patternId] = module as string;
+  }
+});
 
 const SvgPattern: React.FC<SvgPatternProps> = ({ patternId }) => {
   const patternSrc = patterns[patternId];
@@ -29,7 +31,7 @@ const SvgPattern: React.FC<SvgPatternProps> = ({ patternId }) => {
     <div
       className="inset-0 bg-gray-100 w-full h-full"
       style={{
-        backgroundImage: `url(${patternSrc})`,
+        backgroundImage: `url("${patternSrc}")`,
         backgroundRepeat: "repeat",
       }}
     />
