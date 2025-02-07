@@ -23,6 +23,10 @@ const DataPage: React.FC = () => {
         locations: [],
         users: [],
         moments: [],
+        overlappingPetsForLocations: {},
+        overlappingLocationsForPets: {},  
+        overlappingPetsForPets: {},
+        overlappingLocationsForLocations: {},
       };
     } else {
       return {
@@ -42,6 +46,11 @@ const DataPage: React.FC = () => {
           start_date: convertDateToISODateString(moment.start_date),
           end_date: convertDateToISODateString(moment.end_date || undefined),
         })),
+        overlappingPetsForLocations: familyData.overlappingPetsForLocations,
+        overlappingLocationsForPets: familyData.overlappingLocationsForPets,
+        overlappingPetsForPets: familyData.overlappingPetsForPets,
+        overlappingLocationsForLocations:
+          familyData.overlappingLocationsForLocations,
       };
     }
   };

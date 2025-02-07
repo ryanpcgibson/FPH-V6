@@ -41,10 +41,14 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
 
   const overlappingLocations =
     familyData.overlappingLocationsForPets[petId] || [];
+  const overlappingPets = familyData.overlappingPetsForPets[petId] || [];
   const petMoments = familyData.moments.filter((moment) =>
     moment.pets?.some((p) => p.id === petId)
   );
 
+  console.log("overlappingLocations", overlappingLocations);
+  console.log("overlappingPets", overlappingPets);
+  
   // Combine moments and locations (excluding pet)
   const timelineItems: TimelineItem[] = [
     ...petMoments.map((moment) => ({
@@ -62,6 +66,13 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
       end_date: location.end_date,
       type: "location" as const,
       originalItem: location,
+    })),
+    ...overlappingPets.map((pet) => ({
+      id: pet.id,
+      name: pet.name,
+      start_date: pet.start_date,
+      type: "pet" as const,
+      originalItem: pet,
     })),
   ];
 
@@ -106,7 +117,10 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
           <DetailListItem
             key={`${item.type}-${item.id}`}
             // Only the currently selected Pet/Location will be displayed as 'start_date YYYY - ' with the dash implying still current. For anything else with just start_date, we assume it's a moment in time and display 'start_date' YYYY in the list
-            dateDisplay={getDateDisplay(item.start_date, item.end_date || item.start_date)}
+            dateDisplay={getDateDisplay(
+              item.start_date,
+              item.end_date || item.start_date
+            )}
             dropdownItems={[
               createEditItem(`${item.type}/${item.id}/edit`, () =>
                 navigate(
