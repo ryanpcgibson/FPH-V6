@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +9,6 @@ import {
   Pencil1Icon,
   LinkBreak1Icon,
 } from "@radix-ui/react-icons";
-import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { useNavigate } from "react-router-dom";
 
 interface DropdownItem {
   icon: React.ReactNode;
@@ -20,9 +17,8 @@ interface DropdownItem {
   className?: string;
 }
 
-interface TimelineListItemProps {
-  startDate: Date;
-  endDate?: Date | undefined;
+interface DetailListItemProps {
+  dateDisplay: string;
   children: React.ReactNode;
   dropdownItems: DropdownItem[];
 }
@@ -44,20 +40,11 @@ export const createDisconnectItem = (onClick: () => void): DropdownItem => ({
   className: "text-destructive focus:text-destructive",
 });
 
-const TimelineListItem: React.FC<TimelineListItemProps> = ({
-  startDate,
-  endDate,
+const DetailListItem: React.FC<DetailListItemProps> = ({
+  dateDisplay,
   children,
   dropdownItems,
 }) => {
-  const startYear = format(new Date(String(startDate)), "yyyy");
-  const endYear = endDate ? format(new Date(String(endDate)), "yyyy") : null;
-
-  const dateDisplay =
-    endYear && endYear !== startYear
-      ? `'${startYear.slice(-2)} - '${endYear.slice(-2)}`
-      : startYear;
-
   return (
     <div className="grid grid-cols-[1fr_40px_80px] gap-2 items-center py-2 px-1 hover:bg-accent/5">
       {children}
@@ -85,4 +72,4 @@ const TimelineListItem: React.FC<TimelineListItemProps> = ({
   );
 };
 
-export default TimelineListItem;
+export default DetailListItem;

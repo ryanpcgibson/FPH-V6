@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import TimelineListItem from "@/components/DetailListItem";
+import DetailListItem from "@/components/DetailListItem";
 
 interface CompoundListItemProps {
   item: any;
@@ -54,7 +54,7 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
   }
 
   return (
-    <TimelineListItem
+    <DetailListItem
       startDate={item.start_date}
       endDate={item.end_date}
       dropdownItems={dropdownItems}
@@ -65,7 +65,7 @@ const CompoundListItem: React.FC<CompoundListItemProps> = ({
         customOnClick={customOnClick}
         isSelected={isSelected}
       />
-    </TimelineListItem>
+    </DetailListItem>
   );
 };
 
