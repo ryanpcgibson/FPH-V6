@@ -61,12 +61,9 @@ const LocationDetailPage: React.FC = () => {
   };
 
   return (
-    <div
-      className="flex flex-row gap-2 h-[calc(100vh-54px)] max-h-[446px] w-full my-[8px]"
-      id="page-container"
-    >
+    <div className="w-full h-full flex flex-row gap-2" id="page-container">
       <div
-        className="flex flex-col flex-grow w-3/5 overflow-hidden h-full"
+        className="w-3/5 h-full flex-grow overflow-hidden "
         id="carousel-container"
       >
         <PetCarousel
@@ -76,7 +73,7 @@ const LocationDetailPage: React.FC = () => {
         />
       </div>
       <div
-        className="flex flex-col flex-grow w-2/5 h-full"
+        className="w-2/5 h-full flex flex-col flex-grow overflow-auto"
         id="location-detail-container"
       >
         <LocationConnectionList

@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import DatePickerWithInput from "../DatePickerWithInput";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -87,14 +88,17 @@ const PetForm: React.FC<PetFormProps> = ({
   }, [petId, familyId, initialData, form]);
 
   return (
-    <div className="flex justify-center" id="pet-form">
+    <div
+      className="w-full h-full flex flex-grow justify-center overflow-y-auto"
+      id="pet-form-container"
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent className="space-y-2 pt-2">
+            <CardContent className="">
               <FormField
                 control={form.control}
                 name="name"
@@ -118,10 +122,11 @@ const PetForm: React.FC<PetFormProps> = ({
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormLabel className="w-1/4">Start Date</FormLabel>
-                    <FormControl className="flex-1">
-                      <DatePicker
+                    <FormControl>
+                      <DatePickerWithInput
                         date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                        setDate={field.onChange}
+                        required={true}
                       />
                     </FormControl>
                     <FormMessage />
@@ -134,10 +139,11 @@ const PetForm: React.FC<PetFormProps> = ({
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormLabel className="w-1/4">End Date</FormLabel>
-                    <FormControl className="flex-1">
-                      <DatePicker
+                    <FormControl>
+                      <DatePickerWithInput
                         date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                        setDate={field.onChange}
+                        required={false}
                       />
                     </FormControl>
                     <FormMessage />
@@ -165,7 +171,7 @@ const PetForm: React.FC<PetFormProps> = ({
               <EntityConnectionManager
                 control={form.control}
                 name="moment_connection"
-                label="Connected Moments"
+                label="Moments"
                 entityType="moment"
                 connectedEntities={
                   familyData?.moments?.filter((m) =>

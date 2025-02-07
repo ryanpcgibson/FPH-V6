@@ -1,5 +1,6 @@
 import React from "react";
-import { Trash } from "lucide-react";
+import { LinkBreak1Icon } from "@radix-ui/react-icons";
+
 import { format } from "date-fns";
 import {
   Select,
@@ -86,15 +87,15 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex items-start space-x-2">
-          <FormLabel className="w-1/4 pt-2">{label}</FormLabel>
-          <FormControl className="flex-1">
-            <div className="space-y-2">
-              <div className="flex flex-col w-full space-y-2 pb-2">
+        <FormItem className="flex items-center space-x-2">
+          <FormLabel className="w-1/4">{label}</FormLabel>
+          <FormControl className="flex-1 mb-2">
+            <div className="">
+              <div className="flex flex-col w-ful">
                 {connectedEntities.map((entity) => (
                   <div
                     key={entity.id}
-                    className="flex items-center justify-between rounded-md border border-input bg-background px-3 text-sm ring-offset-background"
+                    className="flex items-center justify-between rounded-md border border-input bg-background px-3 text-sm ring-offset-background mb-2"
                   >
                     <span className="text-sm">
                       {getEntityDisplayName(entity)}
@@ -104,7 +105,7 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
                       size="sm"
                       onClick={() => onDisconnect(entity.id)}
                     >
-                      <Trash className="h-4 w-4 text-red-500" />
+                      <LinkBreak1Icon className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                 ))}

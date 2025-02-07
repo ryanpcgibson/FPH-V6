@@ -33,9 +33,8 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
   setCurrentMomentIndex,
 }) => {
   const photos = moments[currentMomentIndex]?.photos || [];
-  const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [emblaRef] = useEmblaCarousel();
   const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
-  const navigate = useNavigate();
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const currentMoment = moments[currentMomentIndex];
 
@@ -64,7 +63,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
               (photo: { id?: string; path: string }, index: number) => (
                 <CarouselItem
                   key={photo.id || index}
-                  className="flex-[0_0_100%] min-w-0 h-full rounded-lg"
+                  className="flex-[0_0_100%] min-w-0 h-full rounded-lg flex items-center"
                 >
                   <img
                     src={photoUrls[photo.id || ""]}
@@ -74,7 +73,7 @@ const PetCarousel: React.FC<PetCarouselProps> = ({
                 </CarouselItem>
               )
             )}
-            <CarouselItem className="rounded-lg overflow-hidden">
+            <CarouselItem className="rounded-lg overflow-hidden ">
               <div className="h-full flex items-center justify-center">
                 <Button onClick={() => setIsUploadModalOpen(true)}>
                   Add photo

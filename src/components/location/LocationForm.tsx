@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DatePicker from "../DatePicker";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 import { Location } from "@/db/db_types";
 import {
   Form,
@@ -18,6 +20,13 @@ import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
+import { format, parse, isValid } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import DatePickerWithInput from "../DatePickerWithInput";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -67,6 +76,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
 
   const { familyData } = useFamilyDataContext();
   const { connectMoment, disconnectMoment } = useMoments();
+
   useEffect(() => {
     if (locationId === null) {
       form.setValue("name", "");
@@ -82,14 +92,17 @@ const LocationForm: React.FC<LocationFormProps> = ({
   }, [locationId, familyId, initialData, form]);
 
   return (
-    <div className="flex justify-center">
+    <div
+      className="w-full h-full flex flex-grow justify-center overflow-y-auto"
+      id="location-form-container"
+    >
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent className="space-y-2 pt-2">
+            <CardContent className="">
               <FormField
                 control={form.control}
                 name="name"
@@ -131,10 +144,11 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormLabel className="w-1/4">Start Date</FormLabel>
-                    <FormControl className="flex-1">
-                      <DatePicker
+                    <FormControl>
+                      <DatePickerWithInput
                         date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                        setDate={field.onChange}
+                        required={true}
                       />
                     </FormControl>
                     <FormMessage />
@@ -147,10 +161,11 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
                     <FormLabel className="w-1/4">End Date</FormLabel>
-                    <FormControl className="flex-1">
-                      <DatePicker
+                    <FormControl>
+                      <DatePickerWithInput
                         date={field.value}
-                        setDate={(date) => field.onChange(date)}
+                        setDate={field.onChange}
+                        required={false}
                       />
                     </FormControl>
                     <FormMessage />
@@ -160,7 +175,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
               <EntityConnectionManager
                 control={form.control}
                 name="moment_connection"
-                label="Connected Moments"
+                label="Moments"
                 entityType="moment"
                 connectedEntities={
                   familyData?.moments?.filter((m) =>

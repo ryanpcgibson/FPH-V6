@@ -46,7 +46,7 @@ const LocationFormPage = () => {
   if (error) return <div>Error loading family data: {error.message}</div>;
 
   return (
-    <div className="mt-2" id="location-form-page">
+    <div className="w-full h-full" id="page-container">
       <LocationForm
         locationId={locationId}
         familyId={currentFamilyId}

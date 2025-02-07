@@ -44,7 +44,7 @@ const PetFormPage = () => {
   if (error) return <div>Error loading family data: {error.message}</div>;
 
   return (
-    <div className="mt-2" id="pet-form-page">
+    <div className="w-full h-full" id="page-container">
       <PetForm
         petId={petId}
         familyId={currentFamilyId}
