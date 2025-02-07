@@ -4,19 +4,18 @@ interface SvgPatternProps {
   patternId: string;
 }
 
-// Use import.meta.glob to import all SVG files from the patterns directory
-const patternModules = import.meta.glob("@/assets/patterns/*.svg", {
-  eager: true,
-});
-
-// Create a dictionary of all patterns
-const patterns: { [key: string]: string } = {};
-Object.entries(patternModules).forEach(([path, module]) => {
-  const patternId = path.split("/").pop()?.replace(".svg", "");
-  if (patternId) {
-    patterns[patternId] = (module as { default: string }).default;
-  }
-});
+// Import SVG files from the patterns directory
+const patterns: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob("@/assets/patterns/*.svg", {
+      eager: true,
+      as: "url",
+    })
+  ).map(([path, url]) => [
+    path.split("/").pop()?.replace(".svg", ""),
+    url as string,
+  ])
+);
 
 const SvgPattern: React.FC<SvgPatternProps> = ({ patternId }) => {
   const patternSrc = patterns[patternId];
