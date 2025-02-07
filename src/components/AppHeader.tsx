@@ -119,7 +119,7 @@ const AppHeader: React.FC = () => {
   );
 
   return (
-    <Card className="w-full flex justify-between rounded-t-none">
+    <Card className="w-full flex justify-end rounded-t-none">
       <div
         className="whitespace-nowrap flex items-center px-2"
         id="app-header-text-container"

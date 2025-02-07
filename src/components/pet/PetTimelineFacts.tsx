@@ -37,57 +37,63 @@ const PetTimelineFacts: React.FC<PetTimelineFactsProps> = ({
   );
 
   return (
-    <Card className="w-full h-full overflow-y-auto">
-      <CardContent className="p-4 space-y-1">
+    <Card className="w-full h-full p-0 overflow-y-auto">
+      <CardContent className="h-full p-2">
+        <DetailListItem
+          startDate={pet.start_date}
+          endDate={pet.end_date}
+          dropdownItems={[
+            createEditItem(`pet/${pet.id}/edit`, () =>
+              navigate(`/app/family/${selectedFamilyId}/pet/${pet.id}/edit`)
+            ),
+          ]}
+        >
+          <span className="text-xl font-bold text-primary-foreground">
+            {pet.name}
+          </span>
+        </DetailListItem>
+
+        {petMoments.map((moment) => (
           <DetailListItem
-            startDate={pet.start_date}
-            endDate={pet.end_date}
+            key={moment.id}
+            startDate={moment.start_date}
+            endDate={moment.end_date}
             dropdownItems={[
-              createEditItem("pet", pet.id),
+              createEditItem(`moment/${moment.id}/edit`, () =>
+                navigate(
+                  `/app/family/${selectedFamilyId}/moment/${moment.id}/edit`
+                )
+              ),
+              createDisconnectItem(() =>
+                disconnectMoment(moment.id, petId!, "pet")
+              ),
             ]}
           >
-            <span className="text-xl font-bold text-primary-foreground">
-              {pet.name}
-            </span>
+            <EntityLink
+              item={{ ...moment, name: moment.title }}
+              itemType="moment"
+              customOnClick={() => onMomentClick(moment.id)}
+              isSelected={currentMomentId === moment.id}
+            />
           </DetailListItem>
+        ))}
 
-          {petMoments.map((moment) => (
-            <DetailListItem
-              startDate={moment.start_date}
-              endDate={moment.end_date}
-              dropdownItems={[
-                createEditItem("moment", moment.id),
-                createDisconnectItem(
-                  moment.id,
-                  petId!,
-                  "pet",
-                  disconnectMoment
-                ),
-              ]}
-            >
-              <EntityLink
-                item={{ ...moment, name: moment.title }}
-                itemType="moment"
-                customOnClick={() => onMomentClick(moment.id)}
-                isSelected={currentMomentId === moment.id}
-              />
-            </DetailListItem>
-          ))}
-
-          {overlappingLocations.map((location) => (
-            <DetailListItem
-              startDate={location.start_date}
-              endDate={location.end_date}
-              dropdownItems={[
-                createEditItem(
-                  "location",
-                  location.id,
-                ),
-              ]}
-            >
-              <EntityLink item={location} itemType="location" />
-            </DetailListItem>
-          ))}
+        {overlappingLocations.map((location) => (
+          <DetailListItem
+            key={location.id}
+            startDate={location.start_date}
+            endDate={location.end_date}
+            dropdownItems={[
+              createEditItem(`location/${location.id}/edit`, () =>
+                navigate(
+                  `/app/family/${selectedFamilyId}/location/${location.id}/edit`
+                )
+              ),
+            ]}
+          >
+            <EntityLink item={location} itemType="location" />
+          </DetailListItem>
+        ))}
       </CardContent>
     </Card>
   );

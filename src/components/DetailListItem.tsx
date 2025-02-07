@@ -27,34 +27,20 @@ interface TimelineListItemProps {
   dropdownItems: DropdownItem[];
 }
 
-// Helper functions to generate common dropdown items
+// Helper functions to create dropdown items without hooks
 export const createEditItem = (
-  itemType: string,
-  itemId: number
-): DropdownItem => {
-  const { selectedFamilyId } = useFamilyDataContext();
-  const navigate = useNavigate();
-  return {
-    icon: <Pencil1Icon className="mr-2" />,
-    label: "Edit",
-    onClick: () =>
-      navigate(`/app/family/${selectedFamilyId}/${itemType}/${itemId}/edit`),
-  };
-};
-
-export const createDisconnectItem = (
-  momentId: number,
-  parentId: number,
-  parentType: string,
-  disconnectMoment: (
-    momentId: number,
-    parentId: number,
-    parentType: string
-  ) => void
+  path: string,
+  onClick: () => void
 ): DropdownItem => ({
+  icon: <Pencil1Icon className="mr-2" />,
+  label: "Edit",
+  onClick,
+});
+
+export const createDisconnectItem = (onClick: () => void): DropdownItem => ({
   icon: <LinkBreak1Icon className="mr-2" />,
   label: "Disconnect",
-  onClick: () => disconnectMoment(momentId, parentId, parentType),
+  onClick,
   className: "text-destructive focus:text-destructive",
 });
 
@@ -73,13 +59,13 @@ const TimelineListItem: React.FC<TimelineListItemProps> = ({
       : startYear;
 
   return (
-    <div className="grid grid-cols-[1fr_40px_60px] gap-2 items-center py-2 px-1 hover:bg-accent/5">
+    <div className="grid grid-cols-[1fr_40px_80px] gap-2 items-center py-2 px-1 hover:bg-accent/5">
       {children}
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
           <DotsHorizontalIcon className="cursor-pointer hover:opacity-70 text-primary-foreground" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="bg-background">
           {dropdownItems.map((item, index) => (
             <DropdownMenuItem
               key={index}
