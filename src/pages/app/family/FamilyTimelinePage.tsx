@@ -1,6 +1,4 @@
 import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useTimelineSections } from "@/hooks/useTimelineSections";
 import TimelineHeader from "@/components/TimelineHeader";
 import FamilyTimelineSection from "@/components/family/FamilyTimelineSection";
@@ -15,8 +13,6 @@ const FamilyTimelinePage: React.FC = () => {
 
   const { sections, yearsArray } = useTimelineSections();
   const minWidth = (yearsArray.length + 1) * cellWidth + headerWidth;
-
-  const { error, isLoading } = useFamilyDataContext();
 
   const scrollToYear = (year: number) => {
     if (gridInnerRef.current) {
@@ -35,12 +31,7 @@ const FamilyTimelinePage: React.FC = () => {
     scrollToYear(currentYear);
   }, [yearsArray]);
 
-  if (error) {
-    return <div>Error fetching family data: {error.message}</div>;
-  }
-  if (isLoading) {
-    return <div>Loading family data...</div>;
-  }
+
 
   return (
     <div className="flex flex-row h-full" id="page-container">

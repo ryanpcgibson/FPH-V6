@@ -1,6 +1,6 @@
 import React from "react";
 import TimelineRow from "./FamilyTimelineRow";
-import type { TimelineSection as TimelineSectionType } from "@/types/timeline";
+import type { TimelineSection as TimelineSectionType } from "@/types/timeline"; // TODO: move to inline types
 
 interface TimelineSectionProps {
   section: TimelineSectionType;
