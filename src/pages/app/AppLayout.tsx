@@ -1,7 +1,15 @@
 import { Outlet } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
 
 const AppLayout = () => {
+  const { error, isLoading } = useFamilyDataContext();
+  if (error) {
+    return <div>Error fetching family data: {error.message}</div>;
+  }
+  if (isLoading) {
+    return <div>Loading family data...</div>;
+  }
   return (
     <div
       className="flex flex-col w-screen h-screen max-w-[1000px] max-h-[500px] mx-auto pl-2 pr-2 bg-white"

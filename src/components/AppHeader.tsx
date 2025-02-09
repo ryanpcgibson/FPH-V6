@@ -1,8 +1,6 @@
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
-import { usePetTimelineContext } from "@/context/PetTimelineContext";
-import { useLocationTimelineContext } from "@/context/LocationTimelineContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Pencil, Menu, ArrowRight } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { useFamilyData } from "@/hooks/useFamilyData";
 import { Button } from "@/components/ui/button";
 import {
@@ -67,56 +65,7 @@ const NavMenu = () => {
 };
 
 const AppHeader: React.FC = () => {
-  const { families } = useFamilyData();
-
-  const location = useLocation();
-  const isEditView = location.pathname.includes("/edit");
-
-  let selectedFamilyId = null;
-  let selectedFamilyName = null;
-  let selectedPetName = null;
-  let selectedPetId = null;
-  let selectedLocationName = null;
-  let selectedLocationId = null;
-
-  try {
-    ({ selectedFamilyId, selectedFamilyName } = useFamilyDataContext());
-  } catch {}
-
-  try {
-    ({ selectedPetName, selectedPetId } = usePetTimelineContext());
-  } catch {}
-
-  try {
-    ({ selectedLocationName, selectedLocationId } =
-      useLocationTimelineContext());
-  } catch {}
-
-  const getEditPath = () => {
-    if (selectedPetId) {
-      return `/app/family/${selectedFamilyId}/pet/${selectedPetId}/edit`;
-    }
-    if (selectedLocationId) {
-      return `/app/family/${selectedFamilyId}/location/${selectedLocationId}/edit`;
-    }
-    return `/app/family/${selectedFamilyId}/edit`;
-  };
-
-  const getAriaLabel = () => {
-    if (selectedPetId) return "Edit Pet";
-    if (selectedLocationId) return "Edit Location";
-    return "Edit Family";
-  };
-
-  const editLink = selectedFamilyId && !isEditView && (
-    <Link
-      to={getEditPath()}
-      className="p-2 transition-colors rounded-md"
-      aria-label={getAriaLabel()}
-    >
-      <Pencil className="h-4 w-4 text-foreground" />
-    </Link>
-  );
+  const { selectedFamilyId, selectedFamilyName } = useFamilyDataContext();
 
   return (
     <Card className="w-full flex justify-end rounded-t-none">

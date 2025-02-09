@@ -1,13 +1,18 @@
-import React, { createContext, useContext, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import { Families, FamilyData } from "@/db/db_types";
 import { useFamilyData } from "@/hooks/useFamilyData";
-
+import { useParams } from "react-router-dom";
 interface FamilyDataContextType {
   families: Families | undefined;
   familyData: FamilyData | undefined;
-  selectedFamilyId: number | null;
-  selectedFamilyName: string | null;
+  selectedFamilyId: number | undefined;
+  selectedFamilyName: string | undefined;
   isLoading: boolean;
   error: Error | null;
 }
@@ -16,43 +21,38 @@ const FamilyDataContext = createContext<FamilyDataContextType | undefined>(
   undefined
 );
 
-const FamilyDataProvider: React.FC<{
+export const FamilyDataProvider = ({
+  children,
+}: {
   children: React.ReactNode;
-}> = ({ children }) => {
+}) => {
   const { familyId: familyIdParam } = useParams<{ familyId?: string }>();
-  const selectedFamilyId = familyIdParam ? parseInt(familyIdParam, 10) : null;
-  const { families, familyData, isLoading, isError, error } = useFamilyData(
-    selectedFamilyId ?? undefined
-  );
+  const selectedFamilyId = familyIdParam
+    ? parseInt(familyIdParam, 10)
+    : undefined;
 
-  const contextValue = useMemo(() => {
-    if (!familyData) {
-      return {
-        families,
-        familyData: undefined,
-        selectedFamilyId: null,
-        selectedFamilyName: null,
-        isLoading,
-        error: isError ? error : null,
-      };
-    }
-    const selectedFamilyName =
-      families?.find(
-        (family: { id: number; name: string }) => family.id === selectedFamilyId
-      )?.name ?? null;
+  const { families, familyData, isLoading, error } =
+    useFamilyData(selectedFamilyId);
 
-    return {
+  const selectedFamilyName =
+    selectedFamilyId && families
+      ? families.find((f) => f.id === selectedFamilyId)?.name ?? undefined
+      : undefined;
+
+  const value = useMemo(
+    () => ({
       families,
       familyData,
       selectedFamilyId,
       selectedFamilyName,
       isLoading,
-      error: isError ? error : null,
-    };
-  }, [families, familyData, selectedFamilyId, isLoading, isError, error]);
+      error,
+    }),
+    [families, familyData, selectedFamilyId, isLoading, error]
+  );
 
   return (
-    <FamilyDataContext.Provider value={contextValue}>
+    <FamilyDataContext.Provider value={value}>
       {children}
     </FamilyDataContext.Provider>
   );
@@ -60,7 +60,7 @@ const FamilyDataProvider: React.FC<{
 
 export const useFamilyDataContext = () => {
   const context = useContext(FamilyDataContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error(
       "useFamilyDataContext must be used within a FamilyDataProvider"
     );

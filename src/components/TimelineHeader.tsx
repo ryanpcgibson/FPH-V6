@@ -10,8 +10,6 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
   headerTexts,
   cellWidth,
 }) => {
-  const borderWidth = 2;
-  const insideCellWidth = cellWidth - borderWidth * 2;
   return (
     <div
       className="sticky top-0 z-50 bg-white w-full"

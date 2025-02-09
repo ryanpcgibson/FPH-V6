@@ -113,15 +113,7 @@ const fetchFamilyData = async (familyId: number): Promise<FamilyData> => {
   return convertedData;
 };
 
-export const useFamilyData = (
-  familyId?: number
-): {
-  families: Families | undefined;
-  familyData: FamilyData | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  error: any;
-} => {
+export const useFamilyData = (familyId?: number | null) => {
   const familiesQuery = useQuery({
     queryKey: ["families"],
     queryFn: fetchFamilies,
@@ -132,20 +124,16 @@ export const useFamilyData = (
     queryFn: () => {
       if (familyId) {
         return fetchFamilyData(familyId);
-      } else {
-        return undefined;
       }
+      return undefined;
     },
-    enabled: familyId !== undefined, // Only run this query when familyId is available
+    enabled: !!familyId,
   });
 
   return {
     families: familiesQuery.data,
     familyData: familyDataQuery.data,
-    isLoading:
-      familiesQuery.isLoading ||
-      (familyId !== null && familyDataQuery.isLoading),
-    isError: familiesQuery.isError || familyDataQuery.isError,
+    isLoading: familiesQuery.isLoading || familyDataQuery.isLoading,
     error: familiesQuery.error || familyDataQuery.error,
   };
 };
