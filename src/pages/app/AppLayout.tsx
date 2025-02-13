@@ -1,5 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
+import AppFooter from "@/components/AppFooter";
+import Logo1 from "@/assets/Logo1.svg";
 
 const AppLayout = () => {
   return (
@@ -8,7 +10,7 @@ const AppLayout = () => {
       id="app-layout"
     >
       <div className="sticky top-0 z-50 bg-white">
-        <AppHeader />
+        <AppHeader Logo={Logo1} />
       </div>
       <div
         className="w-full h-[calc(100vh-54px)] max-h-[446px] my-[8px] overflow-hidden"
@@ -16,6 +18,7 @@ const AppLayout = () => {
       >
         <Outlet />
       </div>
+      <AppFooter />
     </div>
   );
 };

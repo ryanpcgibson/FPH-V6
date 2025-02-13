@@ -1,6 +1,5 @@
 import React from "react";
 import type { TimelineSegment } from "@/types/timeline";
-import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
 import ColoredHeartIcon from "@/components/ColoredHeartIcon";
 
 import { useNavigate, useLocation } from "react-router-dom";

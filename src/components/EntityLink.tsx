@@ -1,6 +1,5 @@
 import ColoredHeartIcon from "@/components/ColoredHeartIcon";
-import { GlobeIcon } from "@radix-ui/react-icons";
-import PawPrintIcon from "@/components/PawPrintIcon";
+import { Globe, PawPrint, Heart } from "lucide-react";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import { useNavigate } from "react-router-dom";
 
@@ -34,11 +33,12 @@ const EntityLink: React.FC<EntityLinkProps> = ({
 
   let icon = undefined;
   if (itemType === "moment") {
-    icon = <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />;
+    // icon = <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />;
+    icon = <Heart />;
   } else if (itemType === "location") {
-    icon = <GlobeIcon />;
+    icon = <Globe />;
   } else if (itemType === "pet") {
-    icon = <PawPrintIcon />;
+    icon = <PawPrint />;
   }
 
   return (

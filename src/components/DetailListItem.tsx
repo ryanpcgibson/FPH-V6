@@ -4,11 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  DotsHorizontalIcon,
-  Pencil1Icon,
-  LinkBreak1Icon,
-} from "@radix-ui/react-icons";
+import { MoreHorizontal, Pencil, Unlink } from "lucide-react";
 
 interface DropdownItem {
   icon: React.ReactNode;
@@ -28,13 +24,13 @@ export const createEditItem = (
   path: string,
   onClick: () => void
 ): DropdownItem => ({
-  icon: <Pencil1Icon className="mr-2" />,
+  icon: <Pencil className="mr-2" />,
   label: "Edit",
   onClick,
 });
 
 export const createDisconnectItem = (onClick: () => void): DropdownItem => ({
-  icon: <LinkBreak1Icon className="mr-2" />,
+  icon: <Unlink className="mr-2" />,
   label: "Disconnect",
   onClick,
   className: "text-destructive focus:text-destructive",
@@ -50,7 +46,7 @@ const DetailListItem: React.FC<DetailListItemProps> = ({
       {children}
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
-          <DotsHorizontalIcon className="cursor-pointer hover:opacity-70 text-primary-foreground" />
+          <MoreHorizontal className="cursor-pointer hover:opacity-70 text-primary-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-background">
           {dropdownItems.map((item, index) => (
