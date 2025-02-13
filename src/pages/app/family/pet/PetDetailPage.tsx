@@ -61,9 +61,12 @@ const PetDetailPage: React.FC = () => {
   };
   // max-h-[calc(100vh-100px)]
   return (
-    <div className="w-full h-full flex flex-row gap-2" id="page-container">
+    <div
+      className="w-full h-full flex flex-col portrait:flex-col landscape:flex-row gap-2"
+      id="page-container"
+    >
       <div
-        className="w-3/5 h-full flex-grow overflow-hidden "
+        className="w-full landscape:w-3/5 portrait:h-1/2 landscape:h-full flex-grow overflow-hidden"
         id="carousel-container"
       >
         <PetCarousel
@@ -73,7 +76,7 @@ const PetDetailPage: React.FC = () => {
         />
       </div>
       <div
-        className="w-2/5 h-full flex flex-col flex-grow overflow-auto"
+        className="w-full landscape:w-2/5 portrait:h-1/2 landscape:h-full flex flex-col flex-grow overflow-auto"
         id="pet-detail-container"
       >
         <PetConnectionList

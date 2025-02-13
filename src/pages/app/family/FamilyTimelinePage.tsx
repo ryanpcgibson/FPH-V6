@@ -43,9 +43,9 @@ const FamilyTimelinePage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row" id="page-container">
+    <div className="flex flex-row h-full" id="page-container">
       <div
-        className="w-full max-h-[454px] flex-grow overflow-x-auto"
+        className="w-full h-full flex-grow overflow-x-auto"
         id="family-timeline-grid"
         ref={gridInnerRef}
       >

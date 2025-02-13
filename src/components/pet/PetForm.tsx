@@ -27,6 +27,7 @@ import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import DatePickerWithInput from "../DatePickerWithInput";
+import { useDebouncedCallback } from "use-debounce";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -75,6 +76,28 @@ const PetForm: React.FC<PetFormProps> = ({
 
   const { familyData } = useFamilyDataContext();
 
+  const debouncedUpdate = useDebouncedCallback(
+    (values: Partial<z.infer<typeof formSchema>>) => {
+      if (petId) {
+        onSubmit({
+          name: form.getValues("name"),
+          start_date: form.getValues("start_date"),
+          end_date: form.getValues("end_date"),
+          ...values,
+        });
+      }
+    },
+    500
+  );
+
+  const handleFieldChange = (
+    field: keyof z.infer<typeof formSchema>,
+    value: any
+  ) => {
+    form.setValue(field, value);
+    debouncedUpdate({ [field]: value });
+  };
+
   useEffect(() => {
     if (petId === null) {
       form.setValue("name", "");
@@ -109,6 +132,9 @@ const PetForm: React.FC<PetFormProps> = ({
                       <Input
                         placeholder="Pet Name"
                         {...field}
+                        onChange={(e) =>
+                          handleFieldChange("name", e.target.value)
+                        }
                         className="w-full bg-background"
                       />
                     </FormControl>
@@ -125,7 +151,9 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={field.onChange}
+                        setDate={(value) =>
+                          handleFieldChange("start_date", value)
+                        }
                         required={true}
                       />
                     </FormControl>
@@ -142,7 +170,9 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={field.onChange}
+                        setDate={(value) =>
+                          handleFieldChange("end_date", value)
+                        }
                         required={false}
                       />
                     </FormControl>
@@ -162,6 +192,9 @@ const PetForm: React.FC<PetFormProps> = ({
                         {...field}
                         className="w-full bg-background"
                         value={field.value || ""}
+                        onChange={(e) =>
+                          handleFieldChange("description", e.target.value)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -211,7 +244,6 @@ const PetForm: React.FC<PetFormProps> = ({
               <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel
               </Button>
-              <Button type="submit">{petId ? "Update" : "Create"}</Button>
             </CardFooter>
           </Card>
         </form>

@@ -10,15 +10,13 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
   headerTexts,
   cellWidth,
 }) => {
-  const borderWidth = 2;
-  const insideCellWidth = cellWidth - borderWidth * 2;
   return (
     <div
       className="sticky top-0 z-50 bg-white w-full"
       id="column-header-container"
     >
       <div
-        className="flex w-full justify-end border-t-2 border-background"
+        className="flex w-full justify-end border-background"
         id="column-headers"
       >
         {headerTexts.map((header, index) => (

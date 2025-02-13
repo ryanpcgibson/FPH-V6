@@ -59,7 +59,6 @@ const LocationForm: React.FC<LocationFormProps> = ({
   locationId,
   familyId,
   initialData,
-  onFamilyChange,
   onDelete,
   onSubmit,
   onCancel,
@@ -108,7 +107,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
-                    <FormLabel className="w-1/4">Location Name</FormLabel>
+                    <FormLabel className="w-1/4">Name</FormLabel>
                     <FormControl className="flex-1">
                       <Input
                         placeholder="Location Name"
@@ -125,7 +124,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 name="map_reference"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
-                    <FormLabel className="w-1/4">Map Reference</FormLabel>
+                    <FormLabel className="w-1/4">Map</FormLabel>
                     <FormControl className="flex-1">
                       <Input
                         placeholder="Map Reference (optional)"
@@ -143,7 +142,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 name="start_date"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
-                    <FormLabel className="w-1/4">Start Date</FormLabel>
+                    <FormLabel className="w-1/4">Start</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
@@ -160,7 +159,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 name="end_date"
                 render={({ field }) => (
                   <FormItem className="flex items-center space-x-2">
-                    <FormLabel className="w-1/4">End Date</FormLabel>
+                    <FormLabel className="w-1/4">End</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}

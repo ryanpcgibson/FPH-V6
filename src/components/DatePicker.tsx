@@ -1,6 +1,7 @@
 import React from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+// import { Calendar as CalendarIcon } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -40,8 +41,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
             !date && "text-muted-foreground"
           )}
           disabled={disabled}
+          id="date-picker-button"
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarDays className="mr-2 h-4 w-4" />
           {date ? format(date, dateFormat) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
