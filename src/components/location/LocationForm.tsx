@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import DatePicker from "../DatePicker";
-import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { Location } from "@/db/db_types";
 import {
@@ -20,12 +18,6 @@ import { Input } from "@/components/ui/input";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
-import { format, parse, isValid } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import DatePickerWithInput from "../DatePickerWithInput";
 
 const formSchema = z.object({
@@ -101,12 +93,12 @@ const LocationForm: React.FC<LocationFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent className="">
+            <CardContent className="p-3">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Name</FormLabel>
                     <FormControl className="flex-1">
                       <Input
@@ -123,7 +115,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 control={form.control}
                 name="map_reference"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Map</FormLabel>
                     <FormControl className="flex-1">
                       <Input
@@ -141,7 +133,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 control={form.control}
                 name="start_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Start</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
@@ -158,7 +150,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 control={form.control}
                 name="end_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">End</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
@@ -194,28 +186,38 @@ const LocationForm: React.FC<LocationFormProps> = ({
                 }
               />
             </CardContent>
-            <CardFooter className="flex justify-end space-x-2">
-              {locationId && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to delete this location?"
-                      )
-                    ) {
-                      onDelete?.();
-                    }
-                  }}
-                >
-                  Delete
-                </Button>
+            <CardFooter className="flex justify-between gap-2 p-3">
+              {locationId ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this location?"
+                        )
+                      ) {
+                        onDelete?.();
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                  <Button type="button" variant="outline" onClick={onCancel}>
+                    Done
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button type="button" variant="outline" onClick={onCancel}>
+                    Cancel
+                  </Button>
+                  <Button variant="outline" type="submit">
+                    Create
+                  </Button>
+                </>
               )}
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit">{locationId ? "Update" : "Create"}</Button>
             </CardFooter>
           </Card>
         </form>

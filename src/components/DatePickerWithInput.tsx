@@ -40,7 +40,7 @@ const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
             }
           }}
           placeholder="MM/dd/yyyy"
-          className="w-full bg-background pr-8"
+          className="w-full bg-background"
         />
         {!required && (
           <button

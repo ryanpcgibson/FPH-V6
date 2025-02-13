@@ -87,7 +87,7 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex items-center space-x-2">
+        <FormItem className="flex items-center">
           <FormLabel className="w-1/4">{label}</FormLabel>
           <FormControl className="flex-1 mb-2">
             <div className="">

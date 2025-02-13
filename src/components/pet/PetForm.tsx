@@ -2,16 +2,8 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import DatePicker from "../DatePicker";
 import { Pet } from "../../db/db_types";
 import {
   Form,
@@ -121,12 +113,12 @@ const PetForm: React.FC<PetFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent className="">
+            <CardContent className="p-3">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Pet Name</FormLabel>
                     <FormControl className="flex-1">
                       <Input
@@ -146,7 +138,7 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="start_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Start Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
@@ -165,7 +157,7 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="end_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center ">
                     <FormLabel className="w-1/4">End Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
@@ -184,7 +176,7 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center ">
                     <FormLabel className="w-1/4">Description</FormLabel>
                     <FormControl className="flex-1">
                       <Input
@@ -223,8 +215,9 @@ const PetForm: React.FC<PetFormProps> = ({
               />
             </CardContent>
 
-            <CardFooter className="flex justify-end space-x-2">
-              {petId && (
+            <CardFooter className="flex justify-between gap-2 p-3">
+              {petId ? (
+                <>
                 <Button
                   type="button"
                   variant="destructive"
@@ -240,10 +233,20 @@ const PetForm: React.FC<PetFormProps> = ({
                 >
                   Delete
                 </Button>
+                <Button type="button" variant="outline" onClick={onCancel}>
+                Done
+                </Button>
+              </>
+              ) : (
+                <>
+                  <Button type="button" variant="outline" onClick={onCancel}>
+                    Cancel
+                  </Button>
+                  <Button variant="outline" type="submit">
+                    Create
+                  </Button>
+                </>
               )}
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
             </CardFooter>
           </Card>
         </form>
