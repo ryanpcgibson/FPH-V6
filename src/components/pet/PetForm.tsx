@@ -2,16 +2,8 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import DatePicker from "../DatePicker";
 import { Pet } from "../../db/db_types";
 import {
   Form,
@@ -27,6 +19,7 @@ import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import DatePickerWithInput from "../DatePickerWithInput";
+import { useDebouncedCallback } from "use-debounce";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -75,6 +68,28 @@ const PetForm: React.FC<PetFormProps> = ({
 
   const { familyData } = useFamilyDataContext();
 
+  const debouncedUpdate = useDebouncedCallback(
+    (values: Partial<z.infer<typeof formSchema>>) => {
+      if (petId) {
+        onSubmit({
+          name: form.getValues("name"),
+          start_date: form.getValues("start_date"),
+          end_date: form.getValues("end_date"),
+          ...values,
+        });
+      }
+    },
+    500
+  );
+
+  const handleFieldChange = (
+    field: keyof z.infer<typeof formSchema>,
+    value: any
+  ) => {
+    form.setValue(field, value);
+    debouncedUpdate({ [field]: value });
+  };
+
   useEffect(() => {
     if (petId === null) {
       form.setValue("name", "");
@@ -98,17 +113,20 @@ const PetForm: React.FC<PetFormProps> = ({
           className="space-y-8 w-full max-w-lg"
         >
           <Card>
-            <CardContent className="">
+            <CardContent className="p-3">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Pet Name</FormLabel>
                     <FormControl className="flex-1">
                       <Input
                         placeholder="Pet Name"
                         {...field}
+                        onChange={(e) =>
+                          handleFieldChange("name", e.target.value)
+                        }
                         className="w-full bg-background"
                       />
                     </FormControl>
@@ -120,12 +138,14 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="start_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Start Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={field.onChange}
+                        setDate={(value) =>
+                          handleFieldChange("start_date", value)
+                        }
                         required={true}
                       />
                     </FormControl>
@@ -137,12 +157,14 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="end_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center ">
                     <FormLabel className="w-1/4">End Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={field.onChange}
+                        setDate={(value) =>
+                          handleFieldChange("end_date", value)
+                        }
                         required={false}
                       />
                     </FormControl>
@@ -154,7 +176,7 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem className="flex items-center ">
                     <FormLabel className="w-1/4">Description</FormLabel>
                     <FormControl className="flex-1">
                       <Input
@@ -162,6 +184,9 @@ const PetForm: React.FC<PetFormProps> = ({
                         {...field}
                         className="w-full bg-background"
                         value={field.value || ""}
+                        onChange={(e) =>
+                          handleFieldChange("description", e.target.value)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -190,8 +215,9 @@ const PetForm: React.FC<PetFormProps> = ({
               />
             </CardContent>
 
-            <CardFooter className="flex justify-end space-x-2">
-              {petId && (
+            <CardFooter className="flex justify-between gap-2 p-3">
+              {petId ? (
+                <>
                 <Button
                   type="button"
                   variant="destructive"
@@ -207,11 +233,20 @@ const PetForm: React.FC<PetFormProps> = ({
                 >
                   Delete
                 </Button>
+                <Button type="button" variant="outline" onClick={onCancel}>
+                Done
+                </Button>
+              </>
+              ) : (
+                <>
+                  <Button type="button" variant="outline" onClick={onCancel}>
+                    Cancel
+                  </Button>
+                  <Button variant="outline" type="submit">
+                    Create
+                  </Button>
+                </>
               )}
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit">{petId ? "Update" : "Create"}</Button>
             </CardFooter>
           </Card>
         </form>

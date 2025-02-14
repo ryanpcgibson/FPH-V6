@@ -1,5 +1,5 @@
 import React from "react";
-import { HeartIcon, HeartFilledIcon } from "@radix-ui/react-icons";
+import { Heart } from "lucide-react";
 
 interface ColoredHeartIconProps {
   size?: number;
@@ -8,49 +8,20 @@ interface ColoredHeartIconProps {
   outerOutlineColor?: string;
 }
 
-const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({ size = 15 }) => {
+const ColoredHeartIcon: React.FC<ColoredHeartIconProps> = ({
+  size = 15,
+  fillColor = "#000000",
+  outlineColor = "#000000",
+  outerOutlineColor = "#000000",
+}) => {
   return (
-    <div
-      style={{
-        position: "relative",
-        display: "inline-block",
-        width: size,
-        height: size,
-      }}
-    >
-      <HeartIcon
-        style={{
-          color: "hsl(var(--background))",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: size,
-          height: size,
-          transform: "scale(1.2)", // Slightly larger for outer outline
-        }}
-      />
-      <HeartIcon
-        style={{
-          color: "hsl(var(--foreground))",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: size,
-          height: size,
-          transform: "scale(1.1)", // Slightly larger for black outline
-        }}
-      />
-      <HeartFilledIcon
-        style={{
-          color: "hsl(var(--primary))",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: size,
-          height: size,
-        }}
-      />
-    </div>
+    <Heart
+      size={size}
+      fill={fillColor}
+      stroke={outlineColor}
+      strokeWidth={1.5}
+      className="transition-colors"
+    />
   );
 };
 

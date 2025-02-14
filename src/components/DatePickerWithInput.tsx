@@ -3,7 +3,7 @@ import { DayPicker } from "react-day-picker";
 import { format, parse, isValid } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, CalendarDays } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -40,7 +40,7 @@ const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
             }
           }}
           placeholder="MM/dd/yyyy"
-          className="w-full bg-background pr-8"
+          className="w-full bg-background"
         />
         {!required && (
           <button
@@ -61,7 +61,7 @@ const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
       <Popover>
         <PopoverTrigger asChild>
           <Button type="button" variant="outline" size="icon">
-            📆
+            <CalendarDays className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">

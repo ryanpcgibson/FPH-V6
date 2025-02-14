@@ -16,7 +16,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
       id="column-header-container"
     >
       <div
-        className="flex w-full justify-end border-t-2 border-background"
+        className="flex w-full justify-end border-background"
         id="column-headers"
       >
         {headerTexts.map((header, index) => (

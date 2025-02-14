@@ -1,5 +1,5 @@
 import React from "react";
-import { LinkBreak1Icon } from "@radix-ui/react-icons";
+import { Link2Off } from "lucide-react";
 
 import { format } from "date-fns";
 import {
@@ -87,7 +87,7 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex items-center space-x-2">
+        <FormItem className="flex items-center">
           <FormLabel className="w-1/4">{label}</FormLabel>
           <FormControl className="flex-1 mb-2">
             <div className="">
@@ -105,7 +105,7 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
                       size="sm"
                       onClick={() => onDisconnect(entity.id)}
                     >
-                      <LinkBreak1Icon className="h-4 w-4 text-red-500" />
+                      <Link2Off className="h-4 w-4 text-red-500" />
                     </Button>
                   </div>
                 ))}
