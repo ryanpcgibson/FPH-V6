@@ -82,6 +82,7 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
     return displayName;
   };
 
+  // TODO: makes more sense to have formfield and labels in parent component
   return (
     <FormField
       control={control}
