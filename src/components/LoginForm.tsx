@@ -56,10 +56,19 @@ function LoginForm() {
   };
 
   const handleGoogleLogin = async () => {
+    const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+    console.log("Base URL:", baseUrl); // For debugging
+
     const { error } = await supabaseClient.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/app`,
+        redirectTo: `${baseUrl}/app`,
+        queryParams: {
+          prompt: "select_account",
+        },
+        // Ensure we return to the same site we started from
+        skipBrowserRedirect: false,
+        flowType: "pkce",
       },
     });
 

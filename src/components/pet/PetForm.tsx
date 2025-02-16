@@ -8,7 +8,6 @@ import { Pet } from "../../db/db_types";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -193,50 +192,54 @@ const PetForm: React.FC<PetFormProps> = ({
                   </FormItem>
                 )}
               />
-              <EntityConnectionManager
-                control={form.control}
-                name="moment_connection"
-                label="Moments"
-                entityType="moment"
-                connectedEntities={
-                  familyData?.moments?.filter((m) =>
-                    m.pets?.some((p) => p.id === petId)
-                  ) || []
-                }
-                availableEntities={
-                  familyData?.moments.filter(
-                    (m) => !m.pets?.some((p) => p.id === petId)
-                  ) || []
-                }
-                onConnect={(momentId) => connectMoment(momentId, petId!, "pet")}
-                onDisconnect={(momentId) =>
-                  disconnectMoment(momentId, petId!, "pet")
-                }
-              />
+              {petId && (
+                <EntityConnectionManager
+                  control={form.control}
+                  name="moment_connection"
+                  label="Moments"
+                  entityType="moment"
+                  connectedEntities={
+                    familyData?.moments?.filter((m) =>
+                      m.pets?.some((p) => p.id === petId)
+                    ) || []
+                  }
+                  availableEntities={
+                    familyData?.moments.filter(
+                      (m) => !m.pets?.some((p) => p.id === petId)
+                    ) || []
+                  }
+                  onConnect={(momentId) =>
+                    connectMoment(momentId, petId!, "pet")
+                  }
+                  onDisconnect={(momentId) =>
+                    disconnectMoment(momentId, petId!, "pet")
+                  }
+                />
+              )}
             </CardContent>
 
             <CardFooter className="flex justify-between gap-2 p-3">
               {petId ? (
                 <>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to delete this pet?"
-                      )
-                    ) {
-                      onDelete?.();
-                    }
-                  }}
-                >
-                  Delete
-                </Button>
-                <Button type="button" variant="outline" onClick={onCancel}>
-                Done
-                </Button>
-              </>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Are you sure you want to delete this pet?"
+                        )
+                      ) {
+                        onDelete?.();
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                  <Button type="button" variant="outline" onClick={onCancel}>
+                    Done
+                  </Button>
+                </>
               ) : (
                 <>
                   <Button type="button" variant="outline" onClick={onCancel}>
