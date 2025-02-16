@@ -55,6 +55,19 @@ function LoginForm() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/app`,
+      },
+    });
+
+    if (error) {
+      console.error("Error logging in with Google:", error.message);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -91,6 +104,14 @@ function LoginForm() {
         )}
         <Button type="submit" disabled={loading} className="w-full">
           {loading ? "Loading..." : "Sign in"}
+        </Button>
+        <Button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full"
+          variant="outline"
+        >
+          Continue with Google
         </Button>
       </form>
     </Form>

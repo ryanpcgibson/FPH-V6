@@ -78,5 +78,18 @@ export const useAuthData = () => {
 
   const signOut = () => supabaseClient.auth.signOut();
 
+  const verifyGoogleToken = async (token: string) => {
+    const { data, error } = await supabaseClient.auth.signInWithIdToken({
+      provider: "google",
+      token,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  };
+
   return { ...authData, signOut };
 };
