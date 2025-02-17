@@ -43,6 +43,7 @@ interface MomentFormProps {
   onDelete?: () => void;
   onSubmit: (values: z.infer<typeof formSchema>) => void;
   onCancel: () => void;
+  preSelectedLocationId?: number;
 }
 
 const MomentForm: React.FC<MomentFormProps> = ({
@@ -52,6 +53,7 @@ const MomentForm: React.FC<MomentFormProps> = ({
   onDelete,
   onSubmit,
   onCancel,
+  preSelectedLocationId,
 }) => {
   console.log("MomentForm", {
     momentId,
@@ -85,6 +87,12 @@ const MomentForm: React.FC<MomentFormProps> = ({
       form.setValue("end_date", initialData?.end_date || null); // TODO: convert to string?
     }
   }, [momentId, familyId, initialData, form]);
+
+  useEffect(() => {
+    if (preSelectedLocationId && !momentId) {
+      form.setValue("location_connection", preSelectedLocationId.toString());
+    }
+  }, [preSelectedLocationId, form, momentId]);
 
   const handleConnectPet = async (petId: number) => {
     if (momentId) {

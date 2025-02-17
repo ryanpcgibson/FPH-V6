@@ -109,7 +109,7 @@ const PetForm: React.FC<PetFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full max-w-lg"
+          className="space-y-2 w-full max-w-lg"
         >
           <Card>
             <CardContent className="p-3">

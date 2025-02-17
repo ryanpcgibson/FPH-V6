@@ -9,6 +9,7 @@ import DetailListItem, {
   createDisconnectItem,
 } from "@/components/DetailListItem";
 import EntityLink from "@/components/EntityLink";
+import { Button } from "@/components/ui/button";
 
 interface LocationConnectionListProps {
   locationId: number | null;
@@ -87,6 +88,16 @@ const LocationConnectionList: React.FC<LocationConnectionListProps> = ({
     return `'${startYear.slice(-2)} - '${endYear.slice(-2)}`;
   }
 
+  const handleAddNewMoment = () => {
+    console.log("handleAddNewMoment", {
+      selectedFamilyId,
+      locationId,
+    });
+    navigate(
+      `/app/family/${selectedFamilyId}/moment/new?locationId=${locationId}`
+    );
+  };
+
   return (
     <Card className="w-full h-full p-0 overflow-y-auto">
       <CardContent className="h-full p-2">
@@ -139,6 +150,14 @@ const LocationConnectionList: React.FC<LocationConnectionListProps> = ({
             />
           </DetailListItem>
         ))}
+
+        <Button
+          variant="ghost"
+          className="w-full mt-2"
+          onClick={handleAddNewMoment}
+        >
+          Add new moment...
+        </Button>
       </CardContent>
     </Card>
   );

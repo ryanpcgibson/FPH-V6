@@ -17,7 +17,9 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Control } from "react-hook-form";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useFamilyDataContext } from "@/context/FamilyDataContext";
+import { Label } from "@/components/ui/label";
 
 // Entity is a generic type that can be used for pets, locations, and moments
 interface Entity {
@@ -32,38 +34,41 @@ interface EntityConnectionManagerProps {
   control: Control<any>;
   name: string;
   label: string;
-  onAdd?: () => void;
-  addUrl?: string;
-  addButton?: React.ReactNode;
+  entityType: "pet" | "location" | "moment" | "photo";
   connectedEntities: Entity[];
   availableEntities: Entity[];
   onConnect: (entityId: number) => void;
   onDisconnect: (entityId: number) => void;
-  entityType: "pet" | "location" | "moment" | "photo";
+  onAdd?: () => void;
+  returnPath?: string;
 }
 
 const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
   control,
   name,
   label,
-  onAdd,
-  addUrl,
-  addButton,
+  entityType,
   connectedEntities,
   availableEntities,
   onConnect,
   onDisconnect,
-  entityType,
+  onAdd,
+  returnPath,
 }) => {
   const navigate = useNavigate();
-  const { familyId } = useParams<{ familyId: string }>();
-  const baseUrl = `/app/family/${familyId}`;
+  const { selectedFamilyId } = useFamilyDataContext();
 
-  const handleAdd = () => {
-    if (onAdd) {
-      onAdd();
-    } else if (addUrl) {
-      navigate(`${baseUrl}/${addUrl}`);
+  const handleValueChange = (value: string) => {
+    if (value === "add_new") {
+      const currentPath = window.location.pathname;
+      navigate(
+        `/app/family/${selectedFamilyId}/${entityType}/new?returnPath=${encodeURIComponent(
+          currentPath
+        )}`
+      );
+    } else if (value !== "placeholder") {
+      // Ignore the placeholder value
+      onConnect(parseInt(value, 10));
     }
   };
 
@@ -82,66 +87,60 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
     return displayName;
   };
 
-  // TODO: makes more sense to have formfield and labels in parent component
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className="flex items-center">
-          <FormLabel className="w-1/4">{label}</FormLabel>
-          <FormControl className="flex-1 mb-2">
-            <div className="">
-              <div className="flex flex-col w-ful">
-                {connectedEntities.map((entity) => (
-                  <div
-                    key={entity.id}
-                    className="flex items-center justify-between rounded-md border border-input bg-background px-3 text-sm ring-offset-background mb-2"
-                  >
-                    <span className="text-sm">
-                      {getEntityDisplayName(entity)}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDisconnect(entity.id)}
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <Label>{label}</Label>
+        <Select onValueChange={handleValueChange}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Choose..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="placeholder">Choose...</SelectItem>
+            {availableEntities.map((entity) => (
+              <SelectItem key={entity.id} value={entity.id.toString()}>
+                {getEntityDisplayName(entity)}
+              </SelectItem>
+            ))}
+            {entityType === "moment" && (
+              <SelectItem value="add_new">Add New Moment...</SelectItem>
+            )}
+          </SelectContent>
+        </Select>
+      </div>
+      <FormField
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <FormItem className="flex items-center">
+            <FormLabel className="w-1/4">{label}</FormLabel>
+            <FormControl className="flex-1 mb-2">
+              <div className="">
+                <div className="flex flex-col w-ful">
+                  {connectedEntities.map((entity) => (
+                    <div
+                      key={entity.id}
+                      className="flex items-center justify-between rounded-md border border-input bg-background px-3 text-sm ring-offset-background mb-2"
                     >
-                      <Link2Off className="h-4 w-4 text-red-500" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              {addButton || (
-                <Select
-                  onValueChange={(value) => {
-                    if (value === "new") {
-                      handleAdd();
-                    } else {
-                      const entityId = parseInt(value, 10);
-                      field.onChange(entityId);
-                      onConnect(entityId);
-                    }
-                  }}
-                  value={field.value?.toString()}
-                >
-                  <SelectTrigger className="w-full bg-background">
-                    <SelectValue placeholder={`Add ${entityType}...`} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="new">Add new {entityType}...</SelectItem>
-                    {availableEntities.map((entity) => (
-                      <SelectItem key={entity.id} value={entity.id.toString()}>
+                      <span className="text-sm">
                         {getEntityDisplayName(entity)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-          </FormControl>
-        </FormItem>
-      )}
-    />
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onDisconnect(entity.id)}
+                      >
+                        <Link2Off className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </FormControl>
+          </FormItem>
+        )}
+      />
+    </div>
   );
 };
 

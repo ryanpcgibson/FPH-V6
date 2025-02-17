@@ -1,9 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useMoments } from "@/hooks/useMoments";
 import MomentForm from "@/components/moment/MomentForm";
 import { useEntityFormPage } from "@/hooks/useEntityFormPage";
 import type { Moment } from "@/db/db_types";
+import { connectMoment } from "@/services/connectMoment";
 
 interface MomentFormValues {
   title: string;
@@ -15,46 +16,59 @@ interface MomentFormValues {
 }
 
 const MomentFormPage = () => {
-  const { momentId: momentIdParam, familyId: familyIdParam } = useParams<{
-    momentId?: string;
-    familyId?: string;
-  }>();
+  const { momentId: momentIdParam } = useParams<{ momentId?: string }>();
+  const [searchParams] = useSearchParams();
+  const returnPath = searchParams.get("returnPath");
+  const navigate = useNavigate();
 
   const momentId = momentIdParam ? parseInt(momentIdParam, 10) : undefined;
+  const preSelectedLocationId = searchParams.get("locationId")
+    ? parseInt(searchParams.get("locationId")!, 10)
+    : undefined;
+
   const { createMoment, updateMoment, deleteMoment } = useMoments();
 
   const {
-    currentFamilyId,
     entity: moment,
-    isLoading,
-    error,
-    handleFamilyChange,
     handleDelete,
     handleSubmit,
     handleCancel,
   } = useEntityFormPage<Moment, MomentFormValues>({
     entityId: momentId,
-    familyId: familyIdParam ? parseInt(familyIdParam, 10) : undefined,
     entityType: "moment",
     findEntity: (data, id) => data?.moments.find((m) => m.id === id),
-    createMoment,
-    updateMoment,
-    deleteMoment,
+    createEntity: async (data) => {
+      const newMoment = await createMoment(data);
+      if (preSelectedLocationId) {
+        await connectMoment({
+          momentId: newMoment.id,
+          entityId: preSelectedLocationId,
+          entityType: "location",
+        });
+      }
+      return newMoment;
+    },
+    updateEntity: (data) => updateMoment(data),
+    deleteEntity: (id) => deleteMoment(id),
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading family data: {error.message}</div>;
+  const handleCancelForm = () => {
+    if (returnPath) {
+      navigate(decodeURIComponent(returnPath));
+    } else {
+      navigate(-1);
+    }
+  };
 
   return (
-    <div className="mt-2" id="moment-form-page">
+    <div className="w-full h-full" id="page-container">
       <MomentForm
         momentId={momentId}
-        familyId={currentFamilyId}
-        onFamilyChange={handleFamilyChange}
         initialData={moment}
         onDelete={handleDelete}
         onSubmit={handleSubmit}
-        onCancel={handleCancel}
+        onCancel={handleCancelForm}
+        preSelectedLocationId={preSelectedLocationId}
       />
     </div>
   );

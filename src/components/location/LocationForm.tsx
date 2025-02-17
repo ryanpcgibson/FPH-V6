@@ -233,6 +233,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
                   onDisconnect={(momentId) =>
                     disconnectMoment(momentId, locationId!, "location")
                   }
+                  returnPath={window.location.pathname}
                 />
               </CardContent>
             </Card>
