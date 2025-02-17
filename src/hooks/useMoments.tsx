@@ -40,17 +40,14 @@ export function useMoments() {
       const tableName =
         entityType === "pet" ? "pet_moments" : "location_moments";
 
-      const query = supabaseClient
+      const { error } = await supabaseClient
         .from(tableName)
         .delete()
         .eq("moment_id", momentId)
         .eq(`${entityType}_id`, entityId);
-        
-      console.log('Executing query:', query);
-      
-      const { error } = await query;
 
       if (error) throw error;
+      return { success: true };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["familyData"] });

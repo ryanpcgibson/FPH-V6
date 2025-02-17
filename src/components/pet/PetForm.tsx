@@ -18,7 +18,6 @@ import EntityConnectionManager from "@/components/EntityConnectionManager";
 import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import DatePickerWithInput from "../DatePickerWithInput";
-import { useDebouncedCallback } from "use-debounce";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,17 +29,17 @@ const formSchema = z.object({
   moment_connection: z.string().optional(),
 });
 
-interface PetFormValues {
+export interface PetFormValues {
   name: string;
-  start_date: Date | null;
-  end_date: Date | null;
+  family_id: number;
+  start_date: Date;
+  end_date: Date | undefined;
+  description: string;
 }
 
 interface PetFormProps {
   petId?: number;
-  familyId: number;
   initialData?: Pet;
-  onFamilyChange: (familyId: number) => void;
   onDelete?: () => void;
   onSubmit: (values: PetFormValues) => void;
   onCancel: () => void;
@@ -48,58 +47,59 @@ interface PetFormProps {
 
 const PetForm: React.FC<PetFormProps> = ({
   petId,
-  familyId,
   initialData,
   onDelete,
   onSubmit,
   onCancel,
 }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<PetFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
-      start_date: initialData?.start_date || null,
-      end_date: initialData?.end_date || null,
+      start_date: initialData?.start_date
+        ? new Date(initialData.start_date)
+        : undefined,
+      end_date: initialData?.end_date
+        ? new Date(initialData.end_date)
+        : undefined,
+      description: initialData?.description || "",
     },
   });
 
-  const { connectMoment, disconnectMoment } = useMoments();
-
   const { familyData } = useFamilyDataContext();
 
-  const debouncedUpdate = useDebouncedCallback(
-    (values: Partial<z.infer<typeof formSchema>>) => {
-      if (petId) {
-        onSubmit({
-          name: form.getValues("name"),
-          start_date: form.getValues("start_date"),
-          end_date: form.getValues("end_date"),
-          ...values,
-        });
-      }
-    },
-    500
+  // Check if any non-moment fields are dirty
+  const isFormDirty = Object.keys(form.formState.dirtyFields).some(
+    (field) => field !== "moment_connection"
   );
 
-  const handleFieldChange = (
-    field: keyof z.infer<typeof formSchema>,
-    value: any
-  ) => {
-    form.setValue(field, value);
-    debouncedUpdate({ [field]: value });
+  const { connectMoment, disconnectMoment } = useMoments();
+
+  const handleMomentConnect = async (momentId: number) => {
+    if (petId) {
+      await connectMoment(momentId, petId, "pet");
+    }
+  };
+
+  const handleMomentDisconnect = async (momentId: number) => {
+    if (petId) {
+      await disconnectMoment(momentId, petId, "pet");
+    }
   };
 
   useEffect(() => {
-    if (petId === null) {
-      form.setValue("name", "");
-      form.setValue("start_date", null);
-      form.setValue("end_date", null);
-    } else {
-      form.setValue("name", initialData?.name || "");
-      form.setValue("start_date", initialData?.start_date || null);
-      form.setValue("end_date", initialData?.end_date || null);
-    }
-  }, [petId, familyId, initialData, form]);
+    // Reset form when initialData changes
+    form.reset({
+      name: initialData?.name || "",
+      start_date: initialData?.start_date
+        ? new Date(initialData.start_date)
+        : undefined,
+      end_date: initialData?.end_date
+        ? new Date(initialData.end_date)
+        : undefined,
+      description: initialData?.description || "",
+    });
+  }, [initialData, form]);
 
   return (
     <div
@@ -123,9 +123,6 @@ const PetForm: React.FC<PetFormProps> = ({
                       <Input
                         placeholder="Pet Name"
                         {...field}
-                        onChange={(e) =>
-                          handleFieldChange("name", e.target.value)
-                        }
                         className="w-full bg-background"
                       />
                     </FormControl>
@@ -142,9 +139,7 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={(value) =>
-                          handleFieldChange("start_date", value)
-                        }
+                        setDate={(value) => field.onChange(value)}
                         required={true}
                       />
                     </FormControl>
@@ -161,9 +156,7 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormControl>
                       <DatePickerWithInput
                         date={field.value}
-                        setDate={(value) =>
-                          handleFieldChange("end_date", value)
-                        }
+                        setDate={(value) => field.onChange(value)}
                         required={false}
                       />
                     </FormControl>
@@ -183,39 +176,12 @@ const PetForm: React.FC<PetFormProps> = ({
                         {...field}
                         className="w-full bg-background"
                         value={field.value || ""}
-                        onChange={(e) =>
-                          handleFieldChange("description", e.target.value)
-                        }
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {petId && (
-                <EntityConnectionManager
-                  control={form.control}
-                  name="moment_connection"
-                  label="Moments"
-                  entityType="moment"
-                  connectedEntities={
-                    familyData?.moments?.filter((m) =>
-                      m.pets?.some((p) => p.id === petId)
-                    ) || []
-                  }
-                  availableEntities={
-                    familyData?.moments.filter(
-                      (m) => !m.pets?.some((p) => p.id === petId)
-                    ) || []
-                  }
-                  onConnect={(momentId) =>
-                    connectMoment(momentId, petId!, "pet")
-                  }
-                  onDisconnect={(momentId) =>
-                    disconnectMoment(momentId, petId!, "pet")
-                  }
-                />
-              )}
             </CardContent>
 
             <CardFooter className="flex justify-between gap-2 p-3">
@@ -236,8 +202,12 @@ const PetForm: React.FC<PetFormProps> = ({
                   >
                     Delete
                   </Button>
-                  <Button type="button" variant="outline" onClick={onCancel}>
-                    Done
+                  <Button
+                    type={isFormDirty ? "submit" : "button"}
+                    variant="outline"
+                    onClick={() => !isFormDirty && onCancel()}
+                  >
+                    {isFormDirty ? "Save" : "Done"}
                   </Button>
                 </>
               ) : (
@@ -252,6 +222,31 @@ const PetForm: React.FC<PetFormProps> = ({
               )}
             </CardFooter>
           </Card>
+
+          {petId && (
+            <Card className="mt-2">
+              <CardContent className="p-3">
+                <EntityConnectionManager
+                  control={form.control}
+                  name="moment_connection"
+                  label="Moments"
+                  entityType="moment"
+                  connectedEntities={
+                    familyData?.moments?.filter((m) =>
+                      m.pets?.some((p) => p.id === petId)
+                    ) || []
+                  }
+                  availableEntities={
+                    familyData?.moments.filter(
+                      (m) => !m.pets?.some((p) => p.id === petId)
+                    ) || []
+                  }
+                  onConnect={handleMomentConnect}
+                  onDisconnect={handleMomentDisconnect}
+                />
+              </CardContent>
+            </Card>
+          )}
         </form>
       </Form>
     </div>
