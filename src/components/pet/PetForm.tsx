@@ -202,13 +202,15 @@ const PetForm: React.FC<PetFormProps> = ({
                   >
                     Delete
                   </Button>
-                  <Button
-                    type={isFormDirty ? "submit" : "button"}
-                    variant="outline"
-                    onClick={() => !isFormDirty && onCancel()}
-                  >
-                    {isFormDirty ? "Save" : "Done"}
-                  </Button>
+                  {isFormDirty ? (
+                    <Button type="submit" variant="default">
+                      Save
+                    </Button>
+                  ) : (
+                    <Button type="button" variant="outline" onClick={onCancel}>
+                      Done
+                    </Button>
+                  )}
                 </>
               ) : (
                 <>

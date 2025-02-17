@@ -74,8 +74,8 @@
     --card-foreground: var(--cornflower);
     --popover: var(--tiffany-blue);
     --popover-foreground: var(--cornflower);
-    --primary: var(--hot-pink);
-    --primary-foreground: var(--dark-blue-gray);
+    --primary: var(--cornflower);
+    --primary-foreground: var(--white);
     --secondary: var(--cyan);
     --secondary-foreground: var(--white);
     --muted: var(--tiffany-blue-desaturated);

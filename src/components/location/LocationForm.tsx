@@ -30,18 +30,16 @@ const formSchema = z.object({
   moment_connection: z.string().optional(),
 });
 
-interface LocationFormValues {
+export interface LocationFormValues {
   name: string;
   map_reference?: string;
-  start_date: Date | null;
-  end_date: Date | null;
+  start_date: Date;
+  end_date: Date | undefined;
 }
 
 interface LocationFormProps {
   locationId?: number;
-  familyId: number;
   initialData?: Location;
-  onFamilyChange: (familyId: number) => void;
   onDelete?: () => void;
   onSubmit: (values: LocationFormValues) => void;
   onCancel: () => void;
@@ -49,38 +47,46 @@ interface LocationFormProps {
 
 const LocationForm: React.FC<LocationFormProps> = ({
   locationId,
-  familyId,
   initialData,
   onDelete,
   onSubmit,
   onCancel,
 }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<LocationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
       map_reference: initialData?.map_reference || "",
-      start_date: initialData?.start_date || null,
-      end_date: initialData?.end_date || null,
+      start_date: initialData?.start_date
+        ? new Date(initialData.start_date)
+        : undefined,
+      end_date: initialData?.end_date
+        ? new Date(initialData.end_date)
+        : undefined,
     },
   });
 
   const { familyData } = useFamilyDataContext();
   const { connectMoment, disconnectMoment } = useMoments();
 
+  // Check if any non-moment fields are dirty
+  const isFormDirty = Object.keys(form.formState.dirtyFields).some(
+    (field) => field !== "moment_connection"
+  );
+
   useEffect(() => {
-    if (locationId === null) {
-      form.setValue("name", "");
-      form.setValue("map_reference", "");
-      form.setValue("start_date", null);
-      form.setValue("end_date", null);
-    } else {
-      form.setValue("name", initialData?.name || "");
-      form.setValue("map_reference", initialData?.map_reference || "");
-      form.setValue("start_date", initialData?.start_date || null);
-      form.setValue("end_date", initialData?.end_date || null);
-    }
-  }, [locationId, familyId, initialData, form]);
+    // Reset form when initialData changes
+    form.reset({
+      name: initialData?.name || "",
+      map_reference: initialData?.map_reference || "",
+      start_date: initialData?.start_date
+        ? new Date(initialData.start_date)
+        : undefined,
+      end_date: initialData?.end_date
+        ? new Date(initialData.end_date)
+        : undefined,
+    });
+  }, [initialData, form]);
 
   return (
     <div
@@ -90,7 +96,7 @@ const LocationForm: React.FC<LocationFormProps> = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full max-w-lg"
+          className="space-y-2 w-full max-w-lg"
         >
           <Card>
             <CardContent className="p-3">
@@ -163,28 +169,6 @@ const LocationForm: React.FC<LocationFormProps> = ({
                   </FormItem>
                 )}
               />
-              <EntityConnectionManager
-                control={form.control}
-                name="moment_connection"
-                label="Moments"
-                entityType="moment"
-                connectedEntities={
-                  familyData?.moments?.filter((m) =>
-                    m.locations?.some((l) => l.id === locationId)
-                  ) || []
-                }
-                availableEntities={
-                  familyData?.moments.filter(
-                    (m) => !m.locations?.some((l) => l.id === locationId)
-                  ) || []
-                }
-                onConnect={(momentId) =>
-                  connectMoment(momentId, locationId!, "location")
-                }
-                onDisconnect={(momentId) =>
-                  disconnectMoment(momentId, locationId!, "location")
-                }
-              />
             </CardContent>
             <CardFooter className="flex justify-between gap-2 p-3">
               {locationId ? (
@@ -204,8 +188,12 @@ const LocationForm: React.FC<LocationFormProps> = ({
                   >
                     Delete
                   </Button>
-                  <Button type="button" variant="outline" onClick={onCancel}>
-                    Done
+                  <Button
+                    type={isFormDirty ? "submit" : "button"}
+                    variant={isFormDirty ? "default" : "outline"}
+                    onClick={() => !isFormDirty && onCancel()}
+                  >
+                    {isFormDirty ? "Save" : "Done"}
                   </Button>
                 </>
               ) : (
@@ -220,6 +208,35 @@ const LocationForm: React.FC<LocationFormProps> = ({
               )}
             </CardFooter>
           </Card>
+
+          {locationId && (
+            <Card className="mt-2">
+              <CardContent className="p-3">
+                <EntityConnectionManager
+                  control={form.control}
+                  name="moment_connection"
+                  label="Moments"
+                  entityType="moment"
+                  connectedEntities={
+                    familyData?.moments?.filter((m) =>
+                      m.locations?.some((l) => l.id === locationId)
+                    ) || []
+                  }
+                  availableEntities={
+                    familyData?.moments.filter(
+                      (m) => !m.locations?.some((l) => l.id === locationId)
+                    ) || []
+                  }
+                  onConnect={(momentId) =>
+                    connectMoment(momentId, locationId!, "location")
+                  }
+                  onDisconnect={(momentId) =>
+                    disconnectMoment(momentId, locationId!, "location")
+                  }
+                />
+              </CardContent>
+            </Card>
+          )}
         </form>
       </Form>
     </div>

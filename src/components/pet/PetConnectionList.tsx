@@ -104,9 +104,7 @@ const PetConnectionList: React.FC<PetConnectionListProps> = ({
             ),
           ]}
         >
-          <span className="text-xl font-bold text-primary-foreground">
-            {pet.name}
-          </span>
+          <span className="text-xl font-bold text-primary">{pet.name}</span>
         </DetailListItem>
 
         {/* Sorted timeline items */}

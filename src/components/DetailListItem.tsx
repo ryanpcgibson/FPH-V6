@@ -46,7 +46,7 @@ const DetailListItem: React.FC<DetailListItemProps> = ({
       {children}
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none">
-          <MoreHorizontal className="cursor-pointer hover:opacity-70 text-primary-foreground" />
+          <MoreHorizontal className="cursor-pointer hover:opacity-70 text-primary" />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-background">
           {dropdownItems.map((item, index) => (

@@ -100,7 +100,7 @@ const LocationConnectionList: React.FC<LocationConnectionListProps> = ({
             ),
           ]}
         >
-          <span className="text-xl font-bold text-primary-foreground">
+          <span className="text-xl font-bold text-primary">
             {location.name}
           </span>
         </DetailListItem>

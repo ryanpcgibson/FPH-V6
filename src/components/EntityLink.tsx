@@ -33,7 +33,6 @@ const EntityLink: React.FC<EntityLinkProps> = ({
 
   let icon = undefined;
   if (itemType === "moment") {
-    // icon = <ColoredHeartIcon fillColor="#ff0000" outlineColor="black" />;
     icon = <Heart />;
   } else if (itemType === "location") {
     icon = <Globe />;
@@ -50,10 +49,10 @@ const EntityLink: React.FC<EntityLinkProps> = ({
       className="cursor-pointer hover:underline w-full"
     >
       <div className="flex items-center gap-2">
-        <span className="text-primary-foreground">{icon}</span>
+        <span className="text-primary">{icon}</span>
         <span
           className={`truncate ${
-            isSelected ? "text-accent font-medium" : "text-primary-foreground"
+            isSelected ? "text-accent font-medium" : "text-primary"
           }`}
         >
           {item.name}

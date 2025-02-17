@@ -1,17 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabaseClient } from "@/db/supabaseClient";
-import { LocationInsert, LocationUpdate } from "@/db/db_types";
 import { prepareEntityForDB } from "@/utils/dbUtils";
+import type { LocationInsert, LocationUpdate } from "@/db/db_types";
 
 export function useLocations() {
   const queryClient = useQueryClient();
 
   const createLocationMutation = useMutation({
-    mutationFn: async (locationData: LocationInsert) => {
-      const preparedData = prepareEntityForDB(locationData);
+    mutationFn: async (location: LocationInsert) => {
       const { data, error } = await supabaseClient
         .from("locations")
-        .insert([preparedData])
+        .insert(prepareEntityForDB(location))
         .select()
         .single();
 
@@ -24,14 +23,13 @@ export function useLocations() {
   });
 
   const updateLocationMutation = useMutation({
-    mutationFn: async (locationData: LocationUpdate) => {
-      if (!locationData.id) throw new Error("Location ID is required");
-
-      const preparedData = prepareEntityForDB(locationData);
+    mutationFn: async (location: LocationUpdate) => {
+      console.log("updateLocationMutation", location);
+      if (!location.id) throw new Error("Location ID is required for update");
       const { data, error } = await supabaseClient
         .from("locations")
-        .update(preparedData)
-        .eq("id", locationData.id)
+        .update(prepareEntityForDB(location))
+        .eq("id", location.id)
         .select()
         .single();
 
@@ -51,6 +49,7 @@ export function useLocations() {
         .eq("id", locationId);
 
       if (error) throw error;
+      return { success: true };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["familyData"] });

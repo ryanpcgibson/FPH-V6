@@ -19,7 +19,7 @@ const AppHeader: React.FC = () => {
       >
         <Link
           to={`/app/family/${selectedFamilyId}`}
-          className="text-xl font-bold text-primary-foreground"
+          className="text-xl font-bold text-primary"
         >
           {selectedFamilyName && `The ${selectedFamilyName} Family`}
         </Link>
@@ -29,7 +29,7 @@ const AppHeader: React.FC = () => {
         id="app-header-text-container"
       >
         <Link to={`/app/family/${selectedFamilyId}`}>
-          <FPHLogo className="text-primary-foreground shrink-0 max-h-[24px]" />
+          <FPHLogo className="text-primary shrink-0 max-h-[24px]" />
         </Link>
       </div>
     </Card>
