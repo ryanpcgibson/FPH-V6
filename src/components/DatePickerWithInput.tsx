@@ -14,31 +14,36 @@ interface DatePickerWithInputProps {
   date: Date | null;
   setDate: (date: Date | undefined) => void;
   required?: boolean;
+  "data-testid"?: string;
 }
 
 const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
   date,
   setDate,
   required = false,
+  "data-testid": testId,
 }) => {
   const [inputValue, setInputValue] = useState(
     date ? format(date, "MM/dd/yyyy") : ""
   );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    const parsedDate = parse(newValue, "MM/dd/yyyy", new Date());
+    if (isValid(parsedDate)) {
+      setDate(parsedDate);
+    }
+  };
 
   return (
     <div className="flex items-center gap-2">
       <div className="relative flex-1">
         <Input
           type="text"
+          data-testid={testId}
           value={inputValue}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            setInputValue(newValue);
-            const parsedDate = parse(newValue, "MM/dd/yyyy", new Date());
-            if (isValid(parsedDate)) {
-              setDate(parsedDate);
-            }
-          }}
+          onChange={handleInputChange}
           placeholder="MM/dd/yyyy"
           className="w-full bg-background"
         />

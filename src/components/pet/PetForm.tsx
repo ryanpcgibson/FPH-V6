@@ -104,7 +104,7 @@ const PetForm: React.FC<PetFormProps> = ({
   return (
     <div
       className="w-full h-full flex flex-grow justify-center overflow-y-auto"
-      id="pet-form-container"
+      data-testid="pet-form-container"
     >
       <Form {...form}>
         <form
@@ -121,6 +121,7 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormLabel className="w-1/4">Pet Name</FormLabel>
                     <FormControl className="flex-1">
                       <Input
+                        data-testid="pet-name-input"
                         placeholder="Pet Name"
                         {...field}
                         onChange={(e) =>
@@ -141,6 +142,7 @@ const PetForm: React.FC<PetFormProps> = ({
                     <FormLabel className="w-1/4">Start Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
+                        data-testid="start-date-input"
                         date={field.value}
                         setDate={(value) =>
                           handleFieldChange("start_date", value)
@@ -156,10 +158,11 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="end_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center ">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">End Date</FormLabel>
                     <FormControl>
                       <DatePickerWithInput
+                        data-testid="end-date-input"
                         date={field.value}
                         setDate={(value) =>
                           handleFieldChange("end_date", value)
@@ -175,10 +178,11 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className="flex items-center ">
+                  <FormItem className="flex items-center">
                     <FormLabel className="w-1/4">Description</FormLabel>
                     <FormControl className="flex-1">
                       <Input
+                        data-testid="pet-description-input"
                         placeholder="Pet description (optional)"
                         {...field}
                         className="w-full bg-background"
@@ -224,6 +228,7 @@ const PetForm: React.FC<PetFormProps> = ({
                   <Button
                     type="button"
                     variant="destructive"
+                    data-testid="delete-pet-button"
                     onClick={() => {
                       if (
                         window.confirm(
@@ -236,16 +241,30 @@ const PetForm: React.FC<PetFormProps> = ({
                   >
                     Delete
                   </Button>
-                  <Button type="button" variant="outline" onClick={onCancel}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-testid="done-button"
+                    onClick={onCancel}
+                  >
                     Done
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button type="button" variant="outline" onClick={onCancel}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-testid="cancel-button"
+                    onClick={onCancel}
+                  >
                     Cancel
                   </Button>
-                  <Button variant="outline" type="submit">
+                  <Button
+                    variant="outline"
+                    type="submit"
+                    data-testid="create-pet-button"
+                  >
                     Create
                   </Button>
                 </>
