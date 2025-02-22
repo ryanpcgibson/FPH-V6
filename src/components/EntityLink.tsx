@@ -47,6 +47,7 @@ const EntityLink: React.FC<EntityLinkProps> = ({
         e.stopPropagation();
         handleClick();
       }}
+      data-entity-id={item.id}
       className="cursor-pointer hover:underline w-full"
     >
       <div className="flex items-center gap-2">

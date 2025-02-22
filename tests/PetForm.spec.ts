@@ -1,4 +1,8 @@
 import { test, expect } from "@playwright/test";
+import { generateTestId, randDate } from "./testUtils";
+import { VALIDATION_MESSAGES } from "../src/constants/validationMessages";
+import { format } from "date-fns";
+import { DATE_FORMATS } from "../src/lib/utils";
 
 const baseURL = process.env.APP_URL;
 const familyId = process.env.TEST_FAMILY_ID;
@@ -6,46 +10,65 @@ const familyId = process.env.TEST_FAMILY_ID;
 test.use({ storageState: "./playwright/.auth/user.json" });
 
 test.describe("Pet Form", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto(`${baseURL}/app/family/${familyId}/pet/add`);
-  });
+  // test.beforeEach(async ({ page }) => {
+  // });
+
+  // const petName = "pet-5uo1n0";
+  const petName = generateTestId("pet");
+  const startDate = randDate();
+  let petId;
 
   test("creates a new pet with all fields", async ({ page }) => {
-    // debug statement to output the html of form
-    await page.getByTestId("pet-name-input").fill("Test Pet");
-    await page.getByTestId("start-date-input").fill("01/01/2024");
+    await page.goto(`${baseURL}/app/family/${familyId}/pet/add`);
+
+    await page.getByTestId("pet-name-input").fill(petName);
+    await page
+      .getByTestId("start-date-input")
+      .fill(format(startDate, DATE_FORMATS.US));
     await page
       .getByTestId("pet-description-input")
       .fill("Test pet description");
     await page.getByTestId("create-pet-button").click();
 
     await expect(page).toHaveURL(`/app/family/${process.env.TEST_FAMILY_ID}`);
-    await expect(page.getByText("Test Pet")).toBeVisible();
+
+    await expect(page.getByText(petName)).toBeVisible();
   });
 
   test("shows validation error for short name", async ({ page }) => {
+    await page.goto(`${baseURL}/app/family/${familyId}/pet/add`);
+
     // Try submitting with 1-character name
     await page.fill('input[placeholder="Pet Name"]', "A");
     await page.click('button:text("Create")');
 
     // Check for validation message
     await expect(
-      page.getByText("Pet name must be at least 2 characters.")
+      page.getByText(VALIDATION_MESSAGES.PET.NAME_MIN_LENGTH)
     ).toBeVisible();
   });
 
   test("can edit existing pet", async ({ page }) => {
-    // First create a pet
-    await page.fill('input[placeholder="Pet Name"]', "Edit Test Dog");
-    await page.fill('input[placeholder="YYYY-MM-DD"]', "2024-01-01");
+    await page.goto(`${baseURL}/app/family/${familyId}`);
+    const petElement = page.locator(`[data-entity-id]`, {
+      has: page.getByText(petName),
+    });
+    const petId = await petElement.getAttribute("data-entity-id");
+    await page.goto(`${baseURL}/app/family/${familyId}/pet/${petId}/edit`);
+
+    await page.fill('input[placeholder="Pet Name"]', `${petName} Updated`);
+    await page.fill(
+      `input[placeholder="${DATE_FORMATS.PLACEHOLDER}"]`,
+      "01/01/2024"
+    );
     await page.click('button:text("Create")');
 
     // Navigate to edit page (you'll need to get the pet ID somehow)
     // This might require a custom API call or data-testid to find the pet
-    await page.click("text=Edit Test Dog");
+    await page.click(`text=${petName}`);
 
     // Edit name
-    await page.fill('input[placeholder="Pet Name"]', "Updated Dog Name");
+    await page.fill('input[placeholder="Pet Name"]', `${petName} Updated`);
 
     // Click Done (saves automatically due to debounce)
     await page.click('button:text("Done")');

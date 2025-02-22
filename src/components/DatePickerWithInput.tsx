@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { DATE_FORMATS } from "@/lib/utils";
 
 interface DatePickerWithInputProps {
   date: Date | null;
@@ -24,15 +25,22 @@ const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
   "data-testid": testId,
 }) => {
   const [inputValue, setInputValue] = useState(
-    date ? format(date, "MM/dd/yyyy") : ""
+    date ? format(date, DATE_FORMATS.US) : ""
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setInputValue(newValue);
     const parsedDate = parse(newValue, "MM/dd/yyyy", new Date());
+    console.log("DatePicker parsed date:", {
+      input: newValue,
+      parsed: parsedDate,
+      isValid: isValid(parsedDate),
+    });
     if (isValid(parsedDate)) {
       setDate(parsedDate);
+    } else {
+      setDate(undefined);
     }
   };
 
@@ -44,7 +52,7 @@ const DatePickerWithInput: React.FC<DatePickerWithInputProps> = ({
           data-testid={testId}
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="MM/dd/yyyy"
+          placeholder={DATE_FORMATS.PLACEHOLDER}
           className="w-full bg-background"
         />
         {!required && (

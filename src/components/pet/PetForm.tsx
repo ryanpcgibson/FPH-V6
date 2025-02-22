@@ -19,22 +19,42 @@ import { useMoments } from "@/hooks/useMoments";
 import { useFamilyDataContext } from "@/context/FamilyDataContext";
 import DatePickerWithInput from "../DatePickerWithInput";
 import { useDebouncedCallback } from "use-debounce";
+import { VALIDATION_MESSAGES } from "@/constants/validationMessages";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Pet name must be at least 2 characters.",
-  }),
-  start_date: z.date().nullable(),
-  end_date: z.date().nullable(),
+  name: z.string().min(2, VALIDATION_MESSAGES.PET.NAME_MIN_LENGTH),
+  start_date: z
+    .date({
+      required_error: VALIDATION_MESSAGES.PET.START_DATE_REQUIRED,
+      invalid_type_error: VALIDATION_MESSAGES.PET.INVALID_DATE,
+    })
+    .nullable()
+    .refine((date) => date !== null, {
+      message: VALIDATION_MESSAGES.PET.START_DATE_REQUIRED,
+    }),
+  end_date: z
+    .date({
+      invalid_type_error: VALIDATION_MESSAGES.PET.INVALID_DATE,
+    })
+    .nullable()
+    .refine(
+      (date) => {
+        console.log("end_date date:", date);
+        if (!date) return true; // Allow null/undefined
+        return date instanceof Date && !isNaN(date.getTime());
+      },
+      {
+        message: VALIDATION_MESSAGES.PET.INVALID_DATE,
+      }
+    ),
   description: z.string().optional(),
   moment_connection: z.string().optional(),
+  family_id: z.number({
+    required_error: "Family ID is required",
+  }),
 });
 
-interface PetFormValues {
-  name: string;
-  start_date: Date | null;
-  end_date: Date | null;
-}
+export type PetFormValues = z.infer<typeof formSchema>;
 
 interface PetFormProps {
   petId?: number;
@@ -60,6 +80,8 @@ const PetForm: React.FC<PetFormProps> = ({
       name: initialData?.name || "",
       start_date: initialData?.start_date || null,
       end_date: initialData?.end_date || null,
+      description: initialData?.description || undefined,
+      family_id: familyId,
     },
   });
 
@@ -74,7 +96,8 @@ const PetForm: React.FC<PetFormProps> = ({
           name: form.getValues("name"),
           start_date: form.getValues("start_date"),
           end_date: form.getValues("end_date"),
-          ...values,
+          description: form.getValues("description"),
+          family_id: familyId,
         });
       }
     },
@@ -85,7 +108,17 @@ const PetForm: React.FC<PetFormProps> = ({
     field: keyof z.infer<typeof formSchema>,
     value: any
   ) => {
+    console.log("Form field change:", { field, value });
     form.setValue(field, value);
+
+    // Trigger validation for date fields when they become invalid
+    if (
+      (field === "start_date" || field === "end_date") &&
+      value === undefined
+    ) {
+      form.trigger(field); // This forces validation to run
+    }
+
     debouncedUpdate({ [field]: value });
   };
 
@@ -117,20 +150,22 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-1/4">Pet Name</FormLabel>
-                    <FormControl className="flex-1">
-                      <Input
-                        data-testid="pet-name-input"
-                        placeholder="Pet Name"
-                        {...field}
-                        onChange={(e) =>
-                          handleFieldChange("name", e.target.value)
-                        }
-                        className="w-full bg-background"
-                      />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="grid grid-cols-4 gap-4">
+                    <FormLabel className="col-span-1">Pet Name</FormLabel>
+                    <div className="col-span-3 space-y-2">
+                      <FormControl>
+                        <Input
+                          data-testid="pet-name-input"
+                          placeholder="Pet Name"
+                          {...field}
+                          onChange={(e) =>
+                            handleFieldChange("name", e.target.value)
+                          }
+                          className="w-full bg-background"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -138,19 +173,21 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="start_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-1/4">Start Date</FormLabel>
-                    <FormControl>
-                      <DatePickerWithInput
-                        data-testid="start-date-input"
-                        date={field.value}
-                        setDate={(value) =>
-                          handleFieldChange("start_date", value)
-                        }
-                        required={true}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="grid grid-cols-4 gap-4">
+                    <FormLabel className="col-span-1">Start Date</FormLabel>
+                    <div className="col-span-3 space-y-2">
+                      <FormControl>
+                        <DatePickerWithInput
+                          data-testid="start-date-input"
+                          date={field.value}
+                          setDate={(value) =>
+                            handleFieldChange("start_date", value)
+                          }
+                          required={true}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -158,19 +195,21 @@ const PetForm: React.FC<PetFormProps> = ({
                 control={form.control}
                 name="end_date"
                 render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormLabel className="w-1/4">End Date</FormLabel>
-                    <FormControl>
-                      <DatePickerWithInput
-                        data-testid="end-date-input"
-                        date={field.value}
-                        setDate={(value) =>
-                          handleFieldChange("end_date", value)
-                        }
-                        required={false}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                  <FormItem className="grid grid-cols-4 gap-4">
+                    <FormLabel className="col-span-1">End Date</FormLabel>
+                    <div className="col-span-3 space-y-2">
+                      <FormControl>
+                        <DatePickerWithInput
+                          data-testid="end-date-input"
+                          date={field.value}
+                          setDate={(value) =>
+                            handleFieldChange("end_date", value)
+                          }
+                          required={false}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -192,7 +231,6 @@ const PetForm: React.FC<PetFormProps> = ({
                         }
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
