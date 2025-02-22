@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pet } from "../../db/db_types";
 import {
@@ -63,6 +69,7 @@ interface PetFormProps {
   onFamilyChange: (familyId: number) => void;
   onDelete?: () => void;
   onSubmit: (values: PetFormValues) => void;
+  onUpdate?: (values: PetFormValues) => void;
   onCancel: () => void;
 }
 
@@ -72,6 +79,7 @@ const PetForm: React.FC<PetFormProps> = ({
   initialData,
   onDelete,
   onSubmit,
+  onUpdate,
   onCancel,
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -86,40 +94,31 @@ const PetForm: React.FC<PetFormProps> = ({
   });
 
   const { connectMoment, disconnectMoment } = useMoments();
-
   const { familyData } = useFamilyDataContext();
-
-  const debouncedUpdate = useDebouncedCallback(
-    (values: Partial<z.infer<typeof formSchema>>) => {
-      if (petId) {
-        onSubmit({
-          name: form.getValues("name"),
-          start_date: form.getValues("start_date"),
-          end_date: form.getValues("end_date"),
-          description: form.getValues("description"),
-          family_id: familyId,
-        });
-      }
-    },
-    500
-  );
+  const formState = form.formState;
+  const isDirty = Object.keys(formState.dirtyFields).length > 0;
+  const hasErrors = Object.keys(formState.errors).length > 0;
+  const isSaveDisabled = !isDirty || hasErrors;
 
   const handleFieldChange = (
     field: keyof z.infer<typeof formSchema>,
     value: any
   ) => {
     console.log("Form field change:", { field, value });
-    form.setValue(field, value);
+
+    // Use form.setValue with shouldValidate and shouldDirty options
+    form.setValue(field, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
 
     // Trigger validation for date fields when they become invalid
     if (
       (field === "start_date" || field === "end_date") &&
       value === undefined
     ) {
-      form.trigger(field); // This forces validation to run
+      form.trigger(field);
     }
-
-    debouncedUpdate({ [field]: value });
   };
 
   useEffect(() => {
@@ -136,14 +135,11 @@ const PetForm: React.FC<PetFormProps> = ({
 
   return (
     <div
-      className="w-full h-full flex flex-grow justify-center overflow-y-auto"
+      className="w-full h-full flex flex-col gap-4"
       data-testid="pet-form-container"
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-8 w-full max-w-lg"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <Card>
             <CardContent className="p-3">
               <FormField
@@ -234,83 +230,74 @@ const PetForm: React.FC<PetFormProps> = ({
                   </FormItem>
                 )}
               />
-              {petId && (
-                <EntityConnectionManager
-                  control={form.control}
-                  name="moment_connection"
-                  label="Moments"
-                  entityType="moment"
-                  connectedEntities={
-                    familyData?.moments?.filter((m) =>
-                      m.pets?.some((p) => p.id === petId)
-                    ) || []
-                  }
-                  availableEntities={
-                    familyData?.moments.filter(
-                      (m) => !m.pets?.some((p) => p.id === petId)
-                    ) || []
-                  }
-                  onConnect={(momentId) =>
-                    connectMoment(momentId, petId!, "pet")
-                  }
-                  onDisconnect={(momentId) =>
-                    disconnectMoment(momentId, petId!, "pet")
-                  }
-                />
-              )}
             </CardContent>
 
-            <CardFooter className="flex justify-between gap-2 p-3">
-              {petId ? (
-                <>
+            <CardFooter className="flex justify-between">
+              <div>
+                {onDelete && (
                   <Button
                     type="button"
                     variant="destructive"
-                    data-testid="delete-pet-button"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this pet?"
-                        )
-                      ) {
-                        onDelete?.();
-                      }
-                    }}
+                    onClick={onDelete}
+                    data-testid="delete-button"
                   >
                     Delete
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    data-testid="done-button"
-                    onClick={onCancel}
-                  >
-                    Done
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    data-testid="cancel-button"
-                    onClick={onCancel}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="outline"
-                    type="submit"
-                    data-testid="create-pet-button"
-                  >
-                    Create
-                  </Button>
-                </>
-              )}
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  data-testid="cancel-button"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSaveDisabled}
+                  data-testid="save-button"
+                >
+                  Save
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </form>
       </Form>
+
+      {petId && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Connected Moments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <div className="text-sm text-muted-foreground">
+                Changes to connections are saved immediately
+              </div>
+              <EntityConnectionManager
+                entityType="moment"
+                connectedEntities={
+                  familyData?.moments?.filter((m) =>
+                    m.pets?.some((p) => p.id === petId)
+                  ) || []
+                }
+                availableEntities={
+                  familyData?.moments.filter(
+                    (m) => !m.pets?.some((p) => p.id === petId)
+                  ) || []
+                }
+                onConnect={(momentId) => connectMoment(momentId, petId!, "pet")}
+                onDisconnect={(momentId) =>
+                  disconnectMoment(momentId, petId!, "pet")
+                }
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

@@ -16,6 +16,8 @@ test.describe("Pet Form", () => {
   // const petName = "pet-5uo1n0";
   const petName = generateTestId("pet");
   const startDate = randDate();
+  const updatedPetName = `${petName} Updated`;
+  const updatedStartDate = randDate();
   let petId;
 
   test("creates a new pet with all fields", async ({ page }) => {
@@ -56,25 +58,15 @@ test.describe("Pet Form", () => {
     const petId = await petElement.getAttribute("data-entity-id");
     await page.goto(`${baseURL}/app/family/${familyId}/pet/${petId}/edit`);
 
-    await page.fill('input[placeholder="Pet Name"]', `${petName} Updated`);
+    await page.fill('input[placeholder="Pet Name"]', updatedPetName);
     await page.fill(
       `input[placeholder="${DATE_FORMATS.PLACEHOLDER}"]`,
-      "01/01/2024"
+      format(updatedStartDate, DATE_FORMATS.US)
     );
-    await page.click('button:text("Create")');
-
-    // Navigate to edit page (you'll need to get the pet ID somehow)
-    // This might require a custom API call or data-testid to find the pet
-    await page.click(`text=${petName}`);
-
-    // Edit name
-    await page.fill('input[placeholder="Pet Name"]', `${petName} Updated`);
-
-    // Click Done (saves automatically due to debounce)
     await page.click('button:text("Done")');
 
     // Verify update
-    await expect(page.getByText("Updated Dog Name")).toBeVisible();
+    await expect(page.getByText(updatedPetName)).toBeVisible();
   });
 
   test("can delete pet", async ({ page }) => {

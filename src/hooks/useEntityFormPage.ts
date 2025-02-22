@@ -42,6 +42,7 @@ interface EntityFormPageConfig<T, V> {
  *   - handleDelete: Handler for entity deletion
  *   - handleSubmit: Handler for form submission (create/update)
  *   - handleCancel: Handler for canceling form operation
+ *   - handleUpdate: Handler for updating an existing entity
  */
 export function useEntityFormPage<T, V>({
   entityId,
@@ -106,5 +107,6 @@ export function useEntityFormPage<T, V>({
     handleDelete,
     handleSubmit,
     handleCancel,
+    handleUpdate: updateEntity,
   };
 }

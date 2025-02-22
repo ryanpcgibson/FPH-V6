@@ -51,6 +51,7 @@ const PetFormPage = () => {
     handleDelete,
     handleSubmit,
     handleCancel,
+    handleUpdate,
   } = useEntityFormPage<Pet, PetFormValues>({
     entityId: petId,
     familyId: familyIdParam ? parseInt(familyIdParam, 10) : undefined,
@@ -71,8 +72,9 @@ const PetFormPage = () => {
         familyId={currentFamilyId}
         onFamilyChange={handleFamilyChange}
         initialData={pet}
-        onDelete={handleDelete}
         onSubmit={handleSubmit}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
         onCancel={handleCancel}
       />
     </div>
