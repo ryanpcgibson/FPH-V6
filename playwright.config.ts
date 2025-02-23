@@ -15,7 +15,6 @@ export default defineConfig({
   use: {
     baseURL: baseURL,
     headless: false,
-    slowMo: 500,
     screenshot: "only-on-failure",
   },
   /* Configure projects for major browsers */

@@ -74,12 +74,21 @@ const EntityConnectionManager: React.FC<EntityConnectionManagerProps> = ({
           onConnect(entityId);
         }}
       >
-        <SelectTrigger className="w-full bg-background">
+        <SelectTrigger
+          className="w-full bg-background"
+          data-testid={`${entityType.toLowerCase()}-select-trigger`}
+        >
           <SelectValue placeholder={`Connect ${entityType}...`} />
         </SelectTrigger>
         <SelectContent>
           {availableEntities.map((entity) => (
-            <SelectItem key={entity.id} value={entity.id.toString()}>
+            <SelectItem
+              key={entity.id}
+              value={entity.id.toString()}
+              data-testid={`${entityType.toLowerCase()}-select-item-${
+                entity.id
+              }`}
+            >
               {getEntityDisplayName(entity)}
             </SelectItem>
           ))}

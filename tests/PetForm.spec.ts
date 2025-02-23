@@ -8,11 +8,9 @@ const baseURL = process.env.APP_URL;
 const familyId = process.env.TEST_FAMILY_ID;
 // Use authenticated state for all tests
 test.use({ storageState: "./playwright/.auth/user.json" });
+const momentId = process.env.TEST_MOMENT_ID;
 
 test.describe("Pet Form", () => {
-  // test.beforeEach(async ({ page }) => {
-  // });
-
   // const petName = "pet-5uo1n0";
   const petName = generateTestId("pet");
   const startDate = randDate();
@@ -30,7 +28,7 @@ test.describe("Pet Form", () => {
     await page
       .getByTestId("pet-description-input")
       .fill("Test pet description");
-    await page.getByTestId("create-pet-button").click();
+    await page.getByTestId("save-button").click();
 
     await expect(page).toHaveURL(`/app/family/${process.env.TEST_FAMILY_ID}`);
 
@@ -42,12 +40,17 @@ test.describe("Pet Form", () => {
 
     // Try submitting with 1-character name
     await page.fill('input[placeholder="Pet Name"]', "A");
-    await page.click('button:text("Create")');
 
     // Check for validation message
     await expect(
       page.getByText(VALIDATION_MESSAGES.PET.NAME_MIN_LENGTH)
     ).toBeVisible();
+
+    // check for validation message clearing
+    await page.fill('input[placeholder="Pet Name"]', petName);
+    await expect(
+      page.getByText(VALIDATION_MESSAGES.PET.NAME_MIN_LENGTH)
+    ).not.toBeVisible();
   });
 
   test("can edit existing pet", async ({ page }) => {
@@ -55,7 +58,7 @@ test.describe("Pet Form", () => {
     const petElement = page.locator(`[data-entity-id]`, {
       has: page.getByText(petName),
     });
-    const petId = await petElement.getAttribute("data-entity-id");
+    petId = await petElement.getAttribute("data-entity-id");
     await page.goto(`${baseURL}/app/family/${familyId}/pet/${petId}/edit`);
 
     await page.fill('input[placeholder="Pet Name"]', updatedPetName);
@@ -63,46 +66,28 @@ test.describe("Pet Form", () => {
       `input[placeholder="${DATE_FORMATS.PLACEHOLDER}"]`,
       format(updatedStartDate, DATE_FORMATS.US)
     );
-    await page.click('button:text("Done")');
+    await page.getByTestId("save-button").click();
 
     // Verify update
     await expect(page.getByText(updatedPetName)).toBeVisible();
   });
 
-  test("can delete pet", async ({ page }) => {
-    // First create a pet
-    await page.fill('input[placeholder="Pet Name"]', "Delete Test Dog");
-    await page.fill('input[placeholder="YYYY-MM-DD"]', "2024-01-01");
-    await page.click('button:text("Create")');
-
-    // Navigate to edit page
-    await page.click("text=Delete Test Dog");
-
-    // Set up dialog handler
-    page.once("dialog", (dialog) => dialog.accept());
-
-    // Click delete and confirm
-    await page.click('button:text("Delete")');
-
-    // Verify pet is gone
-    await expect(page.getByText("Delete Test Dog")).not.toBeVisible();
-  });
-
   test("can connect pet to moment", async ({ page }) => {
-    // Create pet first
-    await page.fill('input[placeholder="Pet Name"]', "Connection Test Dog");
-    await page.fill('input[placeholder="YYYY-MM-DD"]', "2024-01-01");
-    await page.click('button:text("Create")');
+    await page.goto(`${baseURL}/app/family/${familyId}/pet/${petId}/edit`);
 
-    // Navigate to edit page
-    await page.click("text=Connection Test Dog");
-
-    // Assuming you have a test moment already created
     // Find and click the connect button for the test moment
-    await page.getByRole("combobox", { name: "Moments" }).click();
-    await page.getByText("Test Moment").click();
+    await page.getByTestId("moment-select-trigger").click();
+    await page.getByTestId(`moment-select-item-${momentId}`).click();
 
     // Verify connection (the moment should appear in connected list)
     await expect(page.getByText("Test Moment")).toBeVisible();
+  });
+
+  test("can delete pet", async ({ page }) => {
+    await page.goto(`${baseURL}/app/family/${familyId}/pet/${petId}/edit`);
+    await page.getByTestId("delete-button").click();
+    page.once("dialog", (dialog) => dialog.accept());
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByText(petName)).not.toBeVisible();
   });
 });

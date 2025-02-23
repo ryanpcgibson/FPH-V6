@@ -1,8 +1,10 @@
 import { test as setup, expect } from "@playwright/test";
 
 const baseURL = process.env.APP_URL;
+const authFile = "./playwright/.auth/user.json";
 
 setup("authenticate", async ({ browser }) => {
+  console.log("Authenticating...");
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -19,6 +21,6 @@ setup("authenticate", async ({ browser }) => {
 
   await expect(page).toHaveURL(`${baseURL}/app`);
 
-  await context.storageState({ path: "./playwright/.auth/user.json" });
+  await context.storageState({ path: authFile });
   await context.close();
 });
