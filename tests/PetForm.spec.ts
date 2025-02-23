@@ -10,8 +10,8 @@ const familyId = process.env.TEST_FAMILY_ID;
 test.use({ storageState: "./playwright/.auth/user.json" });
 const momentId = process.env.TEST_MOMENT_ID;
 
+// Intended to run in sequence, test creats, updates, then deletes a pet record usiong previously created family and moment.
 test.describe("Pet Form", () => {
-  // const petName = "pet-5uo1n0";
   const petName = generateTestId("pet");
   const startDate = randDate();
   const updatedPetName = `${petName} Updated`;
